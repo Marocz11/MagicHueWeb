@@ -1439,24 +1439,29 @@ ol {
 .modal {
   display: none;
   position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.8); /* Black with opacity */
-}
-
-/* Modal Content */
-.modal-content {
-  margin: 15% auto;
-  padding: 20px;
+  z-index: 1000; /* Zvýšený z-index pro zajištění popředí */
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   width: 80%;
   max-width: 700px;
-  background-color: #f4f4f4; /* Light gray background */
+  height: auto;
+  overflow: auto;
+  padding: 20px;
   text-align: center;
   border-radius: 10px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+  background-color: transparent; /* Transparentní pozadí pro modal */
+}
+
+.modal-content {
+  margin: 0; /* Odstraněný okraj, zarovnání řeší .modal */
+  padding: 20px;
+  background-color: #ffffff; /* Bílé pozadí */
+  border-radius: 10px;
+  display: inline-block;
+  position: relative;
+  z-index: 1001; /* Zvýšený z-index pro zajištění popředí */
 }
 
 .modal-content img {
@@ -1466,7 +1471,7 @@ ol {
 }
 
 .caption {
-  color: #333; /* Darker text color */
+  color: #333; /* Tmavší barva textu */
   font-size: 16px;
 }
 
@@ -1478,6 +1483,7 @@ ol {
   color: #aaa;
   font-size: 30px;
   font-weight: bold;
+  z-index: 1002; /* Zvýšený z-index pro zajištění popředí */
 }
 
 .close:hover,
@@ -1486,7 +1492,6 @@ ol {
   text-decoration: none;
   cursor: pointer;
 }
-
 
 /* Add Animation - Zoom in the Modal */
 .modal-content, #caption {
@@ -1506,24 +1511,6 @@ ol {
   to {transform: scale(1)}
 }
 
-/* The Close Button */
-.close {
-  position: absolute;
-  top: 15px;
-  right: 35px;
-  color: #f1f1f1;
-  font-size: 40px;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-.close:hover,
-.close:focus {
-  color: #bbb;
-  text-decoration: none;
-  cursor: pointer;
-}
-
 .work__item a.open-modal {
   position: absolute;
   top: 0;
@@ -1532,6 +1519,7 @@ ol {
   height: 100%;
   z-index: 2;
 }
+
 
 
 /*---------------------

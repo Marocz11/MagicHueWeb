@@ -1,6 +1,6 @@
 /********** Template CSS **********/
 :root {
-    --primary: #AB7442;
+    --primary: #00CEF1; /* Změna barvy na cyan */
     --light: #F5F5F5;
     --dark: #353535;
 }
@@ -147,7 +147,6 @@
     }
 }
 
-
 /*** Header ***/
 @media (max-width: 768px) {
     .header-carousel .owl-carousel-item {
@@ -286,7 +285,6 @@
     display: none;
 }
 
-
 /*** About ***/
 @media (min-width: 992px) {
     .container.about {
@@ -310,7 +308,6 @@
     }
 }
 
-
 /*** Service ***/
 .service-item img {
     transition: .5s;
@@ -319,7 +316,6 @@
 .service-item:hover img {
     transform: scale(1.1);
 }
-
 
 /*** Feature ***/
 @media (min-width: 992px) {
@@ -343,7 +339,6 @@
         padding-left: calc(((100% - 1320px) / 2) + .75rem);
     }
 }
-
 
 /*** Project Portfolio ***/
 #portfolio-flters li {
@@ -396,7 +391,6 @@
     opacity: 1;
 }
 
-
 /*** Quote ***/
 @media (min-width: 992px) {
     .container.quote {
@@ -419,7 +413,6 @@
         padding-right: calc(((100% - 1320px) / 2) + .75rem);
     }
 }
-
 
 /*** Team ***/
 .team-item img {
@@ -455,7 +448,6 @@
 .team-item:hover .team-social {
     left: 0;
 }
-
 
 /*** Testimonial ***/
 .testimonial-carousel::before {
@@ -535,7 +527,6 @@
     color: var(--dark);
 }
 
-
 /*** Contact ***/
 @media (min-width: 992px) {
     .container.contact {
@@ -558,7 +549,6 @@
         padding-left: calc(((100% - 1320px) / 2) + .75rem);
     }
 }
-
 
 /*** Footer ***/
 .footer {

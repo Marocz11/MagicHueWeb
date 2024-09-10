@@ -3083,20 +3083,20 @@ fieldset:disabled .btn {
 .btn-primary {
     color: #000;
     background-color: #00CEF1;
-    border-color: #00CEF1
+    border-color: #00CEF1;
 }
 
 .btn-primary:hover {
     color: #000;
-    background-color: #b8895e;
-    border-color: #b38255
+    background-color: #00B8EA; /* Nová modrá barva při hover efektu */
+    border-color: #00B8EA;
 }
 
 .btn-check:focus+.btn-primary,
 .btn-primary:focus {
     color: #000;
     background-color: #5ea6b8;
-    border-color: #b38255;
+    border-color: #00B8EA;
     box-shadow: 0 0 0 .25rem rgba(145, 99, 56, 0.5)
 }
 
@@ -3106,8 +3106,8 @@ fieldset:disabled .btn {
 .btn-primary.active,
 .show>.btn-primary.dropdown-toggle {
     color: #000;
-    background-color: #bc9068;
-    border-color: #b38255
+    background-color: #00a8ea;
+    border-color: #00a8ea
 }
 
 .btn-check:checked+.btn-primary:focus,
@@ -3767,7 +3767,7 @@ fieldset:disabled .btn {
 }
 
 .btn-link:hover {
-    color: #895d35
+    color: #00a8ea
 }
 
 .btn-link:disabled,

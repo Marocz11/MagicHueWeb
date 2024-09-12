@@ -265,6 +265,30 @@
     border-color: var(--primary);
 }
 
+/*** Cenik sesion ***/
+.info-text {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 10px;
+}
+
+.info-text span:first-child {
+    font-weight: bold;
+}
+
+.info-text span:last-child {
+    margin-left: 20px;
+    text-align: right;
+}
+
+/* Styl pro tučné a modré poslední řádky */
+.info-text.bold-blue span {
+    font-weight: bold;
+    color: #00CEF1; /* Bootstrap modrá barva (nebo použijte jiný odstín, který se hodí ke stránce) */
+}
+
 
 /*** Section Title ***/
 .section-title h1 {

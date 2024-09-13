@@ -2201,6 +2201,59 @@ progress {
     margin-bottom: .5rem
 }
 
+/*** Quote ***/
+/* Base styles for the drop zone */
+.drop-zone {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+/* Change the size and style of the icon */
+.drop-zone i {
+    color: #ccc;
+}
+
+/* Default state of the drop zone */
+.drop-zone p {
+    color: #888;
+}
+
+/* Hover and active state when dragging a file */
+.drop-zone.dragover {
+    border-color: #007bff;
+    background-color: #e7f3ff;
+}
+
+/* Lower height for the box */
+.drop-zone {
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Styling for the file list */
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.file-item button {
+    background: none;
+    border: none;
+    color: #ff0000;
+    cursor: pointer;
+}
+
 .col-form-label {
     padding-top: calc(.375rem + 1px);
     padding-bottom: calc(.375rem + 1px);

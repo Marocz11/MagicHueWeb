@@ -247,263 +247,91 @@
     </div>
     <!-- O nás End -->
 
-    <!-- Projects Start -->
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="section-title text-center">
-                <h1 class="display-5 mb-5 text-primary">Naše projekty</h1>
-            </div>
-            <div class="row mt-n2 wow fadeInUp" data-wow-delay="0.3s">
-                <div class="col-12 text-center">
-                    <ul class="list-inline mb-5" id="portfolio-flters">
-                        <li class="mx-2 active" data-filter="*">Vše</li>
-                        <li class="mx-2" data-filter=".cutters">Vykrajovátka</li>
-                        <li class="mx-2" data-filter=".wedding">Svatba</li>
-                        <!-- <li class="mx-2" data-filter=".corporate">Firemní předměty</li> -->
-                        <li class="mx-2" data-filter=".multimaterial">Multimaterial</li>
-                        <li class="mx-2" data-filter=".prototypes">Prototypy</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="row g-4 portfolio-container">
-                <!-- Vykrajovátka -->
-                <div class="col-lg-4 col-md-6 portfolio-item cutters wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="rounded overflow-hidden">
-                        <div class="position-relative overflow-hidden">
-                            <img class="img-fluid w-100" src="img/Vykrajovatko1.jpg" alt="">
-                            <div class="portfolio-overlay">
-                                <a class="btn btn-square btn-outline-light mx-1" href="img/Vykrajovatko1.jpg" data-lightbox="portfolio"><i class="fa fa-eye"></i></a>
-                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
-                            </div>
-                        </div>
-                        <div class="border border-5 border-light border-top-0 p-4">
-                            <p class="text-primary fw-medium mb-2">Vykrajovátka</p>
-                            <h5 class="lh-base mb-0">Tvorba přesných vykrajovátek pomocí 3D tisku</h5>
-                        </div>
+<!-- Lightbox Library (Include these in the <head> or before the closing </body> tag) -->
+    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+    <script src="lib/lightbox/js/lightbox.min.js"></script>
+    
+<!-- Lightbox Library (Ensure this is included in the <head> or before the closing </body> tag) -->
+    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+    <script src="lib/lightbox/js/lightbox.min.js"></script>
+    
+<!-- Projects Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="section-title text-center">
+            <h1 class="display-5 mb-5 text-primary">Naše projekty</h1>
+        </div>
+        <div class="row g-4 portfolio-container">
+            <!-- Project 1 -->
+            <div class="col-lg-4 col-md-6 portfolio-item cutters wow fadeInUp" data-wow-delay="0.1s">
+                <div class="rounded overflow-hidden">
+                    <div class="position-relative overflow-hidden">
+                        <!-- Clickable image without the overlay -->
+                        <a href="img/Vykrajovatko3.jpg" data-lightbox="portfolio" data-title="Vykrajovátko 3">
+                            <img class="img-fluid w-100 project-image" src="img/Vykrajovatko3.jpg" alt="Vykrajovátko 3">
+                        </a>
                     </div>
-                </div>
-                <div class="col-lg-4 col-md-6 portfolio-item cutters wow fadeInUp" data-wow-delay="0.2s">
-                    <div class="rounded overflow-hidden">
-                        <div class="position-relative overflow-hidden">
-                            <img class="img-fluid w-100" src="img/Vykrajovatko2.jpg" alt="">
-                            <div class="portfolio-overlay">
-                                <a class="btn btn-square btn-outline-light mx-1" href="img/Vykrajovatko2.jpg" data-lightbox="portfolio"><i class="fa fa-eye"></i></a>
-                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
-                            </div>
-                        </div>
-                        <div class="border border-5 border-light border-top-0 p-4">
-                            <p class="text-primary fw-medium mb-2">Vykrajovátka</p>
-                            <h5 class="lh-base mb-0">Unikátní designy pro různé příležitosti</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 portfolio-item cutters wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="rounded overflow-hidden">
-                        <div class="position-relative overflow-hidden">
-                            <img class="img-fluid w-100" src="img/Vykrajovatko3.jpg" alt="">
-                            <div class="portfolio-overlay">
-                                <a class="btn btn-square btn-outline-light mx-1" href="img/Vykrajovatko3.jpg" data-lightbox="portfolio"><i class="fa fa-eye"></i></a>
-                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
-                            </div>
-                        </div>
-                        <div class="border border-5 border-light border-top-0 p-4">
-                            <p class="text-primary fw-medium mb-2">Vykrajovátka</p>
-                            <h5 class="lh-base mb-0">Personalizované vykrajovátka dle požadavků zákazníka</h5>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Svatba -->
-                <div class="col-lg-4 col-md-6 portfolio-item wedding wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="rounded overflow-hidden">
-                        <div class="position-relative overflow-hidden">
-                            <img class="img-fluid w-100" src="img/svatba1.jpg" alt="">
-                            <div class="portfolio-overlay">
-                                <a class="btn btn-square btn-outline-light mx-1" href="img/svatba1.jpg" data-lightbox="portfolio"><i class="fa fa-eye"></i></a>
-                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
-                            </div>
-                        </div>
-                        <div class="border border-5 border-light border-top-0 p-4">
-                            <p class="text-primary fw-medium mb-2">Svatba</p>
-                            <h5 class="lh-base mb-0">Popisky</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 portfolio-item wedding wow fadeInUp" data-wow-delay="0.2s">
-                    <div class="rounded overflow-hidden">
-                        <div class="position-relative overflow-hidden">
-                            <img class="img-fluid w-100" src="img/svatba2.jpg" alt="">
-                            <div class="portfolio-overlay">
-                                <a class="btn btn-square btn-outline-light mx-1" href="img/svatba2.jpg" data-lightbox="portfolio"><i class="fa fa-eye"></i></a>
-                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
-                            </div>
-                        </div>
-                        <div class="border border-5 border-light border-top-0 p-4">
-                            <p class="text-primary fw-medium mb-2">Svatba</p>
-                            <h5 class="lh-base mb-0">Jmenovky</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 portfolio-item wedding wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="rounded overflow-hidden">
-                        <div class="position-relative overflow-hidden">
-                            <img class="img-fluid w-100" src="img/svatba3.jpg" alt="">
-                            <div class="portfolio-overlay">
-                                <a class="btn btn-square btn-outline-light mx-1" href="img/svatba3.jpg" data-lightbox="portfolio"><i class="fa fa-eye"></i></a>
-                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
-                            </div>
-                        </div>
-                        <div class="border border-5 border-light border-top-0 p-4">
-                            <p class="text-primary fw-medium mb-2">Svatba</p>
-                            <h5 class="lh-base mb-0">Podtácky</h5>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Firemní předměty
-                <div class="col-lg-4 col-md-6 portfolio-item corporate wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="rounded overflow-hidden">
-                        <div class="position-relative overflow-hidden">
-                            <img class="img-fluid w-100" src="img/firemni1.jpg" alt="">
-                            <div class="portfolio-overlay">
-                                <a class="btn btn-square btn-outline-light mx-1" href="img/firemni1.jpg" data-lightbox="portfolio"><i class="fa fa-eye"></i></a>
-                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
-                            </div>
-                        </div>
-                        <div class="border border-5 border-light border-top-0 p-4">
-                            <p class="text-primary fw-medium mb-2">Firemní předměty</p>
-                            <h5 class="lh-base mb-0">Personalizované předměty pro firmy</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 portfolio-item corporate wow fadeInUp" data-wow-delay="0.2s">
-                    <div class="rounded overflow-hidden">
-                        <div class="position-relative overflow-hidden">
-                            <img class="img-fluid w-100" src="img/portfolio-8.jpg" alt="">
-                            <div class="portfolio-overlay">
-                                <a class="btn btn-square btn-outline-light mx-1" href="img/portfolio-8.jpg" data-lightbox="portfolio"><i class="fa fa-eye"></i></a>
-                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
-                            </div>
-                        </div>
-                        <div class="border border-5 border-light border-top-0 p-4">
-                            <p class="text-primary fw-medium mb-2">Firemní předměty</p>
-                            <h5 class="lh-base mb-0">Výroba reklamních předmětů</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 portfolio-item corporate wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="rounded overflow-hidden">
-                        <div class="position-relative overflow-hidden">
-                            <img class="img-fluid w-100" src="img/portfolio-9.jpg" alt="">
-                            <div class="portfolio-overlay">
-                                <a class="btn btn-square btn-outline-light mx-1" href="img/portfolio-9.jpg" data-lightbox="portfolio"><i class="fa fa-eye"></i></a>
-                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
-                            </div>
-                        </div>
-                        <div class="border border-5 border-light border-top-0 p-4">
-                            <p class="text-primary fw-medium mb-2">Firemní předměty</p>
-                            <h5 class="lh-base mb-0">Dárkové předměty na míru</h5>
-                        </div>
-                    </div>
-                </div> -->
-
-                <!-- Multimaterial -->
-                <div class="col-lg-4 col-md-6 portfolio-item multimaterial wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="rounded overflow-hidden">
-                        <div class="position-relative overflow-hidden">
-                            <img class="img-fluid w-100" src="img/multi1.jpg" alt="">
-                            <div class="portfolio-overlay">
-                                <a class="btn btn-square btn-outline-light mx-1" href="img/multi1.jpg" data-lightbox="portfolio"><i class="fa fa-eye"></i></a>
-                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
-                            </div>
-                        </div>
-                        <div class="border border-5 border-light border-top-0 p-4">
-                            <p class="text-primary fw-medium mb-2">Multimaterial</p>
-                            <h5 class="lh-base mb-0">Airbus</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 portfolio-item multimaterial wow fadeInUp" data-wow-delay="0.2s">
-                    <div class="rounded overflow-hidden">
-                        <div class="position-relative overflow-hidden">
-                            <img class="img-fluid w-100" src="img/multi2.jpg" alt="">
-                            <div class="portfolio-overlay">
-                                <a class="btn btn-square btn-outline-light mx-1" href="img/multi2.jpg" data-lightbox="portfolio"><i class="fa fa-eye"></i></a>
-                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
-                            </div>
-                        </div>
-                        <div class="border border-5 border-light border-top-0 p-4">
-                            <p class="text-primary fw-medium mb-2">Multimaterial</p>
-                            <h5 class="lh-base mb-0">Lego logo</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 portfolio-item multimaterial wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="rounded overflow-hidden">
-                        <div class="position-relative overflow-hidden">
-                            <img class="img-fluid w-100" src="img/multi3.jpg" alt="">
-                            <div class="portfolio-overlay">
-                                <a class="btn btn-square btn-outline-light mx-1" href="img/multi3.jpg" data-lightbox="portfolio"><i class="fa fa-eye"></i></a>
-                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
-                            </div>
-                        </div>
-                        <div class="border border-5 border-light border-top-0 p-4">
-                            <p class="text-primary fw-medium mb-2">Multimaterial</p>
-                            <h5 class="lh-base mb-0">Bitcoin logo</h5>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Prototypy -->
-                <div class="col-lg-4 col-md-6 portfolio-item prototypes wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="rounded overflow-hidden">
-                        <div class="position-relative overflow-hidden">
-                            <img class="img-fluid w-100" src="img/prototyp1.jpg" alt="">
-                            <div class="portfolio-overlay">
-                                <a class="btn btn-square btn-outline-light mx-1" href="img/prototyp1.jpg" data-lightbox="portfolio"><i class="fa fa-eye"></i></a>
-                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
-                            </div>
-                        </div>
-                        <div class="border border-5 border-light border-top-0 p-4">
-                            <p class="text-primary fw-medium mb-2">Prototypy</p>
-                            <h5 class="lh-base mb-0">Nádobka na mycí prostředek do dřezu</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 portfolio-item prototypes wow fadeInUp" data-wow-delay="0.2s">
-                    <div class="rounded overflow-hidden">
-                        <div class="position-relative overflow-hidden">
-                            <img class="img-fluid w-100" src="img/prototyp2.jpg" alt="">
-                            <div class="portfolio-overlay">
-                                <a class="btn btn-square btn-outline-light mx-1" href="img/prototyp2.jpg" data-lightbox="portfolio"><i class="fa fa-eye"></i></a>
-                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
-                            </div>
-                        </div>
-                        <div class="border border-5 border-light border-top-0 p-4">
-                            <p class="text-primary fw-medium mb-2">Prototypy</p>
-                            <h5 class="lh-base mb-0">Krabička pro lokátor pod zadní odrazku na kolo</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 portfolio-item prototypes wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="rounded overflow-hidden">
-                        <div class="position-relative overflow-hidden">
-                            <img class="img-fluid w-100" src="img/portfolio-15.jpg" alt="">
-                            <div class="portfolio-overlay">
-                                <a class="btn btn-square btn-outline-light mx-1" href="img/portfolio-15.jpg" data-lightbox="portfolio"><i class="fa fa-eye"></i></a>
-                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
-                            </div>
-                        </div>
-                        <div class="border border-5 border-light border-top-0 p-4">
-                            <p class="text-primary fw-medium mb-2">Prototypy</p>
-                            <h5 class="lh-base mb-0">Detailní funkční modely dle specifikace</h5>
-                        </div>
+                    <div class="border border-5 border-light border-top-0 p-4">
+                        <p class="text-primary fw-medium mb-2">Vykrajovátka</p>
+                        <h5 class="lh-base mb-0">Personalizovaná vykrajovátka dle požadavků zákazníka</h5>
                     </div>
                 </div>
             </div>
+
+            <!-- Project 2 -->
+            <div class="col-lg-4 col-md-6 portfolio-item cutters wow fadeInUp" data-wow-delay="0.2s">
+                <div class="rounded overflow-hidden">
+                    <div class="position-relative overflow-hidden">
+                        <a href="img/svatba2.jpg" data-lightbox="portfolio" data-title="Vykrajovátko 2">
+                            <img class="img-fluid w-100 project-image" src="img/svatba2.jpg" alt="Vykrajovátko 2">
+                        </a>
+                    </div>
+                    <div class="border border-5 border-light border-top-0 p-4">
+                        <p class="text-primary fw-medium mb-2">Svatba</p>
+                        <h5 class="lh-base mb-0">Jmenovky</h5>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project 3 -->
+            <div class="col-lg-4 col-md-6 portfolio-item wedding wow fadeInUp" data-wow-delay="0.3s">
+                <div class="rounded overflow-hidden">
+                    <div class="position-relative overflow-hidden">
+                        <a href="img/multi2.jpg" data-lightbox="portfolio" data-title="Multimaterial">
+                            <img class="img-fluid w-100 project-image" src="img/multi2.jpg" alt="Multimaterial">
+                        </a>
+                    </div>
+                    <div class="border border-5 border-light border-top-0 p-4">
+                        <p class="text-primary fw-medium mb-2">Multimaterial</p>
+                        <h5 class="lh-base mb-0">Lego logo</h5>
+                    </div>
+                </div>
+            </div>
+
+            <!-- More projects here -->
+        </div>
+
+        <!-- Button to redirect to Projekty page -->
+        <div class="text-center mt-5">
+            <a href="project.html" class="btn btn-primary btn-lg">Více projektů</a>
         </div>
     </div>
-    <!-- Projects End -->
+</div>
+<!-- Projects End -->
+
+    
+    <!-- Custom CSS for zoom-in effect -->
+    <style>
+        .project-image {
+            transition: transform 0.3s ease;
+        }
+    
+        .project-image:hover {
+            transform: scale(1.05); /* Slight zoom on hover */
+        }
+    </style>
+    
+    
 
 
     <!-- Feature Start -->

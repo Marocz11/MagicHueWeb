@@ -1,4 +1,4 @@
-<?php
+ <?php
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -13,7 +13,7 @@ try {
     $mail->isSMTP();
     $mail->Host = 'smtp.seznam.cz';
     $mail->SMTPAuth = true;
-    $mail->Username = 'kamsvatba@seznam.cz';  // Your username
+    $mail->Username = 'kamsvatba@seznam.cz'; // Your username
     $mail->Password = 'Marekkiki';  // Your password
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port = 587;
@@ -34,24 +34,20 @@ try {
     $use_location = $_POST['use_location'] ?? 'Není zadáno';
     $delivery = $_POST['delivery'] ?? 'Není zadáno';
 
-    // Handle file uploads (limit to 25MB total)
+    // Handle file uploads (limit to 25MB)
     $totalFileSize = 0;
-    $maxFileSize = 25 * 1024 * 1024; // 25MB in bytes
-
     if (!empty($_FILES['files']['name'][0])) {
         for ($i = 0; $i < count($_FILES['files']['name']); $i++) {
             $file_name = $_FILES['files']['name'][$i];
             $file_size = $_FILES['files']['size'][$i];
             $file_tmp = $_FILES['files']['tmp_name'][$i];
 
-            // Check file size
-            if ($file_size > 0 && $totalFileSize + $file_size <= $maxFileSize) {
-                $totalFileSize += $file_size;
-                // Add file as an attachment
-                $mail->addAttachment($file_tmp, $file_name);
-            } else {
+            $totalFileSize += $file_size;
+            if ($totalFileSize > 25 * 1024 * 1024) { // Check if total size exceeds 25MB
                 throw new Exception('Celková velikost příloh překračuje 25MB.');
             }
+
+            $mail->addAttachment($file_tmp, $file_name);
         }
     }
 
@@ -69,9 +65,10 @@ try {
                       <p><strong>Doprava:</strong> {$delivery}</p>";
     $mail->AltBody = "Nová zpráva z webu\nJméno: {$name}\nEmail: {$email}\nTelefon: {$phone}\nPředmět: {$subject}\nPožadavek: {$request}\nBarva: {$color}\nKde bude výtisk používán: {$use_location}\nDoprava: {$delivery}";
 
-    // Send the email
     $mail->send();
     header('Location: index.html?success=1'); // Redirect back to the form page
 } catch (Exception $e) {
-    echo "Message could not be sent. Mailer Error: {$e->getMessage()}";
+    echo "Message could not be sent. Error: {$e->getMessage()}";
 }
+?>
+

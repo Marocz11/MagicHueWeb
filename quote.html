@@ -154,55 +154,55 @@
                             <div class="col-12 col-sm-6">
                                 <input type="text" name="subject" class="form-control border-0" placeholder="Předmět" style="height: 55px;" required>
                             </div>
-
-                            <!-- Main Request and options in two columns -->
-                            <div class="col-12 col-md-6 d-flex flex-column justify-content-between">
-                                <textarea name="request" class="form-control border-0" placeholder="Co nejvíce specifikujte Váš požadavek" rows="6" style="min-height: 170px;" required></textarea>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <div class="row h-100 d-flex flex-column justify-content-between">
-                                    <div class="col-12 mb-3">
-                                        <select name="color" class="form-select border-0" style="height: 55px;">
-                                            <option selected>Barva</option>
-                                            <option value="Černá">Černá</option>
-                                            <option value="Bílá">Bílá</option>
-                                            <option value="Jakákoliv">Jakákoliv</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-12 mb-3">
-                                        <select name="use_location" class="form-select border-0" style="height: 55px;">
-                                            <option selected>Kde bude výtisk používán</option>
-                                            <option value="Venku">Venku</option>
-                                            <option value="Uvnitř">Uvnitř</option>
-                                            <option value="Součást stroje">Součást stroje</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-12">
-                                        <select name="delivery" class="form-select border-0" style="height: 55px;">
-                                            <option selected>Doprava</option>
-                                            <option value="Zásilkovna - 75 Kč">Zásilkovna - 75 Kč</option>
-                                            <option value="Osobní převzetí Ostrava">Osobní převzetí Slezská Ostrava</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- File upload with drag-and-drop area and multiple files removal -->
                             <div class="col-12">
-                                <label>Preferované formáty .STL / .OBJ (Maximálně 25MB)</label>
-                                <div id="dropArea" class="drag-drop-zone">
-                                    Přetáhněte soubory sem nebo klikněte pro výběr souborů
+                                <textarea name="request" class="form-control border-0" placeholder="Co nejvíce specifikujte Váš požadavek" rows="4" required></textarea>
+                            </div>
+                    
+                            <div class="col-12">
+                                <label>Preferované formáty .STL / .STEP / .OBJ nebo případně skici / obrázky (Maximálně 25MB)</label>
+                                <div id="drop-zone" class="drop-zone">
+                                    <i class="fa fa-cloud-upload-alt fa-2x"></i>
+                                    <p class="mt-2">Přetáhněte soubory sem nebo klikněte pro výběr</p>
+                                    <input type="file" id="file-input" name="files[]" class="form-control d-none" multiple required>
                                 </div>
-                                <input type="file" id="fileInput" name="files[]" multiple class="d-none">
-                                <div id="fileList"></div>
-                                <span id="fileCount">Počet souborů: 0</span>
+                                <div id="file-list" class="mt-3"></div>
                             </div>
 
+                            <!-- Options like color, material, and others -->
+                            <div class="col-12 col-sm-6">
+                                <select name="color" class="form-select border-0" style="height: 55px;">
+                                    <option selected>Barva</option>
+                                    <option value="Černá">Černá</option>
+                                    <option value="Bílá">Bílá</option>
+                                    <option value="Jakákoliv">Jakákoliv</option>
+                                    <option value="Uvedu v poznámce">Uvedu v poznámce</option>
+                                </select>
+                            </div>
+                    
+                            <div class="col-12 col-sm-6">
+                                <select name="use_location" class="form-select border-0" style="height: 55px;">
+                                    <option selected>Kde bude výtisk používán</option>
+                                    <option value="Venku">Venku</option>
+                                    <option value="Uvnitř">Uvnitř</option>
+                                    <option value="Součást stroje">Součást stroje</option>
+                                </select>
+                            </div>
+                    
+                            <!-- Delivery options -->
+                            <div class="col-12 col-sm-6">
+                                <select name="delivery" class="form-select border-0" style="height: 55px;">
+                                    <option selected>Doprava</option>
+                                    <option value="Zásilkovna - 75 Kč">Zásilkovna - 75 Kč</option>
+                                    <option value="Osobní převzetí Ostrava">Osobní převzetí Ostrava</option>
+                                </select>
+                            </div>
+                    
                             <div class="col-12">
                                 <button class="btn btn-primary w-100 py-3" type="submit">Odeslat</button>
                             </div>
                         </div>
                     </form>
+                    
 
                 </div>
             </div>
@@ -211,122 +211,80 @@
 </div>
 <!-- Form Section End -->
 
-
-
-<!-- CSS for drag-and-drop area -->
+<!-- Custom CSS for Drop Zone -->
 <style>
-    .drag-drop-zone {
-        width: 100%;
-        padding: 20px;
+    /* Base styles for the drop zone */
+    .drop-zone {
         border: 2px dashed #ccc;
-        border-radius: 5px;
+        border-radius: 8px;
+        padding: 30px;
         text-align: center;
         cursor: pointer;
-        background-color: #f9f9f9;
+        transition: border-color 0.3s, background-color 0.3s;
     }
 
-    .drag-drop-zone.dragging {
-        background-color: #e3f2fd;
-        border-color: #42a5f5;
+    /* Change the size and style of the icon */
+    .drop-zone i {
+        color: #ccc;
     }
 
-    .custom-file-upload {
-        display: inline-block;
-        padding: 6px 12px;
-        cursor: pointer;
-        border: 1px solid #ccc;
-        border-radius: 4px;
+    /* Default state of the drop zone */
+    .drop-zone p {
+        color: #888;
     }
 
-    #fileList {
-        margin-top: 10px;
+    /* Hover and active state when dragging a file */
+    .drop-zone.dragover {
+        border-color: #007bff;
+        background-color: #e7f3ff;
     }
 
-    #fileList div {
-        margin-bottom: 5px;
+    /* Lower height for the box */
+    .drop-zone {
+        height: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
-    
 </style>
 
-<!-- JavaScript to handle drag-and-drop and file removal -->
 <script>
-    const fileInput = document.getElementById('fileInput');
-    const dropArea = document.getElementById('dropArea');
-    const fileList = document.getElementById('fileList');
-    const fileCount = document.getElementById('fileCount');
-    let files = [];
+    // Get drop zone and file input
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const fileList = document.getElementById('file-list');
 
-    // Handle drag and drop events
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        dropArea.addEventListener(eventName, preventDefaults, false);
+    // Event listeners for drag and drop
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    dropZone.addEventListener('dragover', (event) => {
+        event.preventDefault();
+        dropZone.classList.add('dragover');
     });
 
-    ['dragenter', 'dragover'].forEach(eventName => {
-        dropArea.addEventListener(eventName, () => dropArea.classList.add('dragging'), false);
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
     });
 
-    ['dragleave', 'drop'].forEach(eventName => {
-        dropArea.addEventListener(eventName, () => dropArea.classList.remove('dragging'), false);
+    dropZone.addEventListener('drop', (event) => {
+        event.preventDefault();
+        dropZone.classList.remove('dragover');
+        fileInput.files = event.dataTransfer.files;
+        displayFileNames();
     });
 
-    dropArea.addEventListener('drop', handleDrop, false);
+    // Update file list when files are selected
+    fileInput.addEventListener('change', displayFileNames);
 
-    // Prevent default behavior for drag and drop events
-    function preventDefaults(e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-
-    // Handle dropped files
-    function handleDrop(e) {
-        let dt = e.dataTransfer;
-        let droppedFiles = dt.files;
-
-        for (let i = 0; i < droppedFiles.length; i++) {
-            files.push(droppedFiles[i]);
-        }
-        renderFileList();
-        updateFileCount();
-    }
-
-    // Open file input when clicking the drop area
-    dropArea.addEventListener('click', function () {
-        fileInput.click();
-    });
-
-    // Handle file input change
-    fileInput.addEventListener('change', function () {
-        for (let i = 0; i < fileInput.files.length; i++) {
-            files.push(fileInput.files[i]);
-        }
-        renderFileList();
-        updateFileCount();
-    });
-
-    // Render file list and remove buttons
-    function renderFileList() {
+    function displayFileNames() {
         fileList.innerHTML = '';
-        files.forEach((file, index) => {
-            const fileItem = document.createElement('div');
-            fileItem.innerHTML = `<span>${file.name}</span> <a href="#" onclick="removeFile(${index}, event)">Odebrat</a>`;
-            fileList.appendChild(fileItem);
-        });
-    }
-
-    // Remove selected file
-    function removeFile(index, event) {
-        event.preventDefault(); // Zabrání skrolování nahoru
-        files.splice(index, 1);
-        renderFileList();
-        updateFileCount();
-    }
-
-    // Update file count
-    function updateFileCount() {
-        fileCount.innerText = `Počet souborů: ${files.length}`;
+        for (let i = 0; i < fileInput.files.length; i++) {
+            const fileName = fileInput.files[i].name;
+            fileList.innerHTML += `<p>${fileName}</p>`;
+        }
     }
 </script>
-
         
     <!-- FAQ Section Start -->
     <div class="container-xxl py-5">

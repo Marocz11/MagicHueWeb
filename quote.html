@@ -159,11 +159,11 @@
                             </div>
                     
                             <div class="col-12">
-                                <label>Preferované formáty .STL / .STEP / .OBJ nebo případně skici / obrázky (Maximálně 25MB)</label>
+                                <label>Preferované formáty .STL / .OBJ nebo případně obrázky (Maximálně 25MB)</label>
                                 <div id="drop-zone" class="drop-zone">
                                     <i class="fa fa-cloud-upload-alt fa-2x"></i>
                                     <p class="mt-2">Přetáhněte soubory sem nebo klikněte pro výběr</p>
-                                    <input type="file" id="file-input" name="files[]" class="form-control d-none" multiple required>
+                                    <input type="file" id="file-input" name="files[]" class="form-control d-none" multiple>
                                 </div>
                                 <div id="file-list" class="mt-3"></div>
                             </div>
@@ -247,9 +247,28 @@
         justify-content: center;
         align-items: center;
     }
+
+    /* Styling for the file list */
+    .file-item {
+        display: flex;
+        justify-content: space-between;
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    .file-item button {
+        background: none;
+        border: none;
+        color: #ff0000;
+        cursor: pointer;
+    }
 </style>
 
 <script>
+    let filesArray = [];
+
     // Get drop zone and file input
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('file-input');
@@ -270,19 +289,50 @@
     dropZone.addEventListener('drop', (event) => {
         event.preventDefault();
         dropZone.classList.remove('dragover');
-        fileInput.files = event.dataTransfer.files;
-        displayFileNames();
+        handleFiles(event.dataTransfer.files);
     });
 
-    // Update file list when files are selected
-    fileInput.addEventListener('change', displayFileNames);
+    fileInput.addEventListener('change', () => handleFiles(fileInput.files));
 
+    // Handle adding files
+    function handleFiles(newFiles) {
+        for (let i = 0; i < newFiles.length; i++) {
+            filesArray.push(newFiles[i]);
+        }
+        updateFileInput();
+        displayFileNames();
+    }
+
+    // Update the file list display
     function displayFileNames() {
         fileList.innerHTML = '';
-        for (let i = 0; i < fileInput.files.length; i++) {
-            const fileName = fileInput.files[i].name;
-            fileList.innerHTML += `<p>${fileName}</p>`;
-        }
+        filesArray.forEach((file, index) => {
+            const fileItem = document.createElement('div');
+            fileItem.classList.add('file-item');
+            fileItem.innerHTML = `
+                <span>${file.name}</span>
+                <button onclick="removeFile(${index})">Smazat</button>
+            `;
+            fileList.appendChild(fileItem);
+        });
+    }
+
+    // Remove file from the list
+    function removeFile(index) {
+        filesArray.splice(index, 1);
+        updateFileInput();
+        displayFileNames();
+    }
+
+    // Update the hidden file input to include files from the array
+    function updateFileInput() {
+        const dataTransfer = new DataTransfer(); // Create a new DataTransfer object
+
+        filesArray.forEach((file) => {
+            dataTransfer.items.add(file); // Add each file to the DataTransfer object
+        });
+
+        fileInput.files = dataTransfer.files; // Set the input element's files property to the DataTransfer files
     }
 </script>
         

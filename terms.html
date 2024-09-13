@@ -126,7 +126,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light py-3 wow fadeIn" data-wow-delay="0.1s">
         <div class="container d-flex justify-content-center align-items-center">
@@ -160,6 +160,38 @@
     <script src="lib/isotope/isotope.pkgd.min.js"></script>
     <script src="lib/lightbox/js/lightbox.min.js"></script>
     <script src="js/main.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Check if the URL has the anchor for 'Nejčastější dotazy'
+            if (window.location.hash === "#nejcastejsi-dotazy") {
+                // Scroll to the element with a little offset
+                setTimeout(function() {
+                    var element = document.getElementById("nejcastejsi-dotazy");
+                    var headerOffset = 150; // Adjust this value as per the height of your fixed navbar
+                    var elementPosition = element.getBoundingClientRect().top;
+                    var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+    
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: "smooth"
+                    });
+                }, 10);
+            }
+        });
+    </script>
+    <style>
+        /* Smooth scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Optional CSS solution */
+        #nejcastejsi-dotazy {
+            scroll-margin-top: 150px; /* Adjust this value to your navbar height */
+        }
+    </style>
+    
 
 </body>
 

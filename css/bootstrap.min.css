@@ -5487,6 +5487,14 @@ fieldset:disabled .btn {
     }
 }
 
+.project-image {
+    transition: transform 0.3s ease;
+}
+
+.project-image:hover {
+    transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
 .list-group {
     display: flex;
     flex-direction: column;

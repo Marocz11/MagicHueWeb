@@ -1,4 +1,4 @@
- <?php
+<?php
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -11,18 +11,17 @@ $mail = new PHPMailer(true);
 try {
     // Server settings
     $mail->isSMTP();
-    $mail->Host = 'smtp.seznam.cz';
+    $mail->Host = 'smtp.forpsi.com'; // SMTP server
     $mail->SMTPAuth = true;
-    $mail->Username = 'kamsvatba@seznam.cz'; // Your username
-    $mail->Password = 'Marekkiki';  // Your password
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port = 587;
-    $mail->CharSet = 'UTF-8';
+    $mail->Username = 'info@printm.cz'; // Your new email address
+    $mail->Password = 's_a9eMAc2W';  // Your new email password
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Secure transfer
+    $mail->Port = 587; // Port for SMTP
+    $mail->CharSet = 'UTF-8'; // Encoding
 
     // Recipients
-    $mail->setFrom('kamsvatba@seznam.cz', 'Kam svatba');
-    $mail->addAddress('kamsvatba@seznam.cz', 'Příjemce');
-    $mail->addAddress('marek.halska@gmail.com', 'Marek Halska');
+    $mail->setFrom('info@printm.cz', 'Print M'); // Set sender email and name
+    $mail->addAddress('info@printm.cz', 'Print M'); // Add recipient (same email)
 
     // Collect form data
     $name = $_POST['name'] ?? 'Není zadáno';
@@ -51,8 +50,8 @@ try {
         }
     }
 
-    // Content
-    $mail->isHTML(true);
+    // Email content
+    $mail->isHTML(true); // Enable HTML content
     $mail->Subject = 'Nová zpráva z webu - ' . $subject;
     $mail->Body    = "<h1>Nová zpráva z webu</h1>
                       <p><strong>Jméno:</strong> {$name}</p>
@@ -65,10 +64,10 @@ try {
                       <p><strong>Doprava:</strong> {$delivery}</p>";
     $mail->AltBody = "Nová zpráva z webu\nJméno: {$name}\nEmail: {$email}\nTelefon: {$phone}\nPředmět: {$subject}\nPožadavek: {$request}\nBarva: {$color}\nKde bude výtisk používán: {$use_location}\nDoprava: {$delivery}";
 
+    // Send the email
     $mail->send();
-    header('Location: index.html?success=1'); // Redirect back to the form page
+    header('Location: index.html?success=1'); // Redirect back to the form page upon success
 } catch (Exception $e) {
     echo "Message could not be sent. Error: {$e->getMessage()}";
 }
 ?>
-

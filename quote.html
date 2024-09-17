@@ -32,46 +32,7 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
-
-
-    <style>
-        /* Popup Modal Style */
-        .modal {
-            position: fixed;
-            z-index: 999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .modal-content {
-            background-color: white;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 400px;
-            text-align: center;
-            border-radius: 10px;
-        }
-
-        .close-btn {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        .close-btn:hover {
-            background-color: #0056b3;
-        }
-    </style>
-
+    <link href="css/popup.css" rel="stylesheet">
 </head>
 
 <body>
@@ -397,46 +358,12 @@
     <script src="lib/isotope/isotope.pkgd.min.js"></script>
     <script src="lib/lightbox/js/lightbox.min.js"></script>
     <script src="js/quote.js"></script>
+    <script src="js/popup.js"></script>
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
 
         <!-- JavaScript for Modal and Form Submission -->
-    <script>
-        // Function to show the popup
-        function showConfirmationPopup() {
-            var popup = document.getElementById("confirmationPopup");
-            popup.style.display = "block";
-        }
-
-        // Function to close the popup and reload the page
-        document.querySelector(".close-btn").addEventListener("click", function () {
-            var popup = document.getElementById("confirmationPopup");
-            popup.style.display = "none";
-            location.reload(); // Reload the page after closing the popup
-        });
-
-        // Submit handler to send form and show popup after email is sent
-        document.getElementById('quoteForm').addEventListener('submit', function (e) {
-            e.preventDefault(); // Prevent the default form submission
-
-            var formData = new FormData(this);
-
-            // Send form data via AJAX
-            fetch('send_email.php', {
-                method: 'POST',
-                body: formData
-            }).then(function (response) {
-                if (response.ok) {
-                    showConfirmationPopup(); // Show the popup after email is sent
-                } else {
-                    alert('Došlo k chybě při odesílání formuláře. Zkuste to prosím znovu.');
-                }
-            }).catch(function (error) {
-                console.error('Error:', error);
-            });
-        });
-    </script>
 </body>
 
 </html>

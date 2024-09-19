@@ -77,7 +77,7 @@
                                     <label for="spzInput1" class="form-label">Text na SPZ (první je povinný):</label>
                                     <div class="d-flex align-items-center">
                                         <input type="text" name="spz[]" class="form-control border-0 spz-input" id="spzInput1" placeholder="Text na SPZ" oninput="updateSPZPreview(1)" required>
-                                        <canvas id="spzCanvas1" width="600" height="120" style="margin-left: 10px; border: 1px solid #ddd;"></canvas>
+                                        <canvas id="spzCanvas1"></canvas>
                                     </div>
                                 </div>
                                 <div id="spz-container" class="col-12"></div>
@@ -134,8 +134,8 @@
             newSpzInput.classList.add('mb-3');
             newSpzInput.innerHTML = `
                 <div class="d-flex align-items-center">
-                    <input type="text" name="spz[]" class="form-control border-0 spz-input" id="spzInput${spzIndex}" placeholder="Text na SPZ ${spzIndex}" oninput="updateSPZPreview(${spzIndex})" style="height: 55px;">
-                    <canvas id="spzCanvas${spzIndex}" width="600" height="15" style="margin-left: 10px; border: 1px solid #ddd;"></canvas>
+                    <input type="text" name="spz[]" class="form-control border-0 spz-input" id="spzInput${spzIndex}" placeholder="Text na SPZ ${spzIndex}" oninput="updateSPZPreview(${spzIndex})">
+                    <canvas id="spzCanvas${spzIndex}"></canvas>
                 </div>
             `;
             spzContainer.appendChild(newSpzInput);
@@ -149,25 +149,29 @@
             const canvas = document.getElementById(`spzCanvas${index}`);
             const ctx = canvas.getContext('2d');
 
+            // Set canvas dimensions to match the image
+            canvas.width = backgroundImage.width;
+            canvas.height = backgroundImage.height;
+
             // Clear the canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Keep the original size of the background image
-            const imageHeight = canvas.height;
-            const imageWidth = (backgroundImage.width / backgroundImage.height) * imageHeight;
-            ctx.drawImage(backgroundImage, 0, 0, imageWidth, imageHeight);
+            // Draw the background image with its correct aspect ratio
+            ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
-            // Set the text properties (1:5 split for the text)
-            ctx.font = 'bold 30px Arial';
+            // Set the text properties (centered within the white part)
+            ctx.font = 'bold 36px Arial'; // Increased font size
             ctx.fillStyle = 'black';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
 
-            // Calculate where to place the text (center in the white section)
-            const textX = (imageWidth + (canvas.width - imageWidth) * 0.75); // Right part for text (3/4 of the remaining space)
-            const textY = canvas.height / 2; // Vertically center the text
+            // Calculate the white area (around 1:5, adjust if necessary)
+            const whiteAreaStartX = canvas.width * 0.2; // Assume the white starts after the blue CZ part
+            const whiteAreaWidth = canvas.width * 0.75; // White area occupies the remaining 75% width
+            const textX = whiteAreaStartX + (whiteAreaWidth / 2) - (canvas.width * 0.006); // Shift the text 0.6% to the left
+            const textY = canvas.height / 2; // Center text vertically
 
-            // Draw the text on the canvas
+            // Draw the text within the white area
             ctx.fillText(text, textX, textY);
         }
 

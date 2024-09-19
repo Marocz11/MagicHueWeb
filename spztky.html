@@ -76,8 +76,8 @@
                                 <div class="col-12">
                                     <label for="spzInput1" class="form-label">Text na SPZ (první je povinný):</label>
                                     <div class="d-flex align-items-center">
-                                        <input type="text" name="spz[]" class="form-control border-0 spz-input" id="spzInput1" placeholder="Text na SPZ" oninput="updateSPZPreview(1)" required>
-                                        <canvas id="spzCanvas1"></canvas>
+                                        <input type="text" name="spz[]" class="form-control border-0 spz-input" id="spzInput1" placeholder="Text na SPZ" style="width: 20ch;" oninput="updateSPZPreview(1)" required>
+                                        <canvas id="spzCanvas1" style="margin-left: 30px;"></canvas>
                                     </div>
                                 </div>
                                 <div id="spz-container" class="col-12"></div>
@@ -134,8 +134,8 @@
             newSpzInput.classList.add('mb-3');
             newSpzInput.innerHTML = `
                 <div class="d-flex align-items-center">
-                    <input type="text" name="spz[]" class="form-control border-0 spz-input" id="spzInput${spzIndex}" placeholder="Text na SPZ ${spzIndex}" oninput="updateSPZPreview(${spzIndex})">
-                    <canvas id="spzCanvas${spzIndex}"></canvas>
+                    <input type="text" name="spz[]" class="form-control border-0 spz-input" id="spzInput${spzIndex}" placeholder="Text na SPZ ${spzIndex}" style="width: 20ch;" oninput="updateSPZPreview(${spzIndex})">
+                    <canvas id="spzCanvas${spzIndex}" style="margin-left: 30px;"></canvas>
                 </div>
             `;
             spzContainer.appendChild(newSpzInput);
@@ -149,12 +149,12 @@
             const canvas = document.getElementById(`spzCanvas${index}`);
             const ctx = canvas.getContext('2d');
 
-            // Set the canvas height to match the input text field
+            // Set the canvas height to match the input text field, and make the image twice as large
             const inputFieldHeight = document.getElementById(`spzInput${index}`).offsetHeight;
             const aspectRatio = backgroundImage.width / backgroundImage.height;
 
-            canvas.height = inputFieldHeight;
-            canvas.width = inputFieldHeight * aspectRatio; // Maintain the aspect ratio
+            canvas.height = inputFieldHeight * 2; // Make the image twice as high as the input field
+            canvas.width = canvas.height * aspectRatio; // Maintain the aspect ratio
 
             // Clear the canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -163,7 +163,7 @@
             ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
             // Set the text properties (centered within the white part)
-            ctx.font = 'bold 36px Arial'; // Increased font size
+            ctx.font = 'bold 48px Arial'; // Increased font size
             ctx.fillStyle = 'black';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';

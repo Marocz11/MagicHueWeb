@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+    <meta charset="utf-8">
+    <title>Print M</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Roboto:wght@500;700;900&display=swap" rel="stylesheet"> 
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
+        <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+            <h2 class="m-0 text-primary">Print M</h2>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="index.html" class="nav-item nav-link">Domů</a>
+                <a href="service.html" class="nav-item nav-link">Služby</a>
+                <a href="project.html" class="nav-item nav-link">Projekty</a>
+                <a href="cenik.html" class="nav-item nav-link active">Ceník</a>
+                <a href="about.html" class="nav-item nav-link">O nás</a>
+                <a href="quote.html" class="nav-item nav-link">Poptávka</a>
+            </div>
+            <a href="" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Získat cenovou nabídku<i class="fa fa-arrow-right ms-3"></i></a>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- Page Header Start -->
+    <div class="container-fluid py-1">
+        <div class="container text-center py-1">
+            <h1 class="display-4 text-primary">Ceník</h1>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+    <!-- Form Section Start -->
+    <div class="container-fluid bg-light overflow-hidden my-5 px-lg-5">
+        <div class="container quote px-lg-0">
+            <div class="row g-0 mx-lg-0">
+                <div class="col-lg-12 quote-text py-5 wow fadeIn" data-wow-delay="0.5s">
+                    <div class="p-lg-5 pe-lg-0">
+                        <div class="section-title text-start">
+                            <h1 class="display-5 mb-4">Poptávka</h1>
+                        </div>
+                        <p class="mb-4 pb-2">Potřebujete rychlou cenovou nabídku na vaše projekty? Nechte nám zprávu a my se vám ozveme s konkrétní nabídkou na míru.</p>
+
+                        <form id="quoteForm" action="send_email.php" method="POST" enctype="multipart/form-data">
+                            <div class="row g-3">
+                                <!-- Dynamic SPZ Inputs -->
+                                <div class="col-12">
+                                    <label for="spzInput1" class="form-label">Text na SPZ (první je povinný):</label>
+                                    <div class="d-flex align-items-center">
+                                        <input type="text" name="spz[]" class="form-control border-0 spz-input" id="spzInput1" placeholder="Text na SPZ" oninput="updateSPZPreview(1)" required>
+                                        <canvas id="spzCanvas1" width="600" height="120" style="margin-left: 10px; border: 1px solid #ddd;"></canvas>
+                                    </div>
+                                </div>
+                                <div id="spz-container" class="col-12"></div>
+                                <div class="col-12">
+                                    <button type="button" class="btn btn-secondary w-100 py-2" id="addSpzButton">Přidat další SPZ</button>
+                                </div>
+
+                                <!-- Other Form Inputs -->
+                                <div class="col-12 col-sm-6">
+                                    <input type="text" name="name" class="form-control border-0" placeholder="Jméno" style="height: 55px;" required>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <input type="email" name="email" class="form-control border-0" placeholder="E-mail" style="height: 55px;" required>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <input type="text" name="phone" class="form-control border-0" placeholder="Telefon" style="height: 55px;" required>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <input type="text" name="subject" class="form-control border-0" placeholder="Předmět" style="height: 55px;" required>
+                                </div>
+                                <div class="col-12">
+                                    <textarea name="request" class="form-control border-0" placeholder="Co nejvíce specifikujte Váš požadavek" rows="4" required></textarea>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="col-12">
+                                    <button class="btn btn-primary w-100 py-3" type="submit">Odeslat</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Form Section End -->
+
+    <script>
+        // Load the background image (SPZ template)
+        const backgroundImage = new Image();
+        backgroundImage.src = 'img/spztka2.png'; // Set the correct path to your image
+
+        // When the background image is loaded, draw the initial canvas
+        backgroundImage.onload = function() {
+            drawSPZ(1, '');
+        };
+
+        // Add another SPZ input
+        document.getElementById('addSpzButton').addEventListener('click', function() {
+            const spzContainer = document.getElementById('spz-container');
+            const spzIndex = spzContainer.childElementCount + 2; // First SPZ is already 1
+            const newSpzInput = document.createElement('div');
+            newSpzInput.classList.add('mb-3');
+            newSpzInput.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <input type="text" name="spz[]" class="form-control border-0 spz-input" id="spzInput${spzIndex}" placeholder="Text na SPZ ${spzIndex}" oninput="updateSPZPreview(${spzIndex})" style="height: 55px;">
+                    <canvas id="spzCanvas${spzIndex}" width="600" height="15" style="margin-left: 10px; border: 1px solid #ddd;"></canvas>
+                </div>
+            `;
+            spzContainer.appendChild(newSpzInput);
+
+            // Draw the blank SPZ on the new canvas
+            drawSPZ(spzIndex, '');
+        });
+
+        // Function to draw the SPZ with text
+        function drawSPZ(index, text) {
+            const canvas = document.getElementById(`spzCanvas${index}`);
+            const ctx = canvas.getContext('2d');
+
+            // Clear the canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Keep the original size of the background image
+            const imageHeight = canvas.height;
+            const imageWidth = (backgroundImage.width / backgroundImage.height) * imageHeight;
+            ctx.drawImage(backgroundImage, 0, 0, imageWidth, imageHeight);
+
+            // Set the text properties (1:5 split for the text)
+            ctx.font = 'bold 30px Arial';
+            ctx.fillStyle = 'black';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            // Calculate where to place the text (center in the white section)
+            const textX = (imageWidth + (canvas.width - imageWidth) * 0.75); // Right part for text (3/4 of the remaining space)
+            const textY = canvas.height / 2; // Vertically center the text
+
+            // Draw the text on the canvas
+            ctx.fillText(text, textX, textY);
+        }
+
+        // Function to update the SPZ canvas as the user types
+        function updateSPZPreview(index) {
+            const spzText = document.getElementById(`spzInput${index}`).value;
+            drawSPZ(index, spzText);
+        }
+    </script>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/isotope/isotope.pkgd.min.js"></script>
+    <script src="lib/lightbox/js/lightbox.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+</body>
+
+</html>

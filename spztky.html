@@ -149,9 +149,12 @@
             const canvas = document.getElementById(`spzCanvas${index}`);
             const ctx = canvas.getContext('2d');
 
-            // Set canvas dimensions to match the image
-            canvas.width = backgroundImage.width;
-            canvas.height = backgroundImage.height;
+            // Set the canvas height to match the input text field
+            const inputFieldHeight = document.getElementById(`spzInput${index}`).offsetHeight;
+            const aspectRatio = backgroundImage.width / backgroundImage.height;
+
+            canvas.height = inputFieldHeight;
+            canvas.width = inputFieldHeight * aspectRatio; // Maintain the aspect ratio
 
             // Clear the canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -168,7 +171,7 @@
             // Calculate the white area (around 1:5, adjust if necessary)
             const whiteAreaStartX = canvas.width * 0.2; // Assume the white starts after the blue CZ part
             const whiteAreaWidth = canvas.width * 0.75; // White area occupies the remaining 75% width
-            const textX = whiteAreaStartX + (whiteAreaWidth / 2) - (canvas.width * 0.006); // Shift the text 0.6% to the left
+            const textX = whiteAreaStartX + (whiteAreaWidth / 2) - (canvas.width * 0.02); // Shift the text 2% to the left
             const textY = canvas.height / 2; // Center text vertically
 
             // Draw the text within the white area

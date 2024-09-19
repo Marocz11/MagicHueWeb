@@ -159,11 +159,12 @@
             // Clear the canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Draw the background image with its correct aspect ratio
+            // Draw the background image
             ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
-            // Set the text properties (centered within the white part)
-            ctx.font = 'bold 48px Arial'; // Increased font size
+            // Set the text properties
+            let fontSize = 48; // Start with a large font size
+            ctx.font = `bold ${fontSize}px Arial`;
             ctx.fillStyle = 'black';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
@@ -171,8 +172,14 @@
             // Calculate the white area (around 1:5, adjust if necessary)
             const whiteAreaStartX = canvas.width * 0.2; // Assume the white starts after the blue CZ part
             const whiteAreaWidth = canvas.width * 0.75; // White area occupies the remaining 75% width
-            const textX = whiteAreaStartX + (whiteAreaWidth / 2) - (canvas.width * 0.02); // Shift the text 2% to the left
+            const textX = whiteAreaStartX + (whiteAreaWidth / 2) - (canvas.width * 0.006); // Shift the text 0.6% to the left
             const textY = canvas.height / 2; // Center text vertically
+
+            // Adjust the font size if the text is too wide for the white area
+            while (ctx.measureText(text).width > whiteAreaWidth && fontSize > 10) {
+                fontSize -= 2;
+                ctx.font = `bold ${fontSize}px Arial`;
+            }
 
             // Draw the text within the white area
             ctx.fillText(text, textX, textY);

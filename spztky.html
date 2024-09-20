@@ -75,8 +75,9 @@
                                 <!-- Dynamic SPZ Inputs -->
                                 <div class="col-12">
                                     <label for="spzInput1" class="form-label">Text na SPZ (první je povinný):</label>
-                                    <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center" id="spzContainer1">
                                         <input type="text" name="spz[]" class="form-control border-0 spz-input" id="spzInput1" placeholder="Text na SPZ" style="width: 20ch;" oninput="updateSPZPreview(1)" required>
+                                        <button type="button" class="btn btn-danger btn-sm rounded-circle ms-2" onclick="removeSPZ(1)">×</button>
                                         <canvas id="spzCanvas1" style="margin-left: 30px;"></canvas>
                                     </div>
                                 </div>
@@ -117,6 +118,8 @@
     <!-- Form Section End -->
 
     <script>
+        let spzCount = 1; // Track the number of SPZ inputs
+
         // Load the background image (SPZ template)
         const backgroundImage = new Image();
         backgroundImage.src = 'img/spztka2.png'; // Set the correct path to your image
@@ -128,13 +131,17 @@
 
         // Add another SPZ input
         document.getElementById('addSpzButton').addEventListener('click', function() {
+            spzCount++;
             const spzContainer = document.getElementById('spz-container');
-            const spzIndex = spzContainer.childElementCount + 2; // First SPZ is already 1
+            const spzIndex = spzCount; // Increment for the next SPZ index
+
             const newSpzInput = document.createElement('div');
             newSpzInput.classList.add('mb-3');
+            newSpzInput.id = `spzContainer${spzIndex}`;
             newSpzInput.innerHTML = `
                 <div class="d-flex align-items-center">
                     <input type="text" name="spz[]" class="form-control border-0 spz-input" id="spzInput${spzIndex}" placeholder="Text na SPZ ${spzIndex}" style="width: 20ch;" oninput="updateSPZPreview(${spzIndex})">
+                    <button type="button" class="btn btn-danger btn-sm rounded-circle ms-2" onclick="removeSPZ(${spzIndex})">×</button>
                     <canvas id="spzCanvas${spzIndex}" style="margin-left: 30px;"></canvas>
                 </div>
             `;
@@ -171,8 +178,8 @@
 
             // Calculate the white area (around 1:5, adjust if necessary)
             const whiteAreaStartX = canvas.width * 0.2; // Assume the white starts after the blue CZ part
-            const whiteAreaWidth = canvas.width * 0.75; // White area occupies the remaining 75% width
-            const textX = whiteAreaStartX + (whiteAreaWidth / 2) - (canvas.width * 0.006); // Shift the text 0.6% to the left
+            const whiteAreaWidth = canvas.width * 0.83; // White area occupies the remaining 75% width
+            const textX = whiteAreaStartX + (whiteAreaWidth / 2) - (canvas.width * 0.045); // Shift the text 0.6% to the left
             const textY = canvas.height / 2; // Center text vertically
 
             // Adjust the font size if the text is too wide for the white area
@@ -189,6 +196,12 @@
         function updateSPZPreview(index) {
             const spzText = document.getElementById(`spzInput${index}`).value;
             drawSPZ(index, spzText);
+        }
+
+        // Function to remove an SPZ input
+        function removeSPZ(index) {
+            const spzContainer = document.getElementById(`spzContainer${index}`);
+            spzContainer.remove();
         }
     </script>
 

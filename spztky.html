@@ -72,19 +72,23 @@
 
                         <form id="quoteForm" action="send_email.php" method="POST" enctype="multipart/form-data">
                             <div class="row g-3">
+
+                                <!-- Přidat SPZ tlačítko (zmenšené a vlevo) -->
+                                <div class="col-12 d-flex align-items-center">
+                                    <button type="button" class="btn btn-secondary py-1 px-3 me-3" id="addSpzButton">Přidat SPZ</button>
+                                    <span id="promotionText">Přidej ještě 4 SPZ pro jednu ZDARMA!</span>
+                                </div>
+
                                 <!-- Dynamic SPZ Inputs -->
                                 <div class="col-12">
                                     <label for="spzInput1" class="form-label">Text na SPZ (první je povinný):</label>
                                     <div class="d-flex align-items-center" id="spzContainer1">
                                         <input type="text" name="spz[]" class="form-control border-0 spz-input" id="spzInput1" placeholder="Text na SPZ" style="width: 20ch;" oninput="updateSPZPreview(1)" required>
-                                        <button type="button" class="btn btn-danger btn-sm rounded-circle ms-2" onclick="removeSPZ(1)">×</button>
+                                        <button type="button" class="btn btn-danger btn-sm ms-2 spz-remove-btn" onclick="removeSPZ(1)">×</button>
                                         <canvas id="spzCanvas1" style="margin-left: 30px;"></canvas>
                                     </div>
                                 </div>
                                 <div id="spz-container" class="col-12"></div>
-                                <div class="col-12">
-                                    <button type="button" class="btn btn-secondary w-100 py-2" id="addSpzButton">Přidat další SPZ</button>
-                                </div>
 
                                 <!-- Other Form Inputs -->
                                 <div class="col-12 col-sm-6">
@@ -141,7 +145,7 @@
             newSpzInput.innerHTML = `
                 <div class="d-flex align-items-center">
                     <input type="text" name="spz[]" class="form-control border-0 spz-input" id="spzInput${spzIndex}" placeholder="Text na SPZ ${spzIndex}" style="width: 20ch;" oninput="updateSPZPreview(${spzIndex})">
-                    <button type="button" class="btn btn-danger btn-sm rounded-circle ms-2" onclick="removeSPZ(${spzIndex})">×</button>
+                    <button type="button" class="btn btn-danger btn-sm ms-2 spz-remove-btn" onclick="removeSPZ(${spzIndex})">×</button>
                     <canvas id="spzCanvas${spzIndex}" style="margin-left: 30px;"></canvas>
                 </div>
             `;
@@ -149,6 +153,9 @@
 
             // Draw the blank SPZ on the new canvas
             drawSPZ(spzIndex, '');
+
+            // Update the promotion text after each addition
+            updatePromotionText();
         });
 
         // Function to draw the SPZ with text
@@ -202,6 +209,17 @@
         function removeSPZ(index) {
             const spzContainer = document.getElementById(`spzContainer${index}`);
             spzContainer.remove();
+            spzCount--;
+
+            // Update the promotion text after removal
+            updatePromotionText();
+        }
+
+        // Function to update the promotion text dynamically
+        function updatePromotionText() {
+            const promotionText = document.getElementById('promotionText');
+            const remaining = 5 - (spzCount % 5);
+            promotionText.innerText = `Přidej ještě ${remaining} SPZ pro jednu ZDARMA!`;
         }
     </script>
 

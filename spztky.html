@@ -14,7 +14,7 @@
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Roboto:wght@500;700;900&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Roboto:wght@500;700;900&display=swap" rel="stylesheet">
 
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
@@ -25,6 +25,74 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+
+    <style>
+        .spz-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .spz-item {
+            width: 48%;
+            margin-bottom: 10px;
+        }
+
+        .remove-btn {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin-left: 10px;
+            border-radius: 5px;
+            background-color: #ff4d4d;
+            color: white;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            border: none;
+        }
+
+        .add-spz-btn {
+            display: inline-block;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .status-box {
+            display: inline-block;
+            padding: 10px;
+            border-radius: 5px;
+            margin-left: 10px;
+            margin-bottom: 15px;
+        }
+
+        .status-text {
+            font-size: 18px;
+        }
+
+        .green-box {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .blue-box {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        .counter-container {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        .counter-container span {
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body>
@@ -70,25 +138,27 @@
                         </div>
                         <p class="mb-4 pb-2">Potřebujete rychlou cenovou nabídku na vaše projekty? Nechte nám zprávu a my se vám ozveme s konkrétní nabídkou na míru.</p>
 
+                        <button id="addSpzButton" class="add-spz-btn">Přidat SPZ</button>
+                        
+                        <!-- Status boxes for SPZ and delivery -->
+                        <div class="status-box blue-box">
+                            <span id="spzStatusText" class="status-text">Přidej ještě 5 pro SPZ ZDARMA</span>
+                        </div>
+                        <div class="status-box blue-box">
+                            <span id="deliveryStatusText" class="status-text">Přidej ještě 5 pro Dopravu ZDARMA</span>
+                        </div>
+
                         <form id="quoteForm" action="send_email.php" method="POST" enctype="multipart/form-data">
                             <div class="row g-3">
-
-                                <!-- Přidat SPZ tlačítko (zmenšené a vlevo) -->
-                                <div class="col-12 d-flex align-items-center">
-                                    <button type="button" class="btn btn-secondary py-1 px-3 me-3" id="addSpzButton">Přidat SPZ</button>
-                                    <span id="promotionText">Přidej ještě 4 SPZ pro jednu ZDARMA!</span>
-                                </div>
-
                                 <!-- Dynamic SPZ Inputs -->
-                                <div class="col-12">
-                                    <label for="spzInput1" class="form-label">Text na SPZ (první je povinný):</label>
-                                    <div class="d-flex align-items-center" id="spzContainer1">
-                                        <input type="text" name="spz[]" class="form-control border-0 spz-input" id="spzInput1" placeholder="Text na SPZ" style="width: 20ch;" oninput="updateSPZPreview(1)" required>
-                                        <button type="button" class="btn btn-danger btn-sm ms-2 spz-remove-btn" onclick="removeSPZ(1)">×</button>
-                                        <canvas id="spzCanvas1" style="margin-left: 30px;"></canvas>
-                                    </div>
+                                <div id="spz-container" class="spz-container"></div>
+
+                                <!-- Counter -->
+                                <div id="spzCounter" class="counter-container">
+                                    Celkový počet SPZ: <span id="totalSpz">0</span>, z toho zdarma: <span id="freeSpz">0</span><br>
+                                    Doprava: <span id="shippingCost">80</span> Kč (Zásilkovna)<br>
+                                    Celková cena včetně dopravy: <span id="totalPrice">80</span> Kč
                                 </div>
-                                <div id="spz-container" class="col-12"></div>
 
                                 <!-- Other Form Inputs -->
                                 <div class="col-12 col-sm-6">
@@ -122,41 +192,100 @@
     <!-- Form Section End -->
 
     <script>
-        let spzCount = 1; // Track the number of SPZ inputs
-
         // Load the background image (SPZ template)
         const backgroundImage = new Image();
         backgroundImage.src = 'img/spztka2.png'; // Set the correct path to your image
 
-        // When the background image is loaded, draw the initial canvas
-        backgroundImage.onload = function() {
-            drawSPZ(1, '');
-        };
+        // Track the number of SPZs with a unique identifier
+        let spzCount = 0;
+        let spzList = [];  // List to track existing SPZs
 
-        // Add another SPZ input
-        document.getElementById('addSpzButton').addEventListener('click', function() {
+        const spzContainer = document.getElementById('spz-container');
+        const addSpzButton = document.getElementById('addSpzButton');
+        const freeSpzText = document.getElementById('freeSpzText');
+        const spzStatusText = document.getElementById('spzStatusText');
+        const deliveryStatusText = document.getElementById('deliveryStatusText');
+        const spzStatusBox = spzStatusText.parentElement;
+        const deliveryStatusBox = deliveryStatusText.parentElement;
+        const totalSpzElem = document.getElementById('totalSpz');
+        const freeSpzElem = document.getElementById('freeSpz');
+        const totalPriceElem = document.getElementById('totalPrice');
+        const shippingCostElem = document.getElementById('shippingCost');
+        const pricePerSpz = 55;
+        const shippingPrice = 80;
+        const freeShippingThreshold = 12;
+
+        // Update free SPZ text and counter
+        function updateFreeSpzText() {
+            const freeSpzThreshold = Math.ceil((spzList.length + 1) / 5) * 5;
+            const remainingSpz = freeSpzThreshold - spzList.length;
+            const freeSpzCount = Math.floor(spzList.length / 5);
+            let totalPrice = pricePerSpz * (spzList.length - freeSpzCount);
+
+            // Update the SPZ status text and color
+            if (remainingSpz === 0) {
+                spzStatusText.innerHTML = `Tato SPZ je ZDARMA!`;
+                spzStatusBox.classList.remove('blue-box');
+                spzStatusBox.classList.add('green-box');
+            } else {
+                spzStatusText.innerHTML = `Přidej ještě ${remainingSpz} pro SPZ ZDARMA`;
+                spzStatusBox.classList.remove('green-box');
+                spzStatusBox.classList.add('blue-box');
+            }
+
+            // Determine if shipping is free and update the delivery status
+            if (spzList.length >= freeShippingThreshold) {
+                deliveryStatusText.innerHTML = "Doprava je ZDARMA!";
+                deliveryStatusBox.classList.remove('blue-box');
+                deliveryStatusBox.classList.add('green-box');
+                shippingCostElem.innerHTML = 0;
+            } else {
+                const remainingForFreeDelivery = freeShippingThreshold - spzList.length;
+                deliveryStatusText.innerHTML = `Přidej ještě ${remainingForFreeDelivery} pro Dopravu ZDARMA`;
+                deliveryStatusBox.classList.remove('green-box');
+                deliveryStatusBox.classList.add('blue-box');
+                shippingCostElem.innerHTML = shippingPrice;
+                totalPrice += shippingPrice;
+            }
+
+            totalSpzElem.innerHTML = spzList.length;
+            freeSpzElem.innerHTML = freeSpzCount;
+            totalPriceElem.innerHTML = totalPrice;
+        }
+
+        // Add another SPZ input at the end
+        addSpzButton.addEventListener('click', function() {
             spzCount++;
-            const spzContainer = document.getElementById('spz-container');
-            const spzIndex = spzCount; // Increment for the next SPZ index
+            spzList.push(spzCount);  // Add SPZ ID to list
 
-            const newSpzInput = document.createElement('div');
-            newSpzInput.classList.add('mb-3');
-            newSpzInput.id = `spzContainer${spzIndex}`;
-            newSpzInput.innerHTML = `
+            const spzDiv = document.createElement('div');
+            spzDiv.classList.add('spz-item');
+            spzDiv.id = `spz-item-${spzCount}`;
+            spzDiv.innerHTML = `
                 <div class="d-flex align-items-center">
-                    <input type="text" name="spz[]" class="form-control border-0 spz-input" id="spzInput${spzIndex}" placeholder="Text na SPZ ${spzIndex}" style="width: 20ch;" oninput="updateSPZPreview(${spzIndex})">
-                    <button type="button" class="btn btn-danger btn-sm ms-2 spz-remove-btn" onclick="removeSPZ(${spzIndex})">×</button>
-                    <canvas id="spzCanvas${spzIndex}" style="margin-left: 30px;"></canvas>
+                    <input type="text" name="spz[]" class="form-control border-0 spz-input" id="spzInput${spzCount}" placeholder="Text na SPZ ${spzCount}" style="width: 20ch;" oninput="updateSPZPreview(${spzCount})">
+                    <button type="button" class="remove-btn" onclick="removeSpz(${spzCount})">&times;</button>
+                    <canvas id="spzCanvas${spzCount}" style="margin-left: 20px;"></canvas>
                 </div>
             `;
-            spzContainer.appendChild(newSpzInput);
+            spzContainer.appendChild(spzDiv);
 
             // Draw the blank SPZ on the new canvas
-            drawSPZ(spzIndex, '');
+            drawSPZ(spzCount, '');
 
-            // Update the promotion text after each addition
-            updatePromotionText();
+            // Update free SPZ text and counter
+            updateFreeSpzText();
         });
+
+        // Remove SPZ input
+        function removeSpz(index) {
+            const spzItem = document.getElementById(`spz-item-${index}`);
+            if (spzItem) {
+                spzContainer.removeChild(spzItem);
+                spzList = spzList.filter(spz => spz !== index);  // Remove SPZ ID from list
+                updateFreeSpzText();
+            }
+        }
 
         // Function to draw the SPZ with text
         function drawSPZ(index, text) {
@@ -203,23 +332,6 @@
         function updateSPZPreview(index) {
             const spzText = document.getElementById(`spzInput${index}`).value;
             drawSPZ(index, spzText);
-        }
-
-        // Function to remove an SPZ input
-        function removeSPZ(index) {
-            const spzContainer = document.getElementById(`spzContainer${index}`);
-            spzContainer.remove();
-            spzCount--;
-
-            // Update the promotion text after removal
-            updatePromotionText();
-        }
-
-        // Function to update the promotion text dynamically
-        function updatePromotionText() {
-            const promotionText = document.getElementById('promotionText');
-            const remaining = 5 - (spzCount % 5);
-            promotionText.innerText = `Přidej ještě ${remaining} SPZ pro jednu ZDARMA!`;
         }
     </script>
 

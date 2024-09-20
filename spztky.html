@@ -223,7 +223,7 @@
             let totalPrice = pricePerSpz * (spzList.length - freeSpzCount);
 
             // Update the SPZ status text and color
-            if (remainingSpz === 0) {
+            if (spzList.length % 5 == 0) {
                 spzStatusText.innerHTML = `Tato SPZ je ZDARMA!`;
                 spzStatusBox.classList.remove('blue-box');
                 spzStatusBox.classList.add('green-box');

@@ -47,27 +47,61 @@ try {
     $pdf = new TCPDF();
     $pdf->AddPage();
 
-    // Add the custom font (DejaVu)
+    // Set font for Czech characters
     $pdf->SetFont('dejavusans', '', 12);
 
-    // Company Information
-    $pdf->Cell(0, 10, 'Jméno firmy: Marek Halška', 0, 1);
-    $pdf->Cell(0, 10, 'Adresa: Heřmanická 1280, Rychvald, 73532', 0, 1);
-    $pdf->Ln(20);
+    // Supplier Info (Dodavatel)
+    $html = <<<EOD
+    <h2>Objednávka</h2>
+    <p><strong>Dodavatel:</strong><br />
+    Marek Halška<br />
+    Heřmanická 1280<br />
+    73532 Rychvald<br />
+    IČ: 04372191<br />
+    Nejsme plátci DPH</p>
+    <p><strong>Kontaktní údaje:</strong><br />
+    E-mail: info@printm.cz<br />
+    Telefon: +420 737 359 994</p>
+    EOD;
 
-    // Customer Information
-    $pdf->Cell(0, 10, "Zákazník: {$name}", 0, 1);
-    $pdf->Cell(0, 10, "Telefon: {$phone}", 0, 1);
-    $pdf->Cell(0, 10, "Email: {$email}", 0, 1);
-    $pdf->Ln(20);
+    // Customer Info (Odběratel) - from form
+    $html .= <<<EOD
+    <p><strong>Odběratel:</strong><br />
+    {$name}<br />
+    Telefon: {$phone}<br />
+    E-mail: {$email}</p>
+    EOD;
 
     // Order Items
-    $pdf->Cell(0, 10, "Položky:", 0, 1);
-    $pdf->Cell(0, 10, "1. SPZtky (počet: {$spzCount}), Cena: {$spzTotal} Kč", 0, 1);
-    $pdf->Cell(0, 10, "2. Doprava, Cena: {$shippingCost} Kč", 0, 1);
-    $pdf->Ln(20);
-    
-    $pdf->Cell(0, 10, "Celkem k zaplacení: {$totalPrice} Kč", 0, 1);
+    $html .= <<<EOD
+    <table border="1" cellpadding="4">
+    <tr>
+        <th><strong>Položka</strong></th>
+        <th><strong>Počet</strong></th>
+        <th><strong>Cena za ks</strong></th>
+        <th><strong>Celkem</strong></th>
+    </tr>
+    <tr>
+        <td>SPZtky</td>
+        <td>{$spzCount}</td>
+        <td>{$pricePerSpz} Kč</td>
+        <td>{$spzTotal} Kč</td>
+    </tr>
+    <tr>
+        <td>Doprava</td>
+        <td>-</td>
+        <td>-</td>
+        <td>{$shippingCost} Kč</td>
+    </tr>
+    <tr>
+        <td colspan="3" align="right"><strong>Celkem k zaplacení:</strong></td>
+        <td>{$totalPrice} Kč</td>
+    </tr>
+    </table>
+    EOD;
+
+    // Output HTML content to PDF
+    $pdf->writeHTML($html, true, false, true, false, '');
 
     // Define a local path to save the PDF
     $pdfFileName = __DIR__ . '/objednavka_' . time() . '.pdf';  // Use absolute or relative path

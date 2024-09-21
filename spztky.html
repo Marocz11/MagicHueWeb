@@ -148,11 +148,15 @@
                             <span id="deliveryStatusText" class="status-text">Přidej ještě 5 pro Dopravu ZDARMA</span>
                         </div>
 
-                        <form id="quoteForm" action="send_email.php" method="POST" enctype="multipart/form-data">
+                        <!-- Form starts here -->
+                        <form id="quoteForm" action="send_email_spztky.php" method="POST" enctype="multipart/form-data">
                             <div class="row g-3">
                                 <!-- Dynamic SPZ Inputs -->
                                 <div id="spz-container" class="spz-container"></div>
 
+                                <!-- Hidden input to store SPZ images -->
+                                <input type="hidden" name="spz_images" id="spzImagesInput">
+                                
                                 <!-- Counter -->
                                 <div id="spzCounter" class="counter-container">
                                     Celkový počet SPZ: <span id="totalSpz">0</span>, z toho zdarma: <span id="freeSpz">0</span><br>
@@ -333,6 +337,21 @@
             const spzText = document.getElementById(`spzInput${index}`).value;
             drawSPZ(index, spzText);
         }
+
+        // Function to collect all SPZ images before form submission
+        function collectSpzImages() {
+            const spzImages = [];
+            for (let i = 0; i < spzList.length; i++) {
+                const canvas = document.getElementById(`spzCanvas${spzList[i]}`);
+                spzImages.push(canvas.toDataURL()); // Convert canvas to base64 string
+            }
+            document.getElementById('spzImagesInput').value = JSON.stringify(spzImages); // Store images as JSON string
+        }
+
+        // Attach event listener to the form submit event to collect images
+        document.getElementById('quoteForm').addEventListener('submit', function(event) {
+            collectSpzImages(); // Collect images before submission
+        });
     </script>
 
     <!-- JavaScript Libraries -->

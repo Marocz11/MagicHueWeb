@@ -44,13 +44,15 @@ try {
     $pdf->SetMargins(15, 15, 15);  // Set margins
     $pdf->AddPage();
 
+    // Set smaller line height ratio for reduced line spacing
+    $pdf->setCellHeightRatio(0.8); // Default is 1.0, reducing it to 0.8
+
     // Add the custom font (DejaVu)
     $pdf->SetFont('dejavusans', '', 12);
 
     // --- Header ---
     $pdf->SetFont('dejavusans', 'B', 16);
     $pdf->Cell(0, 15, 'Objednávka: ' . $orderNumber, 0, 1, 'C'); // Kombinace textu "Objednávka" a čísla objednávky
-
 
     // --- Dodavatel & Odběratel ---
     $pdf->SetFont('dejavusans', 'B', 10);
@@ -77,11 +79,6 @@ try {
     $pdf->SetFont('dejavusans', '', 10);
     $pdf->Cell(0, 10, $orderNumber, 0, 1, 'L'); // Use same number for variabilní symbol
 
-    $pdf->SetFont('dejavusans', 'B', 10);
-    $pdf->Cell(40, 10, 'Číslo objednávky:', 0, 0, 'L');
-    $pdf->SetFont('dejavusans', '', 10);
-    $pdf->Cell(0, 10, $orderNumber, 0, 1, 'L'); // Use same number for order number
-
     $pdf->Ln(5);  // Add spacing
 
     // --- Date Info ---
@@ -103,14 +100,15 @@ try {
     $pdf->Cell(80, 10, 'SPZtky', 1);
     $pdf->Cell(30, 10, $spzCount, 1, 0, 'C');
     $pdf->Cell(40, 10, '55 Kč', 1, 0, 'C');
-    $pdf->Cell(40, 10, $spzTotal . ' Kč', 1, 1, 'C');
+    // $pdf->Cell(40, 10, $spzTotal . ' Kč', 1, 1, 'C');
+    $pdf->Cell(40, 10, ($spzCount * (55)) . ' Kč', 1, 1, 'C');
 
     // Add free SPZ row if applicable
     if ($freeSpz > 0) {
-        $pdf->Cell(80, 10, 'SPZtky ZDARMA', 1);
-        $pdf->Cell(30, 10, -$freeSpz, 1, 0, 'C');
-        $pdf->Cell(40, 10, '55 Kč', 1, 0, 'C');
-        $pdf->Cell(40, 10, '-' . ($freeSpz * 55) . ' Kč', 1, 1, 'C');
+        $pdf->Cell(80, 10, 'SPZtky SLEVA', 1);
+        $pdf->Cell(30, 10, $freeSpz, 1, 0, 'C');
+        $pdf->Cell(40, 10, '- 55 Kč', 1, 0, 'C');
+        $pdf->Cell(40, 10, '-' . ($freeSpz * (55)) . ' Kč', 1, 1, 'C');
     }
 
     // --- Total Price ---

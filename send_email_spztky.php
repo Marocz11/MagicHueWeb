@@ -22,94 +22,94 @@ try {
     $mail->Port = 587;
     $mail->CharSet = 'UTF-8';
 
-    // Enable debugging for SMTP
-    $mail->SMTPDebug = 2;  // Set to 2 for full debug output
-
     // Collect form data
-    $name = $_POST['name'] ?? 'Unknown';  // Add default value if missing
-    $email = $_POST['email'] ?? 'Unknown';
-    $phone = $_POST['phone'] ?? 'Unknown';
-    $subject = $_POST['subject'] ?? 'Unknown';
-    $request = $_POST['request'] ?? 'Unknown';
-    $spzImages = json_decode($_POST['spz_images'], true); // Decode the base64 images
-    $spzCount = count($spzImages);
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
+    $subject = $_POST['subject'];
+    $request = $_POST['request'];
+    $spzImages = json_decode($_POST['spz_images'], true); // SPZ images from form (base64)
+    $spzCount = count($spzImages);  // Total number of SPZ entered
     $pricePerSpz = 55; // Price per SPZ
-    $spzTotal = $spzCount * $pricePerSpz;
-    $shippingCost = $spzCount >= 12 ? 0 : 80; // Free shipping if 12 or more
+    $freeSpz = floor($spzCount / 5); // Calculate free SPZ based on every 5th being free
+    $spzTotal = ($spzCount - $freeSpz) * $pricePerSpz; // Total price considering free SPZ
+    $shippingCost = $spzCount >= 12 ? 0 : 80; // Free shipping if 12 or more SPZ
     $totalPrice = $spzTotal + $shippingCost;
 
-    // Check if form inputs are not missing
-    if (!$name || !$email || !$subject || !$phone) {
-        throw new Exception("Missing form inputs");
-    }
-
-    // Create PDF using TCPDF
+    // --- Create PDF using TCPDF ---
     $pdf = new TCPDF();
+    $pdf->SetMargins(15, 15, 15);  // Set margins
     $pdf->AddPage();
 
-    // Set font for Czech characters
+    // Add the custom font (DejaVu)
     $pdf->SetFont('dejavusans', '', 12);
 
-    // Supplier Info (Dodavatel)
-    $html = <<<EOD
-    <h2>Objednávka</h2>
-    <p><strong>Dodavatel:</strong><br />
-    Marek Halška<br />
-    Heřmanická 1280<br />
-    73532 Rychvald<br />
-    IČ: 04372191<br />
-    Nejsme plátci DPH</p>
-    <p><strong>Kontaktní údaje:</strong><br />
-    E-mail: info@printm.cz<br />
-    Telefon: +420 737 359 994</p>
-    EOD;
+    // --- Header ---
+    $pdf->SetFont('dejavusans', 'B', 16);
+    $pdf->Cell(0, 15, 'Objednávka', 0, 1, 'C');
 
-    // Customer Info (Odběratel) - from form
-    $html .= <<<EOD
-    <p><strong>Odběratel:</strong><br />
-    {$name}<br />
-    Telefon: {$phone}<br />
-    E-mail: {$email}</p>
-    EOD;
+    // --- Dodavatel & Odběratel ---
+    $pdf->SetFont('dejavusans', 'B', 10);
+    $pdf->Cell(95, 10, 'Dodavatel:', 0, 0, 'L');
+    $pdf->Cell(95, 10, 'Odběratel:', 0, 1, 'L');
 
-    // Order Items
-    $html .= <<<EOD
-    <table border="1" cellpadding="4">
-    <tr>
-        <th><strong>Položka</strong></th>
-        <th><strong>Počet</strong></th>
-        <th><strong>Cena za ks</strong></th>
-        <th><strong>Celkem</strong></th>
-    </tr>
-    <tr>
-        <td>SPZtky</td>
-        <td>{$spzCount}</td>
-        <td>{$pricePerSpz} Kč</td>
-        <td>{$spzTotal} Kč</td>
-    </tr>
-    <tr>
-        <td>Doprava</td>
-        <td>-</td>
-        <td>-</td>
-        <td>{$shippingCost} Kč</td>
-    </tr>
-    <tr>
-        <td colspan="3" align="right"><strong>Celkem k zaplacení:</strong></td>
-        <td>{$totalPrice} Kč</td>
-    </tr>
-    </table>
-    EOD;
+    $pdf->SetFont('dejavusans', '', 10);
+    $pdf->Cell(95, 10, 'Marek Halška', 0, 0, 'L');
+    $pdf->Cell(95, 10, "{$name}", 0, 1, 'L');
+    $pdf->Cell(95, 10, 'Heřmanická 1280, Rychvald, 73532', 0, 0, 'L');
+    $pdf->Cell(95, 10, "Telefon: {$phone}", 0, 1, 'L');
+    $pdf->Cell(95, 10, 'IČ: 04372191, Nejsme plátci DPH', 0, 0, 'L');
+    $pdf->Cell(95, 10, "Email: {$email}", 0, 1, 'L');
+    $pdf->Ln(10);  // Add spacing
 
-    // Output HTML content to PDF
-    $pdf->writeHTML($html, true, false, true, false, '');
+    // --- Bankovní Údaje ---
+    $pdf->SetFont('dejavusans', 'B', 10);
+    $pdf->Cell(0, 10, 'Bankovní účet:', 0, 1, 'L');
+    $pdf->SetFont('dejavusans', '', 10);
+    $pdf->Cell(0, 10, '262192938/0600', 0, 1, 'L');
+    $pdf->Cell(0, 10, 'IBAN: CZ71 0600 0000 0002 6219 2938', 0, 1, 'L');
+    $pdf->Cell(0, 10, 'SWIFT: AGBACZPP', 0, 1, 'L');
+    $pdf->Ln(5);  // Add spacing
 
-    // Define a local path to save the PDF
-    $pdfFileName = __DIR__ . '/objednavka_' . time() . '.pdf';  // Use absolute or relative path
+    // --- Date Info ---
+    $pdf->SetFont('dejavusans', '', 10);
+    $pdf->Cell(0, 10, 'Datum vystavení: ' . date('d.m.Y'), 0, 1, 'L');
+    $pdf->Cell(0, 10, 'Platnost do: ' . date('d.m.Y', strtotime('+14 days')), 0, 1, 'L');
+    $pdf->Ln(5);  // Add spacing
+
+    // --- Table Header ---
+    $pdf->SetFont('dejavusans', 'B', 10);
+    $pdf->SetFillColor(200, 200, 200);  // Gray background
+    $pdf->Cell(80, 10, 'Označení dodávky', 1, 0, 'C', 1);
+    $pdf->Cell(30, 10, 'Počet', 1, 0, 'C', 1);
+    $pdf->Cell(40, 10, 'Cena za ks', 1, 0, 'C', 1);
+    $pdf->Cell(40, 10, 'Celkem', 1, 1, 'C', 1);
+
+    // --- Table Items ---
+    $pdf->SetFont('dejavusans', '', 10);
+    $pdf->Cell(80, 10, 'SPZtky', 1);
+    $pdf->Cell(30, 10, $spzCount, 1, 0, 'C');
+    $pdf->Cell(40, 10, '55 Kč', 1, 0, 'C');
+    $pdf->Cell(40, 10, $spzTotal . ' Kč', 1, 1, 'C');
+
+    // Add free SPZ row if applicable
+    if ($freeSpz > 0) {
+        $pdf->Cell(80, 10, 'SPZtky ZDARMA', 1);
+        $pdf->Cell(30, 10, -$freeSpz, 1, 0, 'C');
+        $pdf->Cell(40, 10, '55 Kč', 1, 0, 'C');
+        $pdf->Cell(40, 10, '-' . ($freeSpz * 55) . ' Kč', 1, 1, 'C');
+    }
+
+    // --- Total Price ---
+    $pdf->SetFont('dejavusans', 'B', 10);
+    $pdf->Cell(150, 10, 'Cena celkem:', 1, 0, 'R');
+    $pdf->Cell(40, 10, "{$totalPrice} Kč", 1, 1, 'C');
 
     // Save PDF to file
-    $pdf->Output($pdfFileName, 'F');  // 'F' stands for "File"
+    $pdfFileName = __DIR__ . '/objednavka_' . time() . '.pdf';  // Use absolute or relative path
+    $pdf->Output($pdfFileName, 'F');  // Save the file
 
-    // Send email
+    // --- Send email ---
     $mail->setFrom('info@printm.cz', 'Print M');
     $mail->addAddress($email); // Send email to the customer
     $mail->addAddress('info@printm.cz'); // Send a copy to your email
@@ -117,14 +117,7 @@ try {
     // Attach the PDF
     $mail->addAttachment($pdfFileName);
 
-    // Attach SPZ images as files
-    foreach ($spzImages as $index => $spzImage) {
-        $imageData = explode(',', $spzImage)[1]; // Remove the data URL header
-        $imageContent = base64_decode($imageData); // Decode the base64 data
-        $mail->addStringAttachment($imageContent, "spz_$index.png"); // Attach as a PNG file
-    }
-
-    // Email content
+    // Send the email
     $mail->isHTML(true);
     $mail->Subject = 'Objednávkový formulář - ' . $subject;
     $mail->Body = "<h1>Děkujeme za Vaši objednávku</h1>

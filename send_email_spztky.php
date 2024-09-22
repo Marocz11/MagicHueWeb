@@ -100,7 +100,6 @@ try {
     $pdf->Cell(80, 10, 'SPZtky', 1);
     $pdf->Cell(30, 10, $spzCount, 1, 0, 'C');
     $pdf->Cell(40, 10, '55 Kč', 1, 0, 'C');
-    // $pdf->Cell(40, 10, $spzTotal . ' Kč', 1, 1, 'C');
     $pdf->Cell(40, 10, ($spzCount * (55)) . ' Kč', 1, 1, 'C');
 
     // Add free SPZ row if applicable
@@ -139,7 +138,7 @@ try {
 
     // Send the email
     $mail->send();
-    echo "Zpráva byla odeslána.";
+    echo "success"; // Return success to the JavaScript function
 } catch (Exception $e) {
     echo "Chyba při odesílání zprávy: {$e->getMessage()}";
 }

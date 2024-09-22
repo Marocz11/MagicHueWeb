@@ -25,6 +25,7 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+    <link href="css/popup.css" rel="stylesheet">
 
     <style>
         .spz-container {
@@ -195,6 +196,14 @@
     </div>
     <!-- Form Section End -->
 
+    <!-- Popup Modal for Success -->
+    <div id="confirmationPopup" class="modal" style="display: none;">
+        <div class="modal-content">
+            <p>Děkujeme za vaši objednávku. Potvrzení objednávky vám příjde na email. Objednávku můžete ihned zaplatit tímto QR kódem.</p>
+            <button class="close-btn">Zavřít</button>
+        </div>
+    </div>
+
     <script>
         // Load the background image (SPZ template)
         const backgroundImage = new Image();
@@ -364,6 +373,7 @@
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
     <script src="lib/isotope/isotope.pkgd.min.js"></script>
     <script src="lib/lightbox/js/lightbox.min.js"></script>
+    <script src="js/popup2.js"></script>
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>

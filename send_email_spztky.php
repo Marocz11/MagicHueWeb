@@ -36,6 +36,9 @@ try {
     $shippingCost = $spzCount >= 12 ? 0 : 80; // Free shipping if 12 or more SPZ
     $totalPrice = $spzTotal + $shippingCost;
 
+    // Generate order number and variable symbol in YYMMDDHHMMSS format
+    $orderNumber = date('ymdHis');
+
     // --- Create PDF using TCPDF ---
     $pdf = new TCPDF();
     $pdf->SetMargins(15, 15, 15);  // Set margins
@@ -46,7 +49,8 @@ try {
 
     // --- Header ---
     $pdf->SetFont('dejavusans', 'B', 16);
-    $pdf->Cell(0, 15, 'Objednávka', 0, 1, 'C');
+    $pdf->Cell(0, 15, 'Objednávka: ' . $orderNumber, 0, 1, 'C'); // Kombinace textu "Objednávka" a čísla objednávky
+
 
     // --- Dodavatel & Odběratel ---
     $pdf->SetFont('dejavusans', 'B', 10);
@@ -64,11 +68,20 @@ try {
 
     // --- Bankovní Údaje ---
     $pdf->SetFont('dejavusans', 'B', 10);
-    $pdf->Cell(0, 10, 'Bankovní účet:', 0, 1, 'L');
+    $pdf->Cell(40, 10, 'Bankovní účet:', 0, 0, 'L');
     $pdf->SetFont('dejavusans', '', 10);
     $pdf->Cell(0, 10, '262192938/0600', 0, 1, 'L');
-    $pdf->Cell(0, 10, 'IBAN: CZ71 0600 0000 0002 6219 2938', 0, 1, 'L');
-    $pdf->Cell(0, 10, 'SWIFT: AGBACZPP', 0, 1, 'L');
+
+    $pdf->SetFont('dejavusans', 'B', 10);
+    $pdf->Cell(40, 10, 'Variabilní symbol:', 0, 0, 'L');
+    $pdf->SetFont('dejavusans', '', 10);
+    $pdf->Cell(0, 10, $orderNumber, 0, 1, 'L'); // Use same number for variabilní symbol
+
+    $pdf->SetFont('dejavusans', 'B', 10);
+    $pdf->Cell(40, 10, 'Číslo objednávky:', 0, 0, 'L');
+    $pdf->SetFont('dejavusans', '', 10);
+    $pdf->Cell(0, 10, $orderNumber, 0, 1, 'L'); // Use same number for order number
+
     $pdf->Ln(5);  // Add spacing
 
     // --- Date Info ---

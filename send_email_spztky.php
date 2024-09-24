@@ -8,6 +8,7 @@ require 'PHPMailer/src/Exception.php';
 require 'PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/src/SMTP.php';
 require 'tcpdf/tcpdf.php';  // Include the TCPDF library
+require 'phpqrcode/qrlib.php';  // Include the PHP QR Code library
 
 $mail = new PHPMailer(true);
 
@@ -37,7 +38,20 @@ try {
     $totalPrice = $spzTotal + $shippingCost;
 
     // Generate order number and variable symbol in YYMMDDHHMMSS format
-    $orderNumber = date('ymdHis');
+    $orderNumber = date('mdHis');
+
+    // --- Vytvoření správného IBAN a QR kódu ---
+    $iban = 'CZ7106000000000262192938'; // Správný IBAN pro 262192938/0600
+    $amount = number_format($totalPrice, 2, '.', ''); // Částka k zaplacení ve správném formátu
+    $message = "Objednávka $orderNumber"; // Zpráva pro příjemce
+    $vs = $orderNumber; // Variabilní symbol je číslo objednávky
+
+    // Formát QR platby podle standardu
+    $qrPlatbaData = "SPD*1.0*ACC:$iban*AM:$amount*CC:CZK*MSG:$message*X-VS:$vs";
+
+    // Vytvoření QR kódu a uložení do souboru
+    $qrCodeFileName = __DIR__ . '/qrcode_' . time() . '.png';
+    QRcode::png($qrPlatbaData, $qrCodeFileName, QR_ECLEVEL_L, 5);  // Generate the QR code
 
     // --- Create PDF using TCPDF ---
     $pdf = new TCPDF();
@@ -114,6 +128,10 @@ try {
     $pdf->SetFont('dejavusans', 'B', 10);
     $pdf->Cell(150, 10, 'Cena celkem:', 1, 0, 'R');
     $pdf->Cell(40, 10, "{$totalPrice} Kč", 1, 1, 'C');
+
+    // Přidání QR kódu do PDF
+    $pdf->Ln(10); // Přidat prostor před QR kódem
+    $pdf->Image($qrCodeFileName, 80, $pdf->GetY(), 50, 50); // Přidání QR kódu (nastavit pozici a velikost)
 
     // Save PDF to file
     $pdfFileName = __DIR__ . '/objednavka_' . time() . '.pdf';  // Use absolute or relative path

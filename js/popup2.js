@@ -18,7 +18,7 @@ document.getElementById('quoteForm').addEventListener('submit', function (e) {
     var formData = new FormData(this);
 
     // Send form data via AJAX
-    fetch('send_email.php', {
+    fetch('send_email_spztky.php', {
         method: 'POST',
         body: formData
     }).then(function (response) {

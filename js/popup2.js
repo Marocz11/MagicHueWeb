@@ -1,13 +1,13 @@
 // Function to show the popup
 function showConfirmationPopup() {
     var popup = document.getElementById("confirmationPopup");
-    popup.style.display = "block";
+    popup.style.display = "flex"; // Display as flex for centering
 }
 
 // Function to close the popup and reload the page
 document.querySelector(".close-btn").addEventListener("click", function () {
     var popup = document.getElementById("confirmationPopup");
-    popup.style.display = "none";
+    popup.style.display = "none"; // Hide the popup
     location.reload(); // Reload the page after closing the popup
 });
 

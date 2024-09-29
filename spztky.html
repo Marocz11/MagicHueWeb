@@ -215,7 +215,6 @@
 
         const spzContainer = document.getElementById('spz-container');
         const addSpzButton = document.getElementById('addSpzButton');
-        const freeSpzText = document.getElementById('freeSpzText');
         const spzStatusText = document.getElementById('spzStatusText');
         const deliveryStatusText = document.getElementById('deliveryStatusText');
         const spzStatusBox = spzStatusText.parentElement;
@@ -226,7 +225,10 @@
         const shippingCostElem = document.getElementById('shippingCost');
         const pricePerSpz = 55;
         const shippingPrice = 80;
-        const freeShippingThreshold = 12;
+        const freeShippingThreshold = 10; // Updated to 10 SPZs for free shipping
+
+        // Default SPZ texts
+        const defaultSpzTexts = ["3T9 1234", "Miriam", "RUPERB"];
 
         // Update free SPZ text and counter
         function updateFreeSpzText() {
@@ -266,8 +268,8 @@
             totalPriceElem.innerHTML = totalPrice;
         }
 
-        // Add another SPZ input at the end
-        addSpzButton.addEventListener('click', function() {
+        // Add SPZ input with default text
+        function addSpzWithText(text) {
             spzCount++;
             spzList.push(spzCount);  // Add SPZ ID to list
 
@@ -276,27 +278,25 @@
             spzDiv.id = `spz-item-${spzCount}`;
             spzDiv.innerHTML = `
                 <div class="d-flex align-items-center">
-                    <input type="text" name="spz[]" class="form-control border-0 spz-input" id="spzInput${spzCount}" placeholder="Text na SPZ ${spzCount}" style="width: 20ch;" oninput="updateSPZPreview(${spzCount})">
+                    <input type="text" name="spz[]" class="form-control border-0 spz-input" id="spzInput${spzCount}" value="${text}" style="width: 20ch;" onfocus="clearDefaultText(${spzCount}, '${text}')" oninput="updateSPZPreview(${spzCount})">
                     <button type="button" class="remove-btn" onclick="removeSpz(${spzCount})">&times;</button>
                     <canvas id="spzCanvas${spzCount}" style="margin-left: 20px;"></canvas>
                 </div>
             `;
             spzContainer.appendChild(spzDiv);
 
-            // Draw the blank SPZ on the new canvas
-            drawSPZ(spzCount, '');
+            // Draw the SPZ with the default text
+            drawSPZ(spzCount, text);
 
             // Update free SPZ text and counter
             updateFreeSpzText();
-        });
+        }
 
-        // Remove SPZ input
-        function removeSpz(index) {
-            const spzItem = document.getElementById(`spz-item-${index}`);
-            if (spzItem) {
-                spzContainer.removeChild(spzItem);
-                spzList = spzList.filter(spz => spz !== index);  // Remove SPZ ID from list
-                updateFreeSpzText();
+        // Function to clear the default text when the user clicks on the input
+        function clearDefaultText(index, defaultText) {
+            const spzInput = document.getElementById(`spzInput${index}`);
+            if (spzInput.value === defaultText) {
+                spzInput.value = ""; // Clear the default text
             }
         }
 
@@ -323,13 +323,16 @@
             ctx.font = `bold ${fontSize}px Arial`;
             ctx.fillStyle = 'black';
             ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
+            ctx.textBaseline = 'middle'; // Ensure the text is aligned in the middle vertically
 
             // Calculate the white area (around 1:5, adjust if necessary)
             const whiteAreaStartX = canvas.width * 0.2; // Assume the white starts after the blue CZ part
             const whiteAreaWidth = canvas.width * 0.83; // White area occupies the remaining 75% width
-            const textX = whiteAreaStartX + (whiteAreaWidth / 2) - (canvas.width * 0.045); // Shift the text 0.6% to the left
-            const textY = canvas.height / 2; // Center text vertically
+            const textX = whiteAreaStartX + (whiteAreaWidth / 2) - (canvas.width * 0.045); // Center horizontally
+
+            // Vertically center the text, then move it down by 10% of the canvas height
+            const verticalShiftPercentage = 0.07; // 10% shift
+            const textY = (canvas.height / 2) + (canvas.height * verticalShiftPercentage);
 
             // Adjust the font size if the text is too wide for the white area
             while (ctx.measureText(text).width > whiteAreaWidth && fontSize > 10) {
@@ -341,26 +344,24 @@
             ctx.fillText(text, textX, textY);
         }
 
+
+
         // Function to update the SPZ canvas as the user types
         function updateSPZPreview(index) {
             const spzText = document.getElementById(`spzInput${index}`).value;
             drawSPZ(index, spzText);
         }
 
-        // Function to collect all SPZ images before form submission
-        function collectSpzImages() {
-            const spzImages = [];
-            for (let i = 0; i < spzList.length; i++) {
-                const canvas = document.getElementById(`spzCanvas${spzList[i]}`);
-                spzImages.push(canvas.toDataURL()); // Convert canvas to base64 string
-            }
-            document.getElementById('spzImagesInput').value = JSON.stringify(spzImages); // Store images as JSON string
+        // Add 3 default SPZ on page load
+        window.onload = function() {
+            defaultSpzTexts.forEach(text => addSpzWithText(text));
         }
 
-        // Attach event listener to the form submit event to collect images
-        document.getElementById('quoteForm').addEventListener('submit', function(event) {
-            collectSpzImages(); // Collect images before submission
+        // Add another SPZ input at the end
+        addSpzButton.addEventListener('click', function() {
+            addSpzWithText(`Text na SPZ ${spzCount + 1}`);
         });
+
     </script>
 
     <!-- JavaScript Libraries -->

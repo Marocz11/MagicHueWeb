@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>Print M</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="" name="keywords">
     <meta content="" name="description">
 
@@ -93,6 +93,10 @@
         .counter-container span {
             font-weight: bold;
         }
+
+
+
+
     </style>
 </head>
 
@@ -228,7 +232,7 @@
         const freeShippingThreshold = 10; // Updated to 10 SPZs for free shipping
 
         // Default SPZ texts
-        const defaultSpzTexts = ["3T9 1234", "Miriam", "RUPERB"];
+        const defaultSpzTexts = ["3T9 1234", "Miriam", "SUPERB"];
 
         // Update free SPZ text and counter
         function updateFreeSpzText() {
@@ -277,12 +281,15 @@
             spzDiv.classList.add('spz-item');
             spzDiv.id = `spz-item-${spzCount}`;
             spzDiv.innerHTML = `
-                <div class="d-flex align-items-center">
-                    <input type="text" name="spz[]" class="form-control border-0 spz-input" id="spzInput${spzCount}" value="${text}" style="width: 20ch;" onfocus="clearDefaultText(${spzCount}, '${text}')" oninput="updateSPZPreview(${spzCount})">
-                    <button type="button" class="remove-btn" onclick="removeSpz(${spzCount})">&times;</button>
-                    <canvas id="spzCanvas${spzCount}" style="margin-left: 20px;"></canvas>
+                <div class="spz-item">
+                    <div class="d-flex">
+                        <input type="text" name="spz[]" class="form-control border-0 spz-input" id="spzInput${spzCount}" value="${text}" style="flex-grow: 1;" onfocus="clearDefaultText(${spzCount}, '${text}')" oninput="updateSPZPreview(${spzCount})">
+                        <button type="button" class="remove-btn" onclick="removeSpz(${spzCount})">&times;</button>
+                    </div>
+                    <canvas id="spzCanvas${spzCount}" style="margin-top: 10px;"></canvas>
                 </div>
             `;
+
             spzContainer.appendChild(spzDiv);
 
             // Draw the SPZ with the default text
@@ -331,7 +338,7 @@
             const textX = whiteAreaStartX + (whiteAreaWidth / 2) - (canvas.width * 0.045); // Center horizontally
 
             // Vertically center the text, then move it down by 10% of the canvas height
-            const verticalShiftPercentage = 0.07; // 10% shift
+            const verticalShiftPercentage = 0.01; // 10% shift
             const textY = (canvas.height / 2) + (canvas.height * verticalShiftPercentage);
 
             // Adjust the font size if the text is too wide for the white area
@@ -361,6 +368,16 @@
         addSpzButton.addEventListener('click', function() {
             addSpzWithText(''); // Pass an empty string to add a new blank input field
         });
+
+        // Remove SPZ input
+        function removeSpz(index) {
+            const spzItem = document.getElementById(`spz-item-${index}`);
+            if (spzItem) {
+                spzContainer.removeChild(spzItem);
+                spzList = spzList.filter(spz => spz !== index);  // Remove SPZ ID from list
+                updateFreeSpzText();
+            }
+        }
 
     </script>
 

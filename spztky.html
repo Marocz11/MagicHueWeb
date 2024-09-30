@@ -28,31 +28,33 @@
     <link href="css/popup2.css" rel="stylesheet">
 
     <style>
+        /* Styl pro PC zůstává stejný */
         .spz-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
         }
-
+    
         .spz-item {
             width: 48%;
             margin-bottom: 10px;
         }
-
+    
         .remove-btn {
-            display: inline-block;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             width: 30px;
             height: 30px;
             margin-left: 10px;
             border-radius: 5px;
             background-color: #ff4d4d;
             color: white;
-            text-align: center;
-            line-height: 30px;
             font-weight: bold;
             border: none;
+            cursor: pointer;
         }
-
+    
         .add-spz-btn {
             display: inline-block;
             background-color: #0dcaf0;
@@ -62,7 +64,7 @@
             border-radius: 5px;
             margin-bottom: 15px;
         }
-
+    
         .status-box {
             display: inline-block;
             padding: 10px;
@@ -70,34 +72,75 @@
             margin-left: 10px;
             margin-bottom: 15px;
         }
-
+    
         .status-text {
             font-size: 18px;
         }
-
+    
         .green-box {
             background-color: #28a745;
             color: white;
         }
-
+    
         .blue-box {
             background-color: #0d6efd;
             color: white;
         }
-
+    
         .counter-container {
             margin-top: 20px;
             font-size: 18px;
         }
-
+    
         .counter-container span {
             font-weight: bold;
         }
-
-
-
-
+    
+        /* Mobilní zobrazení */
+        @media (max-width: 768px) {
+            .spz-container {
+                display: block;
+            }
+    
+            .spz-item {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+    
+            .spz-input {
+                margin-bottom: 10px;
+            }
+    
+            .spz-item canvas {
+                margin-top: 10px;
+                width: 100%;
+            }
+    
+            .status-box {
+                display: block;
+                margin-left: 0; /* Zarovná status box vlevo */
+            }
+            .remove-btn {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 30px;
+                height: 30px;
+                margin-left: 10px;
+                border-radius: 5px;
+                background-color: #ff4d4d;
+                color: white;
+                font-weight: bold;
+                border: none;
+                cursor: pointer;
+            }
+            .add-spz-btn {
+                width: 100%;
+            }
+        }
     </style>
+    
+    
 </head>
 
 <body>

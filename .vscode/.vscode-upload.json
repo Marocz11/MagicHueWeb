@@ -1,0 +1,9 @@
+{
+  "protocol": "ftp",
+  "host": "ftpx.forpsi.com",
+  "port": 21,
+  "username": "www.printm.cz",
+  "password": "8cdRHkd5fm",
+  "remotePath": "/www",
+  "uploadOnSave": true
+}

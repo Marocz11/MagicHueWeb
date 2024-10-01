@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="cs">
-
 <head>
     <meta charset="utf-8">
     <title>Print M</title>
@@ -28,18 +27,17 @@
     <link href="css/popup2.css" rel="stylesheet">
 
     <style>
-        /* Styl pro PC zůstává stejný */
         .spz-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
         }
-    
+
         .spz-item {
             width: 48%;
             margin-bottom: 10px;
         }
-    
+
         .remove-btn {
             display: flex;
             justify-content: center;
@@ -54,7 +52,7 @@
             border: none;
             cursor: pointer;
         }
-    
+
         .add-spz-btn {
             display: inline-block;
             background-color: #0dcaf0;
@@ -64,7 +62,7 @@
             border-radius: 5px;
             margin-bottom: 15px;
         }
-    
+
         .status-box {
             display: inline-block;
             padding: 10px;
@@ -72,54 +70,55 @@
             margin-left: 10px;
             margin-bottom: 15px;
         }
-    
+
         .status-text {
             font-size: 18px;
         }
-    
+
         .green-box {
             background-color: #28a745;
             color: white;
         }
-    
+
         .blue-box {
             background-color: #0d6efd;
             color: white;
         }
-    
+
         .counter-container {
             margin-top: 20px;
             font-size: 18px;
         }
-    
+
         .counter-container span {
             font-weight: bold;
         }
-    
+
         /* Mobilní zobrazení */
         @media (max-width: 768px) {
             .spz-container {
                 display: block;
             }
-    
+
             .spz-item {
                 width: 100%;
                 margin-bottom: 20px;
             }
-    
+
             .spz-input {
                 margin-bottom: 10px;
             }
-    
+
             .spz-item canvas {
                 margin-top: 10px;
                 width: 100%;
             }
-    
+
             .status-box {
                 display: block;
                 margin-left: 0; /* Zarovná status box vlevo */
             }
+
             .remove-btn {
                 display: flex;
                 justify-content: center;
@@ -134,13 +133,12 @@
                 border: none;
                 cursor: pointer;
             }
+
             .add-spz-btn {
                 width: 100%;
             }
         }
     </style>
-    
-    
 </head>
 
 <body>
@@ -272,7 +270,7 @@
         const shippingCostElem = document.getElementById('shippingCost');
         const pricePerSpz = 55;
         const shippingPrice = 80;
-        const freeShippingThreshold = 10; // Updated to 10 SPZs for free shipping
+        const freeShippingThreshold = 10;
 
         // Default SPZ texts
         const defaultSpzTexts = ["3T9 1234", "Miriam", "SUPERB"];
@@ -394,8 +392,6 @@
             ctx.fillText(text, textX, textY);
         }
 
-
-
         // Function to update the SPZ canvas as the user types
         function updateSPZPreview(index) {
             const spzText = document.getElementById(`spzInput${index}`).value;
@@ -422,6 +418,20 @@
             }
         }
 
+        // Function to collect all SPZ images before form submission
+        function collectSpzImages() {
+            const spzImages = [];
+            for (let i = 0; i < spzList.length; i++) {
+                const canvas = document.getElementById(`spzCanvas${spzList[i]}`);
+                spzImages.push(canvas.toDataURL()); // Convert canvas to base64 string
+            }
+            document.getElementById('spzImagesInput').value = JSON.stringify(spzImages); // Store images as JSON string
+        }
+
+        // Attach event listener to the form submit event to collect images
+        document.getElementById('quoteForm').addEventListener('submit', function(event) {
+            collectSpzImages(); // Collect images before submission
+        });
     </script>
 
     <!-- JavaScript Libraries -->
@@ -439,5 +449,4 @@
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
 </body>
-
 </html>

@@ -93,6 +93,46 @@
         .counter-container span {
             font-weight: bold;
         }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+            text-align: center;
+        }
+
+        .close-btn {
+            background-color: #0d6efd;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Centering QR code */
+        .qr-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .qr-container img {
+            max-width: 100%;
+            height: auto;
+        }
 
         /* Mobilní zobrazení */
         @media (max-width: 768px) {
@@ -245,6 +285,9 @@
     <div id="confirmationPopup" class="modal" style="display: none;">
         <div class="modal-content">
             <p>Děkujeme za vaši objednávku. Potvrzení objednávky vám příjde na email. Objednávku můžete ihned zaplatit tímto QR kódem.</p>
+            <div class="qr-container">
+                <img id="qrCodeImage" src="" alt="QR kód">
+            </div>
             <button class="close-btn">Zavřít</button>
         </div>
     </div>

@@ -1,7 +1,9 @@
-// Function to show the popup
-function showConfirmationPopup() {
+// Show the confirmation popup with the QR code
+function showConfirmationPopup(qrCodeUrl) {
     var popup = document.getElementById("confirmationPopup");
-    popup.style.display = "flex"; // Display as flex for centering
+    var qrCodeImage = document.getElementById("qrCodeImage");
+    qrCodeImage.src = qrCodeUrl; // Set the QR code image URL
+    popup.style.display = "flex"; // Display the popup
 }
 
 // Function to close the popup and reload the page
@@ -22,8 +24,10 @@ document.getElementById('quoteForm').addEventListener('submit', function (e) {
         method: 'POST',
         body: formData
     }).then(function (response) {
-        if (response.ok) {
-            showConfirmationPopup(); // Show the popup after email is sent
+        return response.json(); // Assume the server returns a JSON with the QR code URL
+    }).then(function (data) {
+        if (data.success) {
+            showConfirmationPopup(data.qrCodeUrl); // Show the popup with the QR code
         } else {
             alert('Došlo k chybě při odesílání formuláře. Zkuste to prosím znovu.');
         }

@@ -156,7 +156,16 @@ try {
 
     // Send the email
     $mail->send();
-    echo "success"; // Return success to the JavaScript function
+
+    // Return success and the QR code URL to the frontend
+    echo json_encode([
+        'success' => true,
+        'qrCodeUrl' => basename($qrCodeFileName) // Send back the QR code filename
+    ]);
+
 } catch (Exception $e) {
-    echo "Chyba při odesílání zprávy: {$e->getMessage()}";
+    echo json_encode([
+        'success' => false,
+        'message' => "Chyba při odesílání zprávy: {$e->getMessage()}"
+    ]);
 }

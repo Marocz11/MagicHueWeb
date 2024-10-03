@@ -133,6 +133,83 @@
             max-width: 100%;
             height: auto;
         }
+                /* Timeline container */
+                .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Line connecting the circles */
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background-color: #ddd;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -1px;
+        }
+
+        /* Container for each timeline item */
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            margin-bottom: 30px;
+        }
+
+        /* Right-side container */
+        .timeline-item-right {
+            left: 50%;
+        }
+
+        /* Left-side container */
+        .timeline-item-left {
+            left: 0;
+        }
+
+        /* Circles for the timeline */
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 4px solid #2196F3;
+            top: 15px;
+            left: 50%;
+            margin-left: -17px;
+            z-index: 1;
+        }
+
+        /* Content boxes */
+        .timeline-item-content {
+            padding: 20px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+        }
+
+        /* Adjust the position of the text */
+        .timeline-item-right .timeline-item-content {
+            text-align: left;
+        }
+
+        .timeline-item-left .timeline-item-content {
+            text-align: right;
+        }
+
+        /* Images */
+        .timeline-item img {
+            border-radius: 50%;
+            max-width: 100px;
+            height: auto;
+            display: block;
+            margin: 0 auto 15px auto;
+        }
 
         /* Mobilní zobrazení */
         @media (max-width: 768px) {
@@ -177,6 +254,25 @@
             .add-spz-btn {
                 width: 100%;
             }
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+
+            /* Make the content box full width */
+            .timeline-item-right,
+            .timeline-item-left {
+                left: 0%;
+            }
+
+            .timeline-item::before {
+                left: 30px;
+            }
+
+            .timeline-item-content {
+                text-align: left;
+            }
         }
     </style>
 </head>
@@ -212,6 +308,47 @@
         </div>
     </div>
     <!-- Page Header End -->
+
+    <body>
+        <!-- Timeline Section -->
+        <div class="timeline">
+            <!-- Step 1: Objednání -->
+            <div class="timeline-item timeline-item-left">
+                <div class="timeline-item-content">
+                    <img src="img/about.jpg" alt="Objednání">
+                    <h4>Objednání</h4>
+                    <p>Zadáte si jména jaké chcete.</p>
+                </div>
+            </div>
+    
+            <!-- Step 2: Email -->
+            <div class="timeline-item timeline-item-right">
+                <div class="timeline-item-content">
+                    <img src="img/spztky/email.png" alt="Email">
+                    <h4>Email</h4>
+                    <p>Do emailu vám přijde potvrzení objednávky s QR kódem pro zaplacení.</p>
+                </div>
+            </div>
+    
+            <!-- Step 3: Odeslání -->
+            <div class="timeline-item timeline-item-left">
+                <div class="timeline-item-content">
+                    <img src="img/odeslani.png" alt="Odeslání">
+                    <h4>Odeslání</h4>
+                    <p>Ihned po zaplacení objednávky vám balíček odešleme na vámi vybranou zásilkovnu.</p>
+                </div>
+            </div>
+    
+            <!-- Step 4: Šťastný zákazník -->
+            <div class="timeline-item timeline-item-right">
+                <div class="timeline-item-content">
+                    <img src="img/stastny-zakaznik.png" alt="Šťastný zákazník">
+                    <h4>Šťastný zákazník</h4>
+                    <p>Věříme, že vám SPZtky dorazí v pořádku a udělají vám radost.</p>
+                </div>
+            </div>
+        </div>
+        <!-- End Timeline Section -->
 
     <!-- Form Section Start -->
     <div class="container-fluid bg-light overflow-hidden my-5 px-lg-5">

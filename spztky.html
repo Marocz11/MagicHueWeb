@@ -273,6 +273,7 @@
             .timeline-item-content {
                 text-align: left;
             }
+            
         }
     </style>
 </head>
@@ -398,8 +399,15 @@
                                     <input type="text" name="phone" class="form-control border-0" placeholder="Telefon" style="height: 55px;" required>
                                 </div>
                                 <div class="col-12 col-sm-6">
-                                    <input type="text" name="subject" class="form-control border-0" placeholder="Předmět" style="height: 55px;" required>
+                                    <!-- Vstupní pole pro vyhledávání -->
+                                    <input type="text" id="search" class="form-control border-0" placeholder="Vyhledat výdejní místo" style="height: 55px;">
+                                    
+                                    <!-- Skrytý výběrový box -->
+                                    <select id="pickupLocation" class="form-control border-0" style="height: 55px; display:none; overflow-y: scroll;" required>
+                                        <option value="">Vyberte výdejní místo</option>
+                                    </select>
                                 </div>
+
                                 <div class="col-12">
                                     <textarea name="request" class="form-control border-0" placeholder="Co nejvíce specifikujte Váš požadavek" rows="4" required></textarea>
                                 </div>
@@ -519,6 +527,114 @@
             // Update free SPZ text and counter
             updateFreeSpzText();
         }
+
+
+
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            
+            const pickupLocationSelect = document.getElementById('pickupLocation');
+            const searchInput = document.getElementById('search');
+
+            let ignoreBlur = false; // Flag pro ignorování blur eventu, když se vybírá z dropdownu
+
+            // Načtení CSV souboru
+            fetch('pickup_locations.csv')
+                .then(response => response.text())
+                .then(csvText => {
+                    const locations = csvText.trim().split('\n').map(row => row.split(','));
+                    populateSelect(locations);
+
+                    // Zobrazení dropdownu i bez zadávání textu (jen po kliknutí)
+                    searchInput.addEventListener('focus', () => {
+                        filterLocations(locations);  // Načtení všech možností při kliknutí do pole
+                        adjustDropdownVisibility();
+                    });
+
+                    // Zobrazení dropdownu a filtrace adres při zadávání textu
+                    searchInput.addEventListener('input', () => {
+                        filterLocations(locations);
+                        adjustDropdownVisibility();
+                    });
+
+                    // Ošetření blur eventu
+                    searchInput.addEventListener('blur', () => {
+                        if (!ignoreBlur && !searchInput.value) {
+                            closeDropdown();
+                        }
+                    });
+
+                    // Ošetření kliknutí na dropdown (zabránění blur eventu)
+                    pickupLocationSelect.addEventListener('mousedown', () => {
+                        ignoreBlur = true;
+                    });
+
+                    // Uvolnění flagu po výběru adresy
+                    pickupLocationSelect.addEventListener('mouseup', () => {
+                        ignoreBlur = false;
+                        const selectedOption = pickupLocationSelect.options[pickupLocationSelect.selectedIndex].text;
+                        searchInput.value = selectedOption; // Nahrazení vyhledávacího pole vybranou adresou
+                        closeDropdown(); // Skrytí selectu po výběru
+                    });
+                });
+
+            // Naplnění výběru možnostmi ve formátu Name, Address
+            function populateSelect(locations) {
+                pickupLocationSelect.innerHTML = '<option value="">Vyberte výdejní místo</option>';
+                locations.forEach(location => {
+                    const option = document.createElement('option');
+                    option.value = location[1]; // Můžete upravit hodnotu, pokud chcete odesílat konkrétní část
+                    option.textContent = `${location[0]}, ${location[1]}`; // Zobrazení Name, Address
+                    pickupLocationSelect.appendChild(option);
+                });
+            }
+
+            // Filtrace míst dle vyhledávacího pole
+            function filterLocations(locations) {
+                const query = searchInput.value.toLowerCase();
+                pickupLocationSelect.innerHTML = '<option value="">Vyberte výdejní místo</option>';
+
+                const filteredLocations = locations
+                    .filter(location => {
+                        return location[0].toLowerCase().includes(query) || location[1].toLowerCase().includes(query);
+                    })
+                    .sort((a, b) => {
+                        const aNameMatch = a[0].toLowerCase().includes(query);
+                        const aAddressMatch = a[1].toLowerCase().includes(query);
+                        const bNameMatch = b[0].toLowerCase().includes(query);
+                        const bAddressMatch = b[1].toLowerCase().includes(query);
+
+                        if (aAddressMatch && !bAddressMatch) return -1;
+                        if (!aAddressMatch && bAddressMatch) return 1;
+                        return 0;
+                    });
+
+                populateSelect(filteredLocations);
+            }
+
+            // Zobrazení rozbaleného seznamu při zaměření nebo zadání textu
+            function adjustDropdownVisibility() {
+                const optionCount = pickupLocationSelect.options.length;
+                if (searchInput.value || document.activeElement === searchInput) {
+                    pickupLocationSelect.size = Math.min(optionCount, 10); // Otevře seznam s maximálně 10 položkami
+                    pickupLocationSelect.style.display = 'block'; // Zobrazení selectu
+                    pickupLocationSelect.style.height = ""; // Reset výšky
+                } else {
+                    closeDropdown(); // Zavře dropdown, pokud není žádný text
+                }
+            }
+
+            // Zavření dropdownu
+            function closeDropdown() {
+                pickupLocationSelect.size = 1;
+                pickupLocationSelect.style.display = 'none'; // Skrytí selectu
+            }
+        });
+
+
+
+
 
         // Function to clear the default text when the user clicks on the input
         function clearDefaultText(index, defaultText) {

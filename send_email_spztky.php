@@ -36,6 +36,7 @@ try {
     $spzTotal = ($spzCount - $freeSpz) * $pricePerSpz; // Total price considering free SPZ
     $shippingCost = $spzCount >= 12 ? 0 : 80; // Free shipping if 12 or more SPZ
     $totalPrice = $spzTotal + $shippingCost;
+    
 
     // Generate order number and variable symbol in YYMMDDHHMMSS format
     $orderNumber = date('mdHis');

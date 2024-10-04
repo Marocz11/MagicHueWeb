@@ -573,7 +573,7 @@
             spzDiv.innerHTML = `
                 <div class="spz-item">
                     <div class="d-flex">
-                        <input type="text" name="spz[]" class="form-control border-0 spz-input" id="spzInput${spzCount}" value="${text}" style="flex-grow: 1;" onfocus="clearDefaultText(${spzCount}, '${text}')" oninput="updateSPZPreview(${spzCount})">
+                        <input type="text" name="spz[]" class="form-control border-0 spz-input" id="spzInput${spzCount}" value="${text}" maxlength="20" style="flex-grow: 1;" onfocus="clearDefaultText(${spzCount}, '${text}')" oninput="updateSPZPreview(${spzCount})">
                         <button type="button" class="remove-btn" onclick="removeSpz(${spzCount})">&times;</button>
                     </div>
                     <canvas id="spzCanvas${spzCount}" style="margin-top: 10px;"></canvas>
@@ -588,6 +588,7 @@
             // Update free SPZ text and counter
             updateFreeSpzText();
         }
+
 
 
 

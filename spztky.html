@@ -336,7 +336,7 @@
     <!-- Page Header Start -->
     <div class="container-fluid py-1">
         <div class="container text-center py-1">
-            <h1 class="display-4 text-primary">Ceník</h1>
+            <h1 class="display-4 text-primary">SPZtky</h1>
         </div>
     </div>
     <!-- Page Header End -->
@@ -346,7 +346,7 @@
 <div class="container-xxl py-5">
     <div class="container">
         <div class="section-title text-center">
-            <h1 class="display-5 mb-5 text-primary">Naše služby</h1>
+            <h1 class="display-5 mb-5 text-primary">Postup</h1>
         </div>
         <div class="row g-4">
             <!-- 3D tisk na zakázku -->
@@ -416,11 +416,11 @@
                         </div>
                         <p class="mb-4 pb-2">Potřebujete rychlou cenovou nabídku na vaše projekty? Nechte nám zprávu a my se vám ozveme s konkrétní nabídkou na míru.</p>
 
-                        <button id="addSpzButton" class="add-spz-btn">Přidat SPZ</button>
+                        <button id="addSpzButton" class="add-spz-btn">Přidat SPZtku</button>
                         
                         <!-- Status boxes for SPZ and delivery -->
                         <div class="status-box blue-box">
-                            <span id="spzStatusText" class="status-text">Přidej ještě 5 pro SPZ ZDARMA</span>
+                            <span id="spzStatusText" class="status-text">Přidej ještě 5 pro SPZtku ZDARMA</span>
                         </div>
                         <div class="status-box blue-box">
                             <span id="deliveryStatusText" class="status-text">Přidej ještě 5 pro Dopravu ZDARMA</span>
@@ -444,7 +444,7 @@
 
                                 <!-- Counter -->
                                 <div id="spzCounter" class="counter-container">
-                                    Celkový počet SPZ: <span id="totalSpz">0</span>, z toho zdarma: <span id="freeSpz">0</span><br>
+                                    Celkový počet SPZtek: <span id="totalSpz">0</span>, z toho zdarma: <span id="freeSpz">0</span><br>
                                     Doprava: <span id="shippingCost">80</span> Kč (Zásilkovna)<br>
                                     Celková cena včetně dopravy: <span id="totalPrice">80</span> Kč
                                 </div>
@@ -534,10 +534,10 @@
             // Update SPZ status text and color
             const remainingSpz = 5 - (spzList.length % 5); // SPZs remaining for the next free one
             if (remainingSpz === 5) { // When the count is exactly a multiple of 5
-                spzStatusText.innerHTML = `Tato SPZ je ZDARMA!`;
+                spzStatusText.innerHTML = `Tato SPZtka je ZDARMA!`;
                 spzStatusBox.classList.replace('blue-box', 'green-box');
             } else {
-                spzStatusText.innerHTML = `Přidej ještě ${remainingSpz} pro SPZ ZDARMA`;
+                spzStatusText.innerHTML = `Přidej ještě ${remainingSpz} pro SPZtka ZDARMA`;
                 spzStatusBox.classList.replace('green-box', 'blue-box');
             }
 

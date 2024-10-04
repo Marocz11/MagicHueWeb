@@ -595,7 +595,7 @@
 
 
         document.addEventListener("DOMContentLoaded", function () {
-    
+
             const pickupLocationSelect = document.getElementById('pickupLocation');
             const searchInput = document.getElementById('search');
 
@@ -605,7 +605,22 @@
             fetch('pickup_locations.csv')
                 .then(response => response.text())
                 .then(csvText => {
-                    const locations = csvText.trim().split('\n'); // Treat each row as a single string
+                    let locations = csvText.trim().split('\n'); // Treat each row as a single string
+
+                    // Seřadíme všechny výdejní místa tak, aby uvozovky byly na konci
+                    locations = locations.sort((a, b) => {
+                        const aStartsWithQuote = a.startsWith('"');
+                        const bStartsWithQuote = b.startsWith('"');
+
+                        if (aStartsWithQuote && !bStartsWithQuote) {
+                            return 1; // a jde za b
+                        } else if (!aStartsWithQuote && bStartsWithQuote) {
+                            return -1; // b jde za a
+                        } else {
+                            return a.localeCompare(b); // normální řazení
+                        }
+                    });
+
                     populateSelect(locations);
 
                     // Zobrazení dropdownu i bez zadávání textu (jen po kliknutí)
@@ -643,7 +658,7 @@
 
             // Naplnění výběru možnostmi, celý řádek jako možnost
             function populateSelect(locations) {
-                pickupLocationSelect.innerHTML = '<option value="">Vyberte výdejní místo</option>';
+                pickupLocationSelect.innerHTML = ''; // Zde odstraníme defaultní možnost
                 locations.forEach(location => {
                     const option = document.createElement('option');
                     option.value = location; // Use the whole line as the value
@@ -655,7 +670,7 @@
             // Filtrace míst dle vyhledávacího pole
             function filterLocations(locations) {
                 const query = searchInput.value.toLowerCase();
-                pickupLocationSelect.innerHTML = '<option value="">Vyberte výdejní místo</option>';
+                pickupLocationSelect.innerHTML = ''; // Zde odstraníme defaultní možnost
 
                 const filteredLocations = locations
                     .filter(location => {
@@ -682,7 +697,9 @@
                 pickupLocationSelect.size = 1;
                 pickupLocationSelect.style.display = 'none'; // Skrytí selectu
             }
-        });
+            });
+
+
 
 
 

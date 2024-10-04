@@ -219,6 +219,24 @@
             margin: 0 auto 15px auto;
         }
 
+        /* Všechny tlačítka s výchozí barvou */
+        button, .btn {
+            background-color: #00CEF1;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        /* Tlačítka při stisknutí */
+        button:active, .btn:active {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+
+
         /* Mobilní zobrazení */
         @media (max-width: 768px) {
             .modal-content {
@@ -324,45 +342,68 @@
     <!-- Page Header End -->
 
     <body>
-        <!-- Timeline Section -->
-        <div class="timeline">
-            <!-- Step 1: Objednání -->
-            <div class="timeline-item timeline-item-left">
-                <div class="timeline-item-content">
-                    <img src="img/about.jpg" alt="Objednání">
-                    <h4>Objednání</h4>
-                    <p>Zadáte si jména jaké chcete.</p>
+<!-- Service Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="section-title text-center">
+            <h1 class="display-5 mb-5 text-primary">Naše služby</h1>
+        </div>
+        <div class="row g-4">
+            <!-- 3D tisk na zakázku -->
+            <div class="col-md-6 col-lg-3 wow fadeUp" data-wow-delay="0.1s">
+                <div class="service-item">
+                    <div class="overflow-hidden">
+                        <img class="img-fluid" src="img/service-1.jpg" alt="">
+                    </div>
+                    <div class="p-4 text-center border border-5 border-light border-top-0">
+                        <h4 class="mb-3">Objednání</h4>
+                        <p>Zadáte si jména jaké chcete.</p>
+                    </div>
                 </div>
             </div>
-    
-            <!-- Step 2: Email -->
-            <div class="timeline-item timeline-item-right">
-                <div class="timeline-item-content">
-                    <img src="img/spztky/email.png" alt="Email">
-                    <h4>Email</h4>
-                    <p>Do emailu vám přijde potvrzení objednávky s QR kódem pro zaplacení.</p>
+
+            <!-- Modelování -->
+            <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.3s">
+                <div class="service-item">
+                    <div class="overflow-hidden">
+                        <img class="img-fluid" src="img/service-2.jpg" alt="">
+                    </div>
+                    <div class="p-4 text-center border border-5 border-light border-top-0">
+                        <h4 class="mb-3">Email</h4>
+                        <p>Do emailu vám přijde potvrzení objednávky s QR kódem pro zaplacení.</p>
+                    </div>
                 </div>
             </div>
-    
-            <!-- Step 3: Odeslání -->
-            <div class="timeline-item timeline-item-left">
-                <div class="timeline-item-content">
-                    <img src="img/odeslani.png" alt="Odeslání">
-                    <h4>Odeslání</h4>
-                    <p>Ihned po zaplacení objednávky vám balíček odešleme na vámi vybranou zásilkovnu.</p>
+
+            <!-- Sériová výroba -->
+            <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.5s">
+                <div class="service-item">
+                    <div class="overflow-hidden">
+                        <img class="img-fluid" src="img/service-3.jpg" alt="">
+                    </div>
+                    <div class="p-4 text-center border border-5 border-light border-top-0">
+                        <h4 class="mb-3">Odeslání</h4>
+                        <p>Ihned po zaplacení objednávky vám balíček odešleme na vámi vybranou zásilkovnu.</p>
+                    </div>
                 </div>
             </div>
-    
-            <!-- Step 4: Šťastný zákazník -->
-            <div class="timeline-item timeline-item-right">
-                <div class="timeline-item-content">
-                    <img src="img/stastny-zakaznik.png" alt="Šťastný zákazník">
-                    <h4>Šťastný zákazník</h4>
-                    <p>Věříme, že vám SPZtky dorazí v pořádku a udělají vám radost.</p>
+
+            <!-- Rapid prototyping -->
+            <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.7s">
+                <div class="service-item">
+                    <div class="overflow-hidden">
+                        <img class="img-fluid" src="img/service-4.jpg" alt="">
+                    </div>
+                    <div class="p-4 text-center border border-5 border-light border-top-0">
+                        <h4 class="mb-3">Šťastný zákazník</h4>
+                        <p>Věříme, že vám SPZtky dorazí v pořádku a udělají vám radost.</p>
+                    </div>
                 </div>
             </div>
         </div>
-        <!-- End Timeline Section -->
+    </div>
+</div>
+<!-- Service End -->
 
     <!-- Form Section Start -->
     <div class="container-fluid bg-light overflow-hidden my-5 px-lg-5">
@@ -492,7 +533,7 @@
             
             // Update SPZ status text and color
             const remainingSpz = 5 - (spzList.length % 5); // SPZs remaining for the next free one
-            if (remainingSpz === 0) {
+            if (remainingSpz === 5) { // When the count is exactly a multiple of 5
                 spzStatusText.innerHTML = `Tato SPZ je ZDARMA!`;
                 spzStatusBox.classList.replace('blue-box', 'green-box');
             } else {
@@ -518,6 +559,8 @@
             freeSpzElem.innerHTML = freeSpzCount;
             totalPriceElem.innerHTML = `${totalPrice} Kč`;
         }
+
+
 
         // Add SPZ input with default text
         function addSpzWithText(text) {

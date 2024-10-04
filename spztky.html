@@ -234,6 +234,21 @@
             background-color: #0d6efd;
             color: white;
         }
+        /* Stylování pro vyhledávací pole */
+        #pickupLocation {
+            position: absolute; /* Ujistíme se, že bude nad ostatními prvky */
+            z-index: 999; /* Vysoký z-index, aby se překryl nad ostatními elementy */
+            width: 100%; /* Aby měl výběrový seznam stejnou šířku jako vstupní pole */
+            background-color: white; /* Bílé pozadí pro čitelnost */
+            border: 1px solid #ddd; /* Mírný rámeček kolem seznamu */
+            max-height: 300px; /* Maximální výška pro scrollování */
+            overflow-y: auto; /* Povolit scrollování uvnitř výběrového seznamu */
+            display: none; /* Skryto, dokud se neaktivuje */
+        }
+
+        #pickupLocation.show {
+            display: block; /* Zobrazí výběrový seznam při otevření */
+        }
 
 
 
@@ -357,7 +372,7 @@
                     </div>
                     <div class="p-4 text-center border border-5 border-light border-top-0">
                         <h4 class="mb-3">Objednání</h4>
-                        <p>Zadáte si jména jaké chcete.</p>
+                        <p>Zadáte si jména, názvy, texty jaké chcete.</p>
                     </div>
                 </div>
             </div>

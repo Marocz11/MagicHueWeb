@@ -93,6 +93,7 @@
         .counter-container span {
             font-weight: bold;
         }
+
         .modal {
             position: fixed;
             top: 0;
@@ -110,8 +111,15 @@
             padding: 20px;
             border-radius: 10px;
             width: 400px;
+            max-width: 90%;
             text-align: center;
+            transform: translate(-50%, -50%);
+            position: absolute;
+            top: 50%;
+            left: 50%;
         }
+
+
 
         .close-btn {
             background-color: #0d6efd;
@@ -213,6 +221,11 @@
 
         /* Mobilní zobrazení */
         @media (max-width: 768px) {
+            .modal-content {
+                width: 100%;
+                max-width: 90%;
+                padding: 15px;
+            }
             .spz-container {
                 display: block;
             }

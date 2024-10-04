@@ -380,7 +380,14 @@
 
                                 <!-- Hidden input to store SPZ images -->
                                 <input type="hidden" name="spz_images" id="spzImagesInput">
-                                
+                                <input type="hidden" name="total_spz_count" id="totalSpzCountInput">
+                                <input type="hidden" name="free_spz_count" id="freeSpzCountInput">
+                                <input type="hidden" name="shipping_cost" id="shippingCostInput">
+                                <input type="hidden" name="total_price" id="totalPriceInput">
+
+                                <!-- Pickup Location Hidden Field -->
+                                <input type="hidden" name="pickupLocation" id="pickupLocationValue">
+
                                 <!-- Counter -->
                                 <div id="spzCounter" class="counter-container">
                                     Celkový počet SPZ: <span id="totalSpz">0</span>, z toho zdarma: <span id="freeSpz">0</span><br>
@@ -411,6 +418,9 @@
                                 <div class="col-12">
                                     <textarea name="request" class="form-control border-0" placeholder="Co nejvíce specifikujte Váš požadavek" rows="4" required></textarea>
                                 </div>
+
+                                <!-- Hidden Subject Field -->
+                                <input type="hidden" name="subject" value="Nová objednávka SPZ">
 
                                 <!-- Submit Button -->
                                 <div class="col-12">
@@ -463,42 +473,37 @@
         // Default SPZ texts
         const defaultSpzTexts = ["3T9 1234", "Miriam", "SUPERB"];
 
-        // Update free SPZ text and counter
         function updateFreeSpzText() {
-            const freeSpzThreshold = Math.ceil((spzList.length + 1) / 5) * 5;
-            const remainingSpz = freeSpzThreshold - spzList.length;
-            const freeSpzCount = Math.floor(spzList.length / 5);
-            let totalPrice = pricePerSpz * (spzList.length - freeSpzCount);
-
-            // Update the SPZ status text and color
-            if (spzList.length % 5 == 0) {
+            const freeSpzCount = Math.floor(spzList.length / 5); // Every 5th SPZ is free
+            let totalPrice = pricePerSpz * (spzList.length - freeSpzCount); // Calculate total with free SPZ
+            
+            // Update SPZ status text and color
+            const remainingSpz = 5 - (spzList.length % 5); // SPZs remaining for the next free one
+            if (remainingSpz === 0) {
                 spzStatusText.innerHTML = `Tato SPZ je ZDARMA!`;
-                spzStatusBox.classList.remove('blue-box');
-                spzStatusBox.classList.add('green-box');
+                spzStatusBox.classList.replace('blue-box', 'green-box');
             } else {
                 spzStatusText.innerHTML = `Přidej ještě ${remainingSpz} pro SPZ ZDARMA`;
-                spzStatusBox.classList.remove('green-box');
-                spzStatusBox.classList.add('blue-box');
+                spzStatusBox.classList.replace('green-box', 'blue-box');
             }
 
-            // Determine if shipping is free and update the delivery status
+            // Calculate shipping
             if (spzList.length >= freeShippingThreshold) {
                 deliveryStatusText.innerHTML = "Doprava je ZDARMA!";
-                deliveryStatusBox.classList.remove('blue-box');
-                deliveryStatusBox.classList.add('green-box');
-                shippingCostElem.innerHTML = 0;
+                deliveryStatusBox.classList.replace('blue-box', 'green-box');
+                shippingCostElem.innerHTML = '0 Kč';
             } else {
-                const remainingForFreeDelivery = freeShippingThreshold - spzList.length;
-                deliveryStatusText.innerHTML = `Přidej ještě ${remainingForFreeDelivery} pro Dopravu ZDARMA`;
-                deliveryStatusBox.classList.remove('green-box');
-                deliveryStatusBox.classList.add('blue-box');
-                shippingCostElem.innerHTML = shippingPrice;
-                totalPrice += shippingPrice;
+                const remainingForFreeShipping = freeShippingThreshold - spzList.length;
+                deliveryStatusText.innerHTML = `Přidej ještě ${remainingForFreeShipping} pro Dopravu ZDARMA`;
+                deliveryStatusBox.classList.replace('green-box', 'blue-box');
+                shippingCostElem.innerHTML = `${shippingPrice} Kč`;
+                totalPrice += shippingPrice; // Add shipping cost if below threshold
             }
 
+            // Update DOM elements
             totalSpzElem.innerHTML = spzList.length;
             freeSpzElem.innerHTML = freeSpzCount;
-            totalPriceElem.innerHTML = totalPrice;
+            totalPriceElem.innerHTML = `${totalPrice} Kč`;
         }
 
         // Add SPZ input with default text
@@ -714,20 +719,52 @@
             }
         }
 
-        // Function to collect all SPZ images before form submission
-        function collectSpzImages() {
+        function collectFormValues() {
+            // Collect SPZ images from canvases
             const spzImages = [];
-            for (let i = 0; i < spzList.length; i++) {
-                const canvas = document.getElementById(`spzCanvas${spzList[i]}`);
-                spzImages.push(canvas.toDataURL()); // Convert canvas to base64 string
-            }
-            document.getElementById('spzImagesInput').value = JSON.stringify(spzImages); // Store images as JSON string
+            const canvases = document.querySelectorAll("canvas");
+            canvases.forEach(canvas => spzImages.push(canvas.toDataURL()));
+
+            document.getElementById('spzImagesInput').value = JSON.stringify(spzImages);
+            document.getElementById('totalSpzCountInput').value = spzList.length;
+            document.getElementById('freeSpzCountInput').value = Math.floor(spzList.length / 5);
+            document.getElementById('shippingCostInput').value = spzList.length >= freeShippingThreshold ? 0 : shippingPrice;
+            document.getElementById('totalPriceInput').value = totalPriceElem.innerHTML.replace(' Kč', ''); // Only the number
         }
 
-        // Attach event listener to the form submit event to collect images
+
         document.getElementById('quoteForm').addEventListener('submit', function(event) {
-            collectSpzImages(); // Collect images before submission
+            event.preventDefault(); // Prevent default form submission
+
+            // Disable the submit button to prevent multiple submissions
+            const submitButton = document.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+
+            collectFormValues(); // Collect and populate hidden fields
+
+            const formData = new FormData(this);
+
+            fetch('send_email_spztky.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('qrCodeImage').src = data.qrCodeUrl; // Display the QR code
+                    document.getElementById('confirmationPopup').style.display = 'block'; // Show the popup
+                } else {
+                    alert('Chyba při odesílání objednávky: ' + data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error))
+            .finally(() => {
+                submitButton.disabled = false; // Re-enable the button after processing is complete
+            });
         });
+
+
+
     </script>
 
     <!-- JavaScript Libraries -->

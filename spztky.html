@@ -520,11 +520,11 @@
         // Load the background image (SPZ template)
         const backgroundImage = new Image();
         backgroundImage.src = 'img/spztka2.png'; // Set the correct path to your image
-
+    
         // Track the number of SPZs with a unique identifier
         let spzCount = 0;
         let spzList = [];  // List to track existing SPZs
-
+    
         const spzContainer = document.getElementById('spz-container');
         const addSpzButton = document.getElementById('addSpzButton');
         const spzStatusText = document.getElementById('spzStatusText');
@@ -538,10 +538,10 @@
         const pricePerSpz = 55;
         const shippingPrice = 80;
         const freeShippingThreshold = 10;
-
+    
         // Default SPZ texts
         const defaultSpzTexts = ["3T9 1234", "Miriam", "SUPERB"];
-
+    
         function updateFreeSpzText() {
             const freeSpzCount = Math.floor(spzList.length / 5); // Every 5th SPZ is free
             let totalPrice = pricePerSpz * (spzList.length - freeSpzCount); // Calculate total with free SPZ
@@ -555,7 +555,7 @@
                 spzStatusText.innerHTML = `Přidej ještě ${remainingSpz} pro SPZtka ZDARMA`;
                 spzStatusBox.classList.replace('green-box', 'blue-box');
             }
-
+    
             // Calculate shipping
             if (spzList.length >= freeShippingThreshold) {
                 deliveryStatusText.innerHTML = "Doprava je ZDARMA!";
@@ -568,20 +568,18 @@
                 shippingCostElem.innerHTML = `${shippingPrice} Kč`;
                 totalPrice += shippingPrice; // Add shipping cost if below threshold
             }
-
+    
             // Update DOM elements
             totalSpzElem.innerHTML = spzList.length;
             freeSpzElem.innerHTML = freeSpzCount;
             totalPriceElem.innerHTML = `${totalPrice} Kč`;
         }
-
-
-
+    
         // Add SPZ input with default text
         function addSpzWithText(text) {
             spzCount++;
             spzList.push(spzCount);  // Add SPZ ID to list
-
+    
             const spzDiv = document.createElement('div');
             spzDiv.classList.add('spz-item');
             spzDiv.id = `spz-item-${spzCount}`;
@@ -594,134 +592,98 @@
                     <canvas id="spzCanvas${spzCount}" style="margin-top: 10px;"></canvas>
                 </div>
             `;
-
+    
             spzContainer.appendChild(spzDiv);
-
+    
             // Draw the SPZ with the default text
             drawSPZ(spzCount, text);
-
+    
             // Update free SPZ text and counter
             updateFreeSpzText();
         }
-
-
-
-
-
-
+    
         document.addEventListener("DOMContentLoaded", function () {
-
             const pickupLocationSelect = document.getElementById('pickupLocation');
             const searchInput = document.getElementById('search');
-
+            const pickupLocationValue = document.getElementById('pickupLocationValue'); // Skryté pole pro výdejní místo
+    
             let ignoreBlur = false; // Flag pro ignorování blur eventu, když se vybírá z dropdownu
-
+    
             // Načtení CSV souboru
             fetch('pickup_locations.csv')
                 .then(response => response.text())
                 .then(csvText => {
-                    let locations = csvText.trim().split('\n'); // Treat each row as a single string
-
-                    // Seřadíme všechny výdejní místa tak, aby uvozovky byly na konci
-                    locations = locations.sort((a, b) => {
-                        const aStartsWithQuote = a.startsWith('"');
-                        const bStartsWithQuote = b.startsWith('"');
-
-                        if (aStartsWithQuote && !bStartsWithQuote) {
-                            return 1; // a jde za b
-                        } else if (!aStartsWithQuote && bStartsWithQuote) {
-                            return -1; // b jde za a
-                        } else {
-                            return a.localeCompare(b); // normální řazení
-                        }
-                    });
-
+                    let locations = csvText.trim().split('\n');
+    
                     populateSelect(locations);
-
-                    // Zobrazení dropdownu i bez zadávání textu (jen po kliknutí)
+    
                     searchInput.addEventListener('focus', () => {
-                        filterLocations(locations);  // Načtení všech možností při kliknutí do pole
+                        filterLocations(locations);
                         adjustDropdownVisibility();
                     });
-
-                    // Zobrazení dropdownu a filtrace adres při zadávání textu
+    
                     searchInput.addEventListener('input', () => {
                         filterLocations(locations);
                         adjustDropdownVisibility();
                     });
-
-                    // Ošetření blur eventu
+    
                     searchInput.addEventListener('blur', () => {
                         if (!ignoreBlur && !searchInput.value) {
                             closeDropdown();
                         }
                     });
-
-                    // Ošetření kliknutí na dropdown (zabránění blur eventu)
+    
                     pickupLocationSelect.addEventListener('mousedown', () => {
                         ignoreBlur = true;
                     });
-
-                    // Uvolnění flagu po výběru adresy
+    
                     pickupLocationSelect.addEventListener('mouseup', () => {
                         ignoreBlur = false;
                         const selectedOption = pickupLocationSelect.options[pickupLocationSelect.selectedIndex].text;
-                        searchInput.value = selectedOption; // Nahrazení vyhledávacího pole vybranou adresou
-                        closeDropdown(); // Skrytí selectu po výběru
+                        searchInput.value = selectedOption;
+                        pickupLocationValue.value = selectedOption; // Uložit vybranou adresu do skrytého pole
+                        closeDropdown();
                     });
                 });
-
-            // Naplnění výběru možnostmi, celý řádek jako možnost
+    
             function populateSelect(locations) {
-                pickupLocationSelect.innerHTML = ''; // Zde odstraníme defaultní možnost
+                pickupLocationSelect.innerHTML = '';
                 locations.forEach(location => {
                     const option = document.createElement('option');
-                    option.value = location; // Use the whole line as the value
-                    option.textContent = location; // Display the whole line (name and address combined)
+                    option.value = location;
+                    option.textContent = location;
                     pickupLocationSelect.appendChild(option);
                 });
             }
-
-            // Filtrace míst dle vyhledávacího pole
+    
             function filterLocations(locations) {
                 const query = searchInput.value.toLowerCase();
-                pickupLocationSelect.innerHTML = ''; // Zde odstraníme defaultní možnost
-
-                const filteredLocations = locations
-                    .filter(location => {
-                        return location.toLowerCase().includes(query); // Match against the entire row
-                    });
-
+                pickupLocationSelect.innerHTML = '';
+    
+                const filteredLocations = locations.filter(location => {
+                    return location.toLowerCase().includes(query);
+                });
+    
                 populateSelect(filteredLocations);
             }
-
-            // Zobrazení rozbaleného seznamu při zaměření nebo zadání textu
+    
             function adjustDropdownVisibility() {
                 const optionCount = pickupLocationSelect.options.length;
                 if (searchInput.value || document.activeElement === searchInput) {
-                    pickupLocationSelect.size = Math.min(optionCount, 10); // Otevře seznam s maximálně 10 položkami
-                    pickupLocationSelect.style.display = 'block'; // Zobrazení selectu
-                    pickupLocationSelect.style.height = ""; // Reset výšky
+                    pickupLocationSelect.size = Math.min(optionCount, 10);
+                    pickupLocationSelect.style.display = 'block';
+                    pickupLocationSelect.style.height = '';
                 } else {
-                    closeDropdown(); // Zavře dropdown, pokud není žádný text
+                    closeDropdown();
                 }
             }
-
-            // Zavření dropdownu
+    
             function closeDropdown() {
                 pickupLocationSelect.size = 1;
-                pickupLocationSelect.style.display = 'none'; // Skrytí selectu
+                pickupLocationSelect.style.display = 'none';
             }
-            });
-
-
-
-
-
-
-
-
-
+        });
+    
         // Function to clear the default text when the user clicks on the input
         function clearDefaultText(index, defaultText) {
             const spzInput = document.getElementById(`spzInput${index}`);
@@ -729,67 +691,67 @@
                 spzInput.value = ""; // Clear the default text
             }
         }
-
+    
         // Function to draw the SPZ with text
         function drawSPZ(index, text) {
             const canvas = document.getElementById(`spzCanvas${index}`);
             const ctx = canvas.getContext('2d');
-
+    
             // Set the canvas height to match the input text field, and make the image twice as large
             const inputFieldHeight = document.getElementById(`spzInput${index}`).offsetHeight;
             const aspectRatio = backgroundImage.width / backgroundImage.height;
-
+    
             canvas.height = inputFieldHeight * 2; // Make the image twice as high as the input field
             canvas.width = canvas.height * aspectRatio; // Maintain the aspect ratio
-
+    
             // Clear the canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+    
             // Draw the background image
             ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-
+    
             // Set the text properties
             let fontSize = 48; // Start with a large font size
             ctx.font = `bold ${fontSize}px Arial`;
             ctx.fillStyle = 'black';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle'; // Ensure the text is aligned in the middle vertically
-
+    
             // Calculate the white area (around 1:5, adjust if necessary)
             const whiteAreaStartX = canvas.width * 0.2; // Assume the white starts after the blue CZ part
             const whiteAreaWidth = canvas.width * 0.83; // White area occupies the remaining 75% width
             const textX = whiteAreaStartX + (whiteAreaWidth / 2) - (canvas.width * 0.045); // Center horizontally
-
+    
             // Vertically center the text, then move it down by 10% of the canvas height
             const verticalShiftPercentage = 0.01; // 10% shift
             const textY = (canvas.height / 2) + (canvas.height * verticalShiftPercentage);
-
+    
             // Adjust the font size if the text is too wide for the white area
             while (ctx.measureText(text).width > whiteAreaWidth && fontSize > 10) {
                 fontSize -= 2;
                 ctx.font = `bold ${fontSize}px Arial`;
             }
-
+    
             // Draw the text within the white area
             ctx.fillText(text, textX, textY);
         }
-
+    
         // Function to update the SPZ canvas as the user types
         function updateSPZPreview(index) {
             const spzText = document.getElementById(`spzInput${index}`).value;
             drawSPZ(index, spzText);
         }
-
+    
         // Add 3 default SPZ on page load
         window.onload = function() {
             defaultSpzTexts.forEach(text => addSpzWithText(text));
         }
-
+    
         // Add another SPZ input at the end
         addSpzButton.addEventListener('click', function() {
             addSpzWithText(''); // Pass an empty string to add a new blank input field
         });
-
+    
         // Remove SPZ input
         function removeSpz(index) {
             const spzItem = document.getElementById(`spz-item-${index}`);
@@ -799,32 +761,31 @@
                 updateFreeSpzText();
             }
         }
-
+    
         function collectFormValues() {
             // Collect SPZ images from canvases
             const spzImages = [];
             const canvases = document.querySelectorAll("canvas");
             canvases.forEach(canvas => spzImages.push(canvas.toDataURL()));
-
+    
             document.getElementById('spzImagesInput').value = JSON.stringify(spzImages);
             document.getElementById('totalSpzCountInput').value = spzList.length;
             document.getElementById('freeSpzCountInput').value = Math.floor(spzList.length / 5);
             document.getElementById('shippingCostInput').value = spzList.length >= freeShippingThreshold ? 0 : shippingPrice;
             document.getElementById('totalPriceInput').value = totalPriceElem.innerHTML.replace(' Kč', ''); // Only the number
         }
-
-
+    
         document.getElementById('quoteForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent default form submission
-
+    
             // Disable the submit button to prevent multiple submissions
             const submitButton = document.querySelector('button[type="submit"]');
             submitButton.disabled = true;
-
+    
             collectFormValues(); // Collect and populate hidden fields
-
+    
             const formData = new FormData(this);
-
+    
             fetch('send_email_spztky.php', {
                 method: 'POST',
                 body: formData
@@ -843,10 +804,8 @@
                 submitButton.disabled = false; // Re-enable the button after processing is complete
             });
         });
-
-
-
     </script>
+    
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -864,3 +823,13 @@
     <script src="js/main.js"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+

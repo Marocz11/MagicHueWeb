@@ -71,7 +71,31 @@ try {
     $pdf->Cell(95, 10, "Telefon: {$phone}", 0, 1, 'L');
     $pdf->Cell(95, 10, 'IČ: 04372191, Nejsme plátci DPH', 0, 0, 'L');
     $pdf->Cell(95, 10, "Email: {$email}", 0, 1, 'L');
-    $pdf->Ln(10);
+    
+    // --- Pickup Location in Odběratel ---
+    $pdf->Ln(10); // Newline for spacing
+
+    // Define a maximum line length to split the pickup location if necessary
+    $maxLineLength = 60;
+    $pdf->SetFont('dejavusans', 'B', 10);
+    $pdf->Cell(40, 10, 'Výdejní místo:', 0, 0, 'L');
+    $pdf->SetFont('dejavusans', '', 10);
+
+    if (strlen($pickupLocation) > $maxLineLength) {
+        // Split into two lines if the location is too long
+        $locationParts = wordwrap($pickupLocation, $maxLineLength, "\n", true);
+        $locationLines = explode("\n", $locationParts);
+
+        $pdf->Cell(0, 10, $locationLines[0], 0, 1, 'L');
+        $pdf->Ln(5); // Add a space before second line
+        $pdf->Cell(95, 10, '', 0, 0, 'L'); // Align with Dodavatel again
+        $pdf->Cell(0, 10, $locationLines[1], 0, 1, 'L');
+    } else {
+        // Print in one line if it fits
+        $pdf->Cell(0, 10, $pickupLocation, 0, 1, 'L');
+    }
+    
+    $pdf->Ln(10);  // Add space before next section
     
     // --- Bank Details ---
     $pdf->SetFont('dejavusans', 'B', 10);
@@ -85,12 +109,6 @@ try {
     $pdf->Cell(0, 10, $orderNumber, 0, 1, 'L');
     
     $pdf->Ln(5);
-    
-    // --- Pickup Location ---
-    $pdf->SetFont('dejavusans', 'B', 10);
-    $pdf->Cell(40, 10, 'Výdejní místo:', 0, 0, 'L');
-    $pdf->SetFont('dejavusans', '', 10);
-    $pdf->Cell(0, 10, $pickupLocation, 0, 1, 'L');
     
     // --- Table Header ---
     $pdf->SetFont('dejavusans', 'B', 10);
@@ -150,7 +168,9 @@ try {
     
     $mail->Subject = 'Objednávkový formulář - ' . $subject;
     $mail->Body = "<h1>Děkujeme za Vaši objednávku</h1>
-                   <p>Přílohou naleznete objednávkový formulář ve formátu PDF.</p>
+                   <p>Děkujeme za váš nákup v našem e-shopu Print M! Vaši objednávku jsme úspěšně přijali a nyní se pustíme do výroby vašich 3D tištěných SPZetek.</p> <br>
+                   <p>Jakmile budou hotové, pečlivě je zabalíme a odešleme na vámi zvolenou adresu. O průběhu zpracování vás budeme informovat e-mailem.</p> <br>
+                   <p>Těšíme se, až vám vaše unikátní SPZetky doručíme!</p> <br>
                    <h2>Texty na SPZ:</h2>
                    $spzTextForEmail
                    <h2>Poznámka:</h2>

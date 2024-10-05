@@ -606,46 +606,46 @@
             const pickupLocationSelect = document.getElementById('pickupLocation');
             const searchInput = document.getElementById('search');
             const pickupLocationValue = document.getElementById('pickupLocationValue'); // Skryté pole pro výdejní místo
-    
+
             let ignoreBlur = false; // Flag pro ignorování blur eventu, když se vybírá z dropdownu
-    
+
             // Načtení CSV souboru
             fetch('pickup_locations.csv')
                 .then(response => response.text())
                 .then(csvText => {
                     let locations = csvText.trim().split('\n');
-    
+
                     populateSelect(locations);
-    
+
                     searchInput.addEventListener('focus', () => {
                         filterLocations(locations);
                         adjustDropdownVisibility();
                     });
-    
+
                     searchInput.addEventListener('input', () => {
                         filterLocations(locations);
                         adjustDropdownVisibility();
                     });
-    
+
                     searchInput.addEventListener('blur', () => {
                         if (!ignoreBlur && !searchInput.value) {
                             closeDropdown();
                         }
                     });
-    
+
                     pickupLocationSelect.addEventListener('mousedown', () => {
                         ignoreBlur = true;
                     });
-    
+
                     pickupLocationSelect.addEventListener('mouseup', () => {
                         ignoreBlur = false;
                         const selectedOption = pickupLocationSelect.options[pickupLocationSelect.selectedIndex].text;
-                        searchInput.value = selectedOption;
-                        pickupLocationValue.value = selectedOption; // Uložit vybranou adresu do skrytého pole
-                        closeDropdown();
+                        searchInput.value = selectedOption; // Update search input with selected address
+                        pickupLocationValue.value = selectedOption; // Save selected address into hidden input
+                        closeDropdown(); // Close dropdown after selection
                     });
                 });
-    
+
             function populateSelect(locations) {
                 pickupLocationSelect.innerHTML = '';
                 locations.forEach(location => {
@@ -655,18 +655,18 @@
                     pickupLocationSelect.appendChild(option);
                 });
             }
-    
+
             function filterLocations(locations) {
                 const query = searchInput.value.toLowerCase();
                 pickupLocationSelect.innerHTML = '';
-    
+
                 const filteredLocations = locations.filter(location => {
                     return location.toLowerCase().includes(query);
                 });
-    
+
                 populateSelect(filteredLocations);
             }
-    
+
             function adjustDropdownVisibility() {
                 const optionCount = pickupLocationSelect.options.length;
                 if (searchInput.value || document.activeElement === searchInput) {
@@ -677,12 +677,13 @@
                     closeDropdown();
                 }
             }
-    
+
             function closeDropdown() {
                 pickupLocationSelect.size = 1;
                 pickupLocationSelect.style.display = 'none';
             }
         });
+
     
         // Function to clear the default text when the user clicks on the input
         function clearDefaultText(index, defaultText) {

@@ -26,7 +26,8 @@ try {
     $phone = $_POST['phone'];
     $pickupLocation = $_POST['pickupLocation'];
     $subject = $_POST['subject'];
-    $request = $_POST['request'];
+    $request = $_POST['request'];  // Poznámka
+    $spzTexts = $_POST['spz']; // Array of SPZ texts
     $spzImages = json_decode($_POST['spz_images'], true);
     
     $totalSpzCount = intval($_POST['total_spz_count']);
@@ -139,8 +140,22 @@ try {
     // Attach PDF to customer email
     $mail->addAttachment($pdfFileName);
     $mail->isHTML(true);
+    
+    // Build the SPZ text part for email
+    $spzTextForEmail = '<ul>';
+    foreach ($spzTexts as $spzText) {
+        $spzTextForEmail .= '<li>' . htmlspecialchars($spzText) . '</li>';
+    }
+    $spzTextForEmail .= '</ul>';
+    
     $mail->Subject = 'Objednávkový formulář - ' . $subject;
-    $mail->Body = "<h1>Děkujeme za Vaši objednávku</h1><p>Přílohou naleznete objednávkový formulář ve formátu PDF.</p>";
+    $mail->Body = "<h1>Děkujeme za Vaši objednávku</h1>
+                   <p>Přílohou naleznete objednávkový formulář ve formátu PDF.</p>
+                   <h2>Texty na SPZ:</h2>
+                   $spzTextForEmail
+                   <h2>Poznámka:</h2>
+                   <p>" . nl2br(htmlspecialchars($request)) . "</p>";
+
     $mail->send();  // Send to customer
     
     // --- Clear Recipients and Attachments ---
@@ -164,4 +179,3 @@ try {
         'message' => "Chyba při odesílání zprávy: {$e->getMessage()}"
     ]);
 }
-

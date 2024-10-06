@@ -166,15 +166,16 @@ try {
     }
     $spzTextForEmail .= '</ul>';
     
-    $mail->Subject = 'Objednávkový formulář - ' . $subject;
-    $mail->Body = "<h1>Děkujeme za Vaši objednávku</h1>
-                   <p>Děkujeme za váš nákup v našem e-shopu Print M! Vaši objednávku jsme úspěšně přijali a nyní se pustíme do výroby vašich 3D tištěných SPZetek.</p> <br>
-                   <p>Jakmile budou hotové, pečlivě je zabalíme a odešleme na vámi zvolenou adresu. O průběhu zpracování vás budeme informovat e-mailem.</p> <br>
-                   <p>Těšíme se, až vám vaše unikátní SPZetky doručíme!</p> <br>
-                   <h2>Texty na SPZ:</h2>
-                   $spzTextForEmail
-                   <h2>Poznámka:</h2>
-                   <p>" . nl2br(htmlspecialchars($request)) . "</p>";
+$mail->Subject = 'Objednávka ' . $orderNumber; // Přidání čísla objednávky do předmětu
+$mail->Body = "<h1>Děkujeme za Vaši objednávku</h1>
+               <p>Děkujeme za váš nákup v našem e-shopu Print M! Vaši objednávku jsme úspěšně přijali a nyní se pustíme do výroby vašich 3D tištěných SPZetek.</p> <br>
+               <p>Jakmile budou hotové, pečlivě je zabalíme a odešleme na vámi zvolenou adresu. O průběhu zpracování vás budeme informovat e-mailem.</p> <br>
+               <p>Těšíme se, až vám vaše unikátní SPZetky doručíme!</p> <br>
+               <h2>Texty na SPZ:</h2>
+               $spzTextForEmail
+               <h2>Poznámka:</h2>
+               <p>" . nl2br(htmlspecialchars($request)) . "</p>";
+
 
     $mail->send();  // Send to customer
     

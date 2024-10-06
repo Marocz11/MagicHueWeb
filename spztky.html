@@ -614,6 +614,9 @@
                 .then(response => response.text())
                 .then(csvText => {
                     let locations = csvText.trim().split('\n');
+                    
+                    // Seřazení adres podle abecedy
+                    locations.sort((a, b) => a.localeCompare(b, 'cs', { sensitivity: 'base' }));
 
                     populateSelect(locations);
 
@@ -683,6 +686,7 @@
                 pickupLocationSelect.style.display = 'none';
             }
         });
+
 
     
         // Function to clear the default text when the user clicks on the input

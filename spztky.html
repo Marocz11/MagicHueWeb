@@ -602,10 +602,20 @@
             updateFreeSpzText();
         }
     
+
+
+
         document.addEventListener("DOMContentLoaded", function () {
+           
             const pickupLocationSelect = document.getElementById('pickupLocation');
             const searchInput = document.getElementById('search');
             const pickupLocationValue = document.getElementById('pickupLocationValue'); // Skryté pole pro výdejní místo
+
+            let locations = [];
+            let filteredLocations = [];
+            let debounceTimeout;
+            let currentVisibleLocations = 100; // Start by showing first 100 locations
+            let allFilteredLoaded = false; // Track if all filtered locations are loaded
 
             let ignoreBlur = false; // Flag pro ignorování blur eventu, když se vybírá z dropdownu
 
@@ -613,21 +623,26 @@
             fetch('pickup_locations.csv')
                 .then(response => response.text())
                 .then(csvText => {
-                    let locations = csvText.trim().split('\n');
-                    
-                    // Seřazení adres podle abecedy
+                    locations = csvText.trim().split('\n');
+
+                    // Seřadit adresy podle abecedy
                     locations.sort((a, b) => a.localeCompare(b, 'cs', { sensitivity: 'base' }));
 
-                    populateSelect(locations);
-
+                    // Při zaměření na vyhledávací pole zobrazit první blok adres
                     searchInput.addEventListener('focus', () => {
-                        filterLocations(locations);
-                        adjustDropdownVisibility();
+                        if (!searchInput.value) {
+                            filterLocations(''); // Při prázdném textu zobrazí všechny adresy
+                            adjustDropdownVisibility();
+                        }
                     });
 
+                    // Implementovat debounce při zadávání textu do vyhledávání
                     searchInput.addEventListener('input', () => {
-                        filterLocations(locations);
-                        adjustDropdownVisibility();
+                        clearTimeout(debounceTimeout);
+                        debounceTimeout = setTimeout(() => {
+                            filterLocations(searchInput.value.toLowerCase());
+                            adjustDropdownVisibility();
+                        }, 300); // Zpoždění 300ms pro optimalizaci vyhledávání
                     });
 
                     searchInput.addEventListener('blur', () => {
@@ -647,10 +662,22 @@
                         pickupLocationValue.value = selectedOption; // Save selected address into hidden input
                         closeDropdown(); // Close dropdown after selection
                     });
+
+                    // Infinite scrolling listener
+                    pickupLocationSelect.addEventListener('scroll', function () {
+                        if (pickupLocationSelect.scrollTop + pickupLocationSelect.clientHeight >= pickupLocationSelect.scrollHeight) {
+                            if (!allFilteredLoaded) {
+                                loadMoreLocations(); // Load more locations when scrolled to bottom
+                            }
+                        }
+                    });
                 });
 
-            function populateSelect(locations) {
-                pickupLocationSelect.innerHTML = '';
+            function populateSelect(locations, append = false) {
+                // Pokud append je true, přidáme nové položky, jinak smažeme existující a nahradíme je
+                if (!append) {
+                    pickupLocationSelect.innerHTML = ''; // Vymazat předchozí možnosti
+                }
                 locations.forEach(location => {
                     const option = document.createElement('option');
                     option.value = location;
@@ -659,21 +686,20 @@
                 });
             }
 
-            function filterLocations(locations) {
-                const query = searchInput.value.toLowerCase();
-                pickupLocationSelect.innerHTML = '';
-
-                const filteredLocations = locations.filter(location => {
-                    return location.toLowerCase().includes(query);
-                });
-
-                populateSelect(filteredLocations);
+            function filterLocations(query) {
+                // Filtrovat adresy podle zadání a zobrazit prvních 100 výsledků
+                filteredLocations = locations.filter(location => location.toLowerCase().includes(query));
+                currentVisibleLocations = 100; // Reset počtu viditelných adres
+                allFilteredLoaded = filteredLocations.length <= currentVisibleLocations; // Zda jsou všechny adresy již zobrazeny
+                populateSelect(filteredLocations.slice(0, currentVisibleLocations));
+                pickupLocationSelect.size = Math.min(filteredLocations.length, 10); // Adjust the number of visible options
+                pickupLocationSelect.scrollTop = 0; // Reset the scroll position to top
             }
 
             function adjustDropdownVisibility() {
                 const optionCount = pickupLocationSelect.options.length;
                 if (searchInput.value || document.activeElement === searchInput) {
-                    pickupLocationSelect.size = Math.min(optionCount, 10);
+                    pickupLocationSelect.size = Math.min(optionCount, 10); // Zobrazíme maximálně 10 možností najednou
                     pickupLocationSelect.style.display = 'block';
                     pickupLocationSelect.style.height = '';
                 } else {
@@ -685,7 +711,24 @@
                 pickupLocationSelect.size = 1;
                 pickupLocationSelect.style.display = 'none';
             }
+
+            function loadMoreLocations() {
+                // Uložit aktuální scroll pozici
+                const previousScrollTop = pickupLocationSelect.scrollTop;
+
+                if (filteredLocations.length > currentVisibleLocations) {
+                    const nextBatch = filteredLocations.slice(currentVisibleLocations, currentVisibleLocations + 100);
+                    populateSelect(nextBatch, true); // True znamená, že chceme přidat nové položky, ne nahradit
+                    currentVisibleLocations += 100;
+                    allFilteredLoaded = currentVisibleLocations >= filteredLocations.length;
+                }
+
+                // Obnovit předchozí scroll pozici
+                pickupLocationSelect.scrollTop = previousScrollTop;
+            }
         });
+
+
 
 
     

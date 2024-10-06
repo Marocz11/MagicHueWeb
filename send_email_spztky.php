@@ -65,7 +65,7 @@ try {
     $pdf->Cell(95, 10, 'Odběratel:', 0, 1, 'L');
     
     $pdf->SetFont('dejavusans', '', 10);
-    $pdf->Cell(95, 10, 'Marek Halška', 0, 0, 'L');
+    $pdf->Cell(95, 10, 'Print M', 0, 0, 'L');
     $pdf->Cell(95, 10, "{$name}", 0, 1, 'L');
     $pdf->Cell(95, 10, 'Heřmanická 1280, Rychvald, 73532', 0, 0, 'L');
     $pdf->Cell(95, 10, "Telefon: {$phone}", 0, 1, 'L');
@@ -167,13 +167,13 @@ try {
     $spzTextForEmail .= '</ul>';
     
 $mail->Subject = 'Objednávka ' . $orderNumber; // Přidání čísla objednávky do předmětu
-$mail->Body = "<h1>Děkujeme za Vaši objednávku</h1>
-               <p>Děkujeme za váš nákup v našem e-shopu Print M! Vaši objednávku jsme úspěšně přijali a nyní se pustíme do výroby vašich 3D tištěných SPZetek.</p> <br>
-               <p>Jakmile budou hotové, pečlivě je zabalíme a odešleme na vámi zvolenou adresu. O průběhu zpracování vás budeme informovat e-mailem.</p> <br>
-               <p>Těšíme se, až vám vaše unikátní SPZetky doručíme!</p> <br>
-               <h2>Texty na SPZ:</h2>
+$mail->Body = "<h2>Děkujeme za Vaši objednávku</h2>
+               <p>Děkujeme za váš nákup v našem e-shopu Print M! Vaši objednávku jsme úspěšně přijali a nyní se pustíme do výroby vašich 3D tištěných SPZetek.</p>
+               <p>Jakmile budou hotové, pečlivě je zabalíme a odešleme na vámi zvolenou adresu. O průběhu zpracování vás budeme informovat e-mailem.</p>
+               <p>Těšíme se, až vám vaše unikátní SPZetky doručíme!</p>
+               <b>Texty na SPZ:</b>
                $spzTextForEmail
-               <h2>Poznámka:</h2>
+               <b>Poznámka:</b>
                <p>" . nl2br(htmlspecialchars($request)) . "</p>";
 
 

@@ -357,68 +357,56 @@
     <!-- Page Header End -->
 
     <body>
-<!-- Service Start -->
-<div class="container-xxl py-5">
-    <div class="container">
-        <div class="section-title text-center">
-            <h1 class="display-5 mb-5 text-primary">Postup</h1>
+    <!-- Obrázek s textem na začátku stránky -->
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <!-- Obrázek -->
+            <div class="col-md-6 text-center">
+                <img src="img/daniel.jpg" class="img-fluid" alt="Daniel" style="max-width: 80%; height: auto; border-radius: 10px;">
+            </div>
+            
+            <!-- Text -->
+            <div class="col-md-6">
+                <h2 class="text-primary">Vytvořte si personalizovanou SPZtku!</h2>
+                <p class="fs-5">Jedna za 50 Kč. <br><strong>Nyní akce 4+1 Zdarma!</strong></p>
+                <a href="spztky.html" class="btn btn-primary">Chci SPZtku</a>
+            </div>
         </div>
-        <div class="row g-4">
-            <!-- 3D tisk na zakázku -->
-            <div class="col-md-6 col-lg-3 wow fadeUp" data-wow-delay="0.1s">
-                <div class="service-item">
-                    <div class="overflow-hidden">
-                        <img class="img-fluid" src="img/spztkainfo1.png" alt="">
-                    </div>
-                    <div class="p-4 text-center border border-5 border-light border-top-0">
-                        <h4 class="mb-3">Objednání</h4>
-                        <p>Zadáte si jména, názvy, texty jaké chcete.</p>
-                    </div>
-                </div>
+    </div>
+        
+    <!-- Feature Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <!-- Section title -->
+            <div class="section-title text-center">
+                <h1 class="fw-bold">Jak to funguje?</h1>
             </div>
 
-            <!-- Modelování -->
-            <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.3s">
-                <div class="service-item">
-                    <div class="overflow-hidden">
-                        <img class="img-fluid" src="img/spztkainfo2.png" alt="">
-                    </div>
-                    <div class="p-4 text-center border border-5 border-light border-top-0">
-                        <h4 class="mb-3">QR kód</h4>
-                        <p>QR kód pro zaplacení objednávky se zobrazí po odesláno objednávky. Můžete se však podívat do emailu na shrnutí celé objednávky, kde QR kód a pokyny k platbě najdete také.</p>
-                    </div>
+            <div class="row g-5 text-center">
+                <!-- Step 1 -->
+                <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.1s">
+                    <h1 class="display-1 text-primary mb-3">1</h1>
+                    <h5 class="mb-3">Objednání</h5>
+                    <p>Vytvořte si jednotlivé SPZtky dle vašeho přání.</p>
                 </div>
-            </div>
 
-            <!-- Sériová výroba -->
-            <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.5s">
-                <div class="service-item">
-                    <div class="overflow-hidden">
-                        <img class="img-fluid" src="img/spztkainfo3.png" alt="">
-                    </div>
-                    <div class="p-4 text-center border border-5 border-light border-top-0">
-                        <h4 class="mb-3">Odeslání</h4>
-                        <p>Ihned po zaplacení objednávky vám balíček odešleme na vámi vybranou zásilkovnu.</p>
-                    </div>
+                <!-- Step 2 -->
+                <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.3s">
+                    <h1 class="display-1 text-primary mb-3">2</h1>
+                    <h5 class="mb-3">Platba</h5>
+                    <p>QR kód pro zaplacení objednávky se zobrazí po odeslání objednávky. Příjde vám také shrnutí celé objednávky na email.</p>
                 </div>
-            </div>
 
-            <!-- Rapid prototyping -->
-            <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.7s">
-                <div class="service-item">
-                    <div class="overflow-hidden">
-                        <img class="img-fluid" src="img/spztkainfo4.png" alt="">
-                    </div>
-                    <div class="p-4 text-center border border-5 border-light border-top-0">
-                        <h4 class="mb-3">Šťastný zákazník</h4>
-                        <p>Věříme, že vám SPZtky dorazí v pořádku a udělají vám radost.</p>
-                    </div>
+                <!-- Step 3 -->
+                <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.5s">
+                    <h1 class="display-1 text-primary mb-3">3</h1>
+                    <h5 class="mb-3">Odeslání</h5>
+                    <p>Ihned po přijetí platby, vytiskneme vaše SPZtky a odešleme na vámi vybranou zásilkovnu.</p>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Service End -->
+    <!-- Feature End -->
 
     <!-- Form Section Start -->
     <div class="container-fluid bg-light overflow-hidden my-5 px-lg-5">
@@ -535,7 +523,7 @@
         const freeSpzElem = document.getElementById('freeSpz');
         const totalPriceElem = document.getElementById('totalPrice');
         const shippingCostElem = document.getElementById('shippingCost');
-        const pricePerSpz = 55;
+        const pricePerSpz = 50;
         const shippingPrice = 80;
         const freeShippingThreshold = 10;
     
@@ -572,7 +560,7 @@
             // Update DOM elements
             totalSpzElem.innerHTML = spzList.length;
             freeSpzElem.innerHTML = freeSpzCount;
-            totalPriceElem.innerHTML = `${totalPrice} Kč`;
+            totalPriceElem.innerHTML = `${totalPrice}`;
         }
     
         // Add SPZ input with default text

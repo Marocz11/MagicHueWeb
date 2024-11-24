@@ -319,6 +319,23 @@
             .timeline-item-content {
                 text-align: left;
             }
+
+            .row.align-items-center > .col-md-6 img {
+            max-width: 90%; /* Obrázek bude menší, aby lépe seděl na obrazovce */
+            }
+            .row.align-items-center > .col-md-6.text-center.text-md-start {
+                text-align: center; /* Text se zarovná na střed */
+            }
+            .row.align-items-center h2 {
+                font-size: 1.5rem; /* Zmenšíme velikost nadpisu pro mobil */
+            }
+            .row.align-items-center p {
+                font-size: 1rem; /* Zmenšíme velikost textu pro mobil */
+            }
+            .row.align-items-center a.btn {
+                padding: 10px 15px; /* Menší tlačítko */
+                font-size: 0.9rem;
+            }
             
         }
     </style>
@@ -339,8 +356,9 @@
                 <a href="index.html" class="nav-item nav-link">Domů</a>
                 <a href="service.html" class="nav-item nav-link">Služby</a>
                 <a href="project.html" class="nav-item nav-link">Projekty</a>
-                <a href="cenik.html" class="nav-item nav-link active">Ceník</a>
+                <a href="cenik.html" class="nav-item nav-link">Ceník</a>
                 <a href="about.html" class="nav-item nav-link">O nás</a>
+                <a href="spztky.html" class="nav-item nav-link active">SPZtky</a>
                 <a href="quote.html" class="nav-item nav-link">Poptávka</a>
             </div>
             <a href="" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Získat cenovou nabídku<i class="fa fa-arrow-right ms-3"></i></a>
@@ -361,15 +379,15 @@
     <div class="container py-5">
         <div class="row align-items-center">
             <!-- Obrázek -->
-            <div class="col-md-6 text-center">
-                <img src="img/daniel.jpg" class="img-fluid" alt="Daniel" style="max-width: 80%; height: auto; border-radius: 10px;">
+            <div class="col-md-6 text-center mb-4 mb-md-0">
+                <img src="img/daniel.jpg" class="img-fluid" alt="Daniel" style="max-width: 100%; height: auto; border-radius: 10px;">
             </div>
             
             <!-- Text -->
-            <div class="col-md-6">
+            <div class="col-md-6 text-center text-md-start">
                 <h2 class="text-primary">Vytvořte si personalizovanou SPZtku!</h2>
                 <p class="fs-5">Jedna za 50 Kč. <br><strong>Nyní akce 4+1 Zdarma!</strong></p>
-                <a href="spztky.html" class="btn btn-primary">Chci SPZtku</a>
+                <a href="javascript:void(0);" class="btn btn-primary" id="scrollToQuote">Chci SPZtku</a>
             </div>
         </div>
     </div>
@@ -409,15 +427,15 @@
     <!-- Feature End -->
 
     <!-- Form Section Start -->
-    <div class="container-fluid bg-light overflow-hidden my-5 px-lg-5">
+    <div id="quote-section" class="container-fluid bg-light overflow-hidden my-5 px-lg-5">
         <div class="container quote px-lg-0">
             <div class="row g-0 mx-lg-0">
                 <div class="col-lg-12 quote-text py-5 wow fadeIn" data-wow-delay="0.5s">
                     <div class="p-lg-5 pe-lg-0">
                         <div class="section-title text-start">
-                            <h1 class="display-5 mb-4">Poptávka</h1>
+                            <h1 class="display-5 mb-4">Vygeneruj SPZtku</h1>
                         </div>
-                        <p class="mb-4 pb-2">Potřebujete rychlou cenovou nabídku na vaše projekty? Nechte nám zprávu a my se vám ozveme s konkrétní nabídkou na míru.</p>
+                        <p class="mb-4 pb-2">Buďte originální s jedinečnou klíčenkou. Vymyslete si vlastní SPZtku a my vám ji vytiskneme na 3D tiskárně.</p>
 
                         <button id="addSpzButton" class="add-spz-btn">Přidat SPZtku</button>
                         
@@ -473,7 +491,7 @@
                                 </div>
 
                                 <div class="col-12">
-                                    <textarea name="request" class="form-control border-0" placeholder="Poznámka" rows="4" required></textarea>
+                                    <textarea name="request" class="form-control border-0" placeholder="Poznámka" rows="4"></textarea>
                                 </div>
 
                                 <!-- Hidden Subject Field -->
@@ -839,6 +857,13 @@
             .finally(() => {
                 submitButton.disabled = false; // Re-enable the button after processing is complete
             });
+        });
+
+
+
+        document.getElementById('scrollToQuote').addEventListener('click', function () {
+            const quoteSection = document.getElementById('quote-section');
+            quoteSection.scrollIntoView({ behavior: 'smooth' }); // Plynulé scrollování
         });
     </script>
     

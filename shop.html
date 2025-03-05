@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="utf-8">
+    <title>Obchod - printM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js/cart.js" defer></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
+        <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+            <h2 class="m-0 text-primary">printM.cz</h2>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="index.html" class="nav-item nav-link">Domů</a>
+                <a href="shop.html" class="nav-item nav-link active">Obchod</a>
+                <a href="cart.html" class="nav-item nav-link">Košík (<span id="cart-count">0</span>)</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="section-title text-center">
+                <h1 class="display-5 text-primary">Produkty</h1>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="service-item border rounded overflow-hidden shadow">
+                        <div class="overflow-hidden">
+                            <img class="img-fluid" src="img/service-1.jpg" alt="Jmenovka 3D">
+                        </div>
+                        <div class="p-4 text-center">
+                            <h4 class="mb-3">Jmenovka 3D</h4>
+                            <p>Personalizovaná 3D tištěná jmenovka.</p>
+                            <p class="text-primary fw-bold">250 Kč</p>
+                            <button class="btn btn-primary add-to-cart" data-id="1" data-name="Jmenovka 3D" data-price="250">Přidat do košíku</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="service-item border rounded overflow-hidden shadow">
+                        <div class="overflow-hidden">
+                            <img class="img-fluid" src="img/daniel.jpg" alt="Klíčenka SPZ">
+                        </div>
+                        <div class="p-4 text-center">
+                            <h4 class="mb-3">Klíčenka SPZ</h4>
+                            <p>Vlastní klíčenka ve tvaru SPZ s možností personalizace.</p>
+                            <p class="text-primary fw-bold">299 Kč</p>
+                            <button class="btn btn-primary add-to-cart" data-id="2" data-name="Klíčenka SPZ" data-price="299">Přidat do košíku</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

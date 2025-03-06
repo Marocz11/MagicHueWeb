@@ -93,6 +93,16 @@
             font-size: 0.9rem;
             text-align-last: center;
         }
+        
+        /* Styl pro detailnější popis produktu */
+        .product-description {
+            text-align: left;
+            margin-bottom: 1rem;
+        }
+        .product-description p,
+        .product-description ul {
+            margin: 0.5rem 0;
+        }
     </style>
 </head>
 
@@ -133,7 +143,21 @@
                     </div>
                     <div class="p-4">
                         <h4 class="mb-3">Jmenovka 3D</h4>
-                        <p>Vtiskněte oslavě či svatební tabuli jedinečný styl s našimi 3D jmenovkami...</p>
+                        
+                        <!-- Podrobnější popis produktu -->
+                        <div class="product-description">
+                            <p>Vtiskněte oslavě či svatební tabuli jedinečný styl s našimi 3D jmenovkami. Každou můžete personalizovat jménem nebo nápisem dle svého přání a pokud si přejete dvě slova, dokážeme je propojit třeba letadlem, srdíčkem nebo jiným motivem. Vyberte si barvu, která nejlépe ladí s vaší výzdobou, a užijte si kouzlo detailů, které zaujmou na první pohled.</p>
+                            <h5>Technické specifikace:</h5>
+                            <ul>
+                                <li>Materiál: PLA</li>
+                                <li>Výroba: 3D tisk</li>
+                                <li>Font: Cassandra personal – písmena jsou navržena tak, aby tvořila jeden pevný objekt.</li>
+                                <li>Diakritika / interpunkce: Umisťujeme ji nad písmeno, aby zůstala pevně propojená s nápisem.</li>
+                                <li>Velikost: Průměrná velikost jmenovky je cca 40 × 80 × 3 mm (záleží na délce slova).</li>
+                                <li>Barevné varianty: Nabízíme více barev, abyste našli tu pravou pro svou akci.</li>
+                            </ul>
+                        </div>
+                        
                         <p class="text-primary fw-bold">15 Kč / jméno</p>
 
                         <!-- Výběr fontu -->
@@ -167,7 +191,7 @@
 
                         <!-- Tlačítko pro přidání všech jmen do košíku -->
                         <button class="btn btn-primary" id="add-all-to-cart">
-                            Přidat všechna jména do košíku
+                            Vložit do košíku
                         </button>
                     </div>
                 </div>

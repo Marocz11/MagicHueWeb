@@ -2,156 +2,403 @@
 <html lang="cs">
 <head>
     <meta charset="utf-8">
-    <title>Košík - Print M</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Košík</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
 
-    <!-- Google Web Fonts -->
+    <!-- Google Web Fonts, Font Awesome, Bootstrap Icons, atd. -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Roboto:wght@500;700;900&display=swap" rel="stylesheet">
-
-    <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- Libraries Stylesheet -->
-    <link href="lib/animate/animate.min.css" rel="stylesheet">
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
-
-    <!-- Customized Bootstrap Stylesheet -->
+    <!-- Bootstrap Stylesheet -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Template Stylesheet -->
+    <!-- Vlastní styl + popup -->
     <link href="css/style.css" rel="stylesheet">
-    
+    <link href="css/popup2.css" rel="stylesheet">
+
     <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-        }
-        .page-container {
-            flex: 1;
-        }
-        .footer {
-            margin-top: auto;
-        }
+      /* ==============================
+         NAV úprava: Košík jako nav-link
+      ============================== */
+      .navbar-nav .nav-item .nav-link.btn {
+        /* Odstraníme nadbytečné styly, pokud tam byly */
+      }
+
+      /* ==============================
+         Košík - styl položek
+      ============================== */
+      .cart-item {
+        border-bottom: 1px solid #ccc;
+        padding: 0.8rem 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .cart-item .item-name {
+        font-weight: 500;
+      }
+      .cart-item .item-price {
+        margin: 0 1rem;
+      }
+      .cart-item button {
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+        padding: 5px 8px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      /* ==============================
+         Form input styl (jako spztky)
+      ============================== */
+      .form-control.border-0 {
+        background-color: #fff; /* bílý podklad */
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        height: 55px;
+      }
+      .form-control.border-0:focus {
+        box-shadow: none;
+        border-color: #0dcaf0;
+      }
+
+      /* Vzhled dropdownu s pobočkami */
+      #pickupLocation {
+        display: none; /* Ve výchozím stavu skryté */
+        position: absolute;
+        z-index: 999;
+        top: 60px; 
+        width: 100%;
+        max-height: 230px;
+        overflow-y: auto;
+        background-color: #fff;
+        border: 1px solid #ccc;
+      }
+      #pickupLocation option {
+        padding: 5px;
+      }
+      #pickupLocation.show {
+        display: block;
+      }
+
+      /* Pro modální okno (QR kód) */
+      .modal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        display: none;
+        justify-content: center; align-items: center;
+      }
+      .modal-content {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 400px;
+        text-align: center;
+      }
+      .close-btn {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 8px 12px;
+        margin-top: 10px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
     </style>
 </head>
+
 <body>
-    <div class="page-container">
-        <!-- Navbar Start -->
-        <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
-            <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-                <h2 class="m-0 text-primary">Print M</h2>
+<!-- NAVBAR Start -->
+<nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
+    <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+        <h2 class="m-0 text-primary">Print M</h2>
+    </a>
+    <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto p-4 p-lg-0">
+            <a href="index.html" class="nav-item nav-link">Domů</a>
+            <a href="service.html" class="nav-item nav-link">Služby</a>
+            <a href="project.html" class="nav-item nav-link">Projekty</a>
+            <a href="cenik.html" class="nav-item nav-link">Ceník</a>
+            <a href="about.html" class="nav-item nav-link">O nás</a>
+            <a href="spztky.html" class="nav-item nav-link">SPZtky</a>
+            <!-- Košík jako nav-link (ne .btn) -->
+            <a href="cart.html" class="nav-item nav-link">
+                Košík (<span id="cart-count">0</span>)
             </a>
-            <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <div class="navbar-nav ms-auto p-4 p-lg-0">
-                    <a href="index.html" class="nav-item nav-link">Domů</a>
-                    <a href="service.html" class="nav-item nav-link">Služby</a>
-                    <a href="project.html" class="nav-item nav-link">Projekty</a>
-                    <a href="cenik.html" class="nav-item nav-link">Ceník</a>
-                    <a href="about.html" class="nav-item nav-link">O nás</a>
-                    <a href="spztky.html" class="nav-item nav-link">SPZtky</a>
-                    <a href="quote.html" class="nav-item nav-link">Poptávka</a>
-                    <a href="cart.html" class="nav-item nav-link active">Košík <span id="cart-count">(0)</span></a>
-                </div>
-                <a href="quote.html" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Získat cenovou nabídku<i class="fa fa-arrow-right ms-3"></i></a>
-            </div>
-        </nav>
-        <!-- Navbar End -->
-
-        <div class="container-xxl py-5">
-            <div class="container">
-                <div class="section-title text-center">
-                    <h1 class="display-5 text-primary">Váš košík</h1>
-                </div>
-                <div class="row g-4">
-                    <div class="col-lg-8">
-                        <div class="bg-light rounded p-4">
-                            <table class="table table-bordered text-center">
-                                <thead>
-                                    <tr>
-                                        <th>Produkt</th>
-                                        <th>Cena</th>
-                                        <th>Množství</th>
-                                        <th>Akce</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="cart-items">
-                                </tbody>
-                            </table>
-                            <div class="mt-3">
-                                <input type="text" id="discount-code" class="form-control" placeholder="Zadejte slevový kód">
-                                <button class="btn btn-primary mt-2" id="apply-discount">Použít kód</button>
-                            </div>
-                            <div class="mt-3">
-                                <input type="checkbox" id="shipping" class="form-check-input">
-                                <label for="shipping" class="form-check-label">Zásilkovna: 79 Kč</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="bg-light rounded p-4 text-center">
-                            <h3>Celkem: <span id="cart-total">0 Kč</span></h3>
-                            <button class="btn btn-success w-100 mt-3" id="checkout">Dokončit objednávku</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <a href="quote.html" class="nav-item nav-link">Poptávka</a>
         </div>
+        <a href="quote.html" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">
+            Získat cenovou nabídku
+            <i class="fa fa-arrow-right ms-3"></i>
+        </a>
     </div>
-    
-    <!-- Footer Start -->
-    <div class="footer container-fluid bg-dark text-light py-3 wow fadeIn" data-wow-delay="0.1s">
-        <div class="container d-flex justify-content-center align-items-center">
-            <a href="#" class="text-light"><i class="fab fa-instagram fa-2x"></i></a>
-            <div class="mx-4" style="border-left: 2px solid #fff; height: 30px;"></div>
-            <a href="terms.html" class="text-light">Obchodní podmínky</a>
+</nav>
+<!-- NAVBAR End -->
+
+<!-- 
+  1) Šedá sekce, ve které je i košík, i formulář
+  Podobné spztky: container-xxl bg-light ...
+-->
+<div class="container-xxl bg-light overflow-hidden my-5 px-lg-5">
+  <div class="container py-5">
+    <!-- Nadpis Košík -->
+    <div class="section-title text-center">
+      <h1 class="display-5 text-primary">Váš Košík</h1>
+    </div>
+    <!-- Košík Items -->
+    <div class="row justify-content-center mb-5">
+      <div class="col-lg-8 col-md-10">
+        <div id="cart-items" class="mb-3">
+          <!-- Sem se vkládají položky z JS -->
         </div>
+        <div class="text-end">
+          <p class="fw-bold mb-0">Zásilkovna + 80 Kč</p>
+          <p class="mb-1">
+            Celková cena (zboží + doprava): 
+            <span id="cart-total" class="fw-bold">0 Kč</span>
+          </p>
+        </div>
+      </div>
     </div>
-    <!-- Footer End -->
 
-    <!-- JavaScript -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let cart = JSON.parse(localStorage.getItem("cart")) || [];
-            let cartItemsContainer = document.getElementById("cart-items");
-            let cartTotal = document.getElementById("cart-total");
-            let cartCount = document.getElementById("cart-count");
-            let totalPrice = 0;
-            let discountApplied = false;
-            let shippingAdded = false;
-            let discountCode = "SLEVA10";
-            let discountAmount = 10;
-            let shippingCost = 79;
+    <!-- Formulář: Dokončení objednávky -->
+    <div class="section-title text-start">
+      <h1 class="display-5 mb-4">Dokončení objednávky</h1>
+    </div>
+    <p class="mb-4 pb-2">
+      Vyplňte prosím své údaje a vyberte pobočku Zásilkovny.
+    </p>
 
-            function updateCartUI() {
-                cartItemsContainer.innerHTML = "";
-                totalPrice = 0;
-                cart.forEach((item, index) => {
-                    let row = document.createElement("tr");
-                    row.innerHTML = `
-                        <td>${item.name}</td>
-                        <td>${item.price} Kč</td>
-                        <td><input type="number" min="1" value="${item.quantity}" class="form-control quantity-input" data-index="${index}"></td>
-                        <td><button class="btn btn-danger btn-sm" onclick="removeFromCart(${index})">Odstranit</button></td>
-                    `;
-                    cartItemsContainer.appendChild(row);
-                    totalPrice += item.price * item.quantity;
-                });
-                if (shippingAdded) totalPrice += shippingCost;
-                cartTotal.innerText = `${totalPrice.toFixed(2)} Kč`;
-            }
-            updateCartUI();
-        });
-    </script>
-    <script src="js/cart.js"></script>
+    <form id="order-form" action="send_email_spztky.php" method="POST" enctype="multipart/form-data">
+      <div class="row g-3">
+        <div class="col-12 col-sm-6">
+          <input type="text" id="name" name="name" class="form-control border-0" placeholder="Jméno" required>
+        </div>
+        <div class="col-12 col-sm-6">
+          <input type="email" id="email" name="email" class="form-control border-0" placeholder="E-mail" required>
+        </div>
+        <div class="col-12 col-sm-6">
+          <input type="text" id="phone" name="phone" class="form-control border-0" placeholder="Telefon" required>
+        </div>
+        <!-- Zásilkovna vyhledávání -->
+        <div class="col-12 col-sm-6 position-relative">
+          <input type="text" id="search" class="form-control border-0" placeholder="Vyhledat výdejní místo" required>
+          <select id="pickupLocation" name="pickup_location" size="1">
+            <option value="">Vyberte výdejní místo</option>
+          </select>
+        </div>
+        <!-- Poznámka (volitelné) -->
+        <div class="col-12">
+          <textarea name="message" class="form-control border-0" rows="4" placeholder="Poznámka (volitelné)"></textarea>
+        </div>
+      </div>
+
+      <button type="button" id="show-qr-btn" class="btn btn-primary w-100 py-3 mt-4">
+        Odeslat objednávku (Zobrazit QR)
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- MODÁL - QR KÓD -->
+<div class="modal" id="qrModal">
+  <div class="modal-content">
+    <h3>Platba</h3>
+    <div class="qr-container">
+      <img src="img/qr-kod.png" alt="QR kód pro platbu" style="max-width:200px;">
+    </div>
+    <p>Prosíme, proskenujte tento QR kód ve své bankovní aplikaci.</p>
+    <button class="close-btn" id="closeModalBtn">Zavřít</button>
+  </div>
+</div>
+
+<!-- Skripty -->
+<script src="js/bootstrap.bundle.min.js"></script>
+<script>
+// =============================================
+// 1) Logika Košíku (localStorage)
+// =============================================
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+const shippingCost = 80;
+
+function renderCart() {
+  const cartItemsEl = document.getElementById("cart-items");
+  const cartCountEl = document.getElementById("cart-count");
+  const cartTotalEl = document.getElementById("cart-total");
+
+  cartItemsEl.innerHTML = "";
+  let totalPriceItems = 0;
+  let totalCount = 0;
+
+  cart.forEach((item, index) => {
+    let itemPrice = item.price * item.quantity;
+    totalPriceItems += itemPrice;
+    totalCount += item.quantity;
+
+    const div = document.createElement("div");
+    div.className = "cart-item";
+    div.innerHTML = `
+      <div>
+        <span class="item-name">${item.name}</span> 
+        <small>(ks: ${item.quantity})</small>
+      </div>
+      <div>
+        <span class="item-price">${itemPrice} Kč</span>
+        <button onclick="removeItem(${index})">Odebrat</button>
+      </div>
+    `;
+    cartItemsEl.appendChild(div);
+  });
+
+  // Celková cena
+  let totalPriceAll = totalPriceItems + shippingCost;
+  cartCountEl.textContent = totalCount;
+  cartTotalEl.textContent = totalPriceAll + " Kč";
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function removeItem(idx) {
+  cart.splice(idx, 1);
+  renderCart();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderCart();
+});
+
+// =============================================
+// 2) Vyhledávání poboček (CSV) - stejný styl
+// =============================================
+let locations = [];
+let filteredLocations = [];
+let debounceTimeout;
+let currentVisibleLocations = 100;
+let allFilteredLoaded = false;
+let ignoreBlur = false;
+
+const searchInput = document.getElementById("search");
+const pickupSelect = document.getElementById("pickupLocation");
+
+fetch('pickup_locations.csv')
+  .then(resp => resp.text())
+  .then(csvText => {
+    locations = csvText.trim().split('\n');
+    locations.sort((a,b) => a.localeCompare(b, 'cs', {sensitivity:'base'}));
+
+    searchInput.addEventListener('focus', () => {
+      if (!searchInput.value) {
+        filterLocations('');
+        showSelect();
+      }
+    });
+    searchInput.addEventListener('input', () => {
+      clearTimeout(debounceTimeout);
+      debounceTimeout = setTimeout(() => {
+        filterLocations(searchInput.value.toLowerCase());
+        showSelect();
+      }, 300);
+    });
+    searchInput.addEventListener('blur', () => {
+      if(!ignoreBlur && !searchInput.value) {
+        closeDropdown();
+      }
+    });
+    pickupSelect.addEventListener('mousedown', () => {
+      ignoreBlur = true;
+    });
+    pickupSelect.addEventListener('mouseup', () => {
+      ignoreBlur = false;
+      const selectedOpt = pickupSelect.options[pickupSelect.selectedIndex].text;
+      searchInput.value = selectedOpt;
+      closeDropdown();
+    });
+    pickupSelect.addEventListener('scroll', () => {
+      if (pickupSelect.scrollTop + pickupSelect.clientHeight >= pickupSelect.scrollHeight) {
+        if (!allFilteredLoaded) loadMore();
+      }
+    });
+  })
+  .catch(err => console.error(err));
+
+function filterLocations(query) {
+  filteredLocations = locations.filter(loc => loc.toLowerCase().includes(query));
+  currentVisibleLocations = 100;
+  allFilteredLoaded = filteredLocations.length <= currentVisibleLocations;
+  populateSelect(filteredLocations.slice(0, currentVisibleLocations), false);
+  pickupSelect.size = Math.min(filteredLocations.length, 10);
+  pickupSelect.scrollTop = 0;
+}
+
+function populateSelect(list, append) {
+  if(!append) pickupSelect.innerHTML = '';
+  list.forEach(loc => {
+    const opt = document.createElement("option");
+    opt.value = loc;
+    opt.textContent = loc;
+    pickupSelect.appendChild(opt);
+  });
+}
+
+function showSelect() {
+  const optionCount = pickupSelect.options.length;
+  if (searchInput.value || document.activeElement === searchInput) {
+    pickupSelect.size = Math.min(optionCount, 10);
+    pickupSelect.classList.add('show');
+  } else {
+    closeDropdown();
+  }
+}
+function closeDropdown() {
+  pickupSelect.size = 1;
+  pickupSelect.classList.remove('show');
+}
+function loadMore() {
+  const prevScrollTop = pickupSelect.scrollTop;
+  if (filteredLocations.length > currentVisibleLocations) {
+    const nextBatch = filteredLocations.slice(currentVisibleLocations, currentVisibleLocations + 100);
+    populateSelect(nextBatch, true);
+    currentVisibleLocations += 100;
+    allFilteredLoaded = currentVisibleLocations >= filteredLocations.length;
+  }
+  pickupSelect.scrollTop = prevScrollTop;
+}
+
+// =============================================
+// 3) QR Popup
+// =============================================
+const showQrBtn = document.getElementById("show-qr-btn");
+const qrModal   = document.getElementById("qrModal");
+const closeBtn  = document.getElementById("closeModalBtn");
+const orderForm = document.getElementById("order-form");
+
+showQrBtn.addEventListener("click", () => {
+  if(!orderForm.checkValidity()) {
+    orderForm.reportValidity();
+    return;
+  }
+  qrModal.style.display = "flex";
+});
+closeBtn.addEventListener("click", () => {
+  qrModal.style.display = "none";
+  // orderForm.submit(); // pokud chcete odeslat hned
+});
+window.addEventListener("click", e => {
+  if(e.target === qrModal) {
+    qrModal.style.display = "none";
+  }
+});
+</script>
 </body>
 </html>

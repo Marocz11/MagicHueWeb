@@ -263,8 +263,8 @@
                             <ul>
                                 <li>Materiál: PLA</li>
                                 <li>Výroba: 3D tisk</li>
-                                <li>Font: Písmena jsou navržena tak, aby tvořila jeden propojený pevný objekt.</li>
-                                <li>Diakritika / interpunkce: Umisťujeme ji nad písmeno, aby zůstala pevně propojená se jménem.</li>
+                                <li>Font: Cassandra personal – písmena jsou navržena tak, aby tvořila jeden pevný objekt.</li>
+                                <li>Diakritika / interpunkce: Umisťujeme ji nad písmeno, aby zůstala pevně propojená s nápisem.</li>
                                 <li>Velikost: Průměrná velikost jmenovky je cca 40 × 80 × 3 mm (záleží na délce slova).</li>
                                 <li>Barevné varianty: Nabízíme více barev, abyste našli tu pravou pro svou akci.</li>
                             </ul>
@@ -319,10 +319,6 @@
                                 <input type="radio" name="connector" value="arrow">
                                 <img src="img/connect/arrow.png" alt="arrow">
                             </label>
-                            <label title="Circle">
-                                <input type="radio" name="connector" value="circle">
-                                <img src="img/connect/Circle.png" alt="Circle">
-                            </label>
                             <label title="Flash">
                                 <input type="radio" name="connector" value="flash">
                                 <img src="img/connect/flash.png" alt="flash">
@@ -334,6 +330,10 @@
                             <label title="Infinity">
                                 <input type="radio" name="connector" value="infinity">
                                 <img src="img/connect/infinity.png" alt="infinity">
+                            </label>
+                            <label title="Plane">
+                                <input type="radio" name="connector" value="plane">
+                                <img src="img/connect/plane.png" alt="plane">
                             </label>
                             <label title="Ring1">
                                 <input type="radio" name="connector" value="ring1">
@@ -413,7 +413,7 @@
     </div>
 </div>
 
-<!-- Skript: logika jmenovek, přidání do localStorage, aktualizace barvy, fontu i placeholderu -->
+<!-- Skript: logika jmenovek, přidání do localStorage, reindexace, atd. -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     let nameCounter = 1;
@@ -457,10 +457,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const connectorNameMap = {
       'none': 'Žádný',
       'arrow': 'Šipka',
-      'circle': 'Kroužek',
       'flash': 'Blesk',
       'heart': 'Srdce',
       'infinity': 'Nekonečno',
+      'plane': 'Letadlo',
       'ring1': 'Kroužek 1',
       'ring2': 'Kroužek 2',
       'ring3': 'Kroužek 3',
@@ -557,19 +557,20 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-    // Odebrání existující kolonky
+    // Odebrání existující kolonky => reindex a smazání
     window.removeName = function(btn) {
-      btn.parentElement.remove();
+      let parentDiv = btn.parentElement;
+      parentDiv.remove();
+      reindexNames();
     };
 
     // Přidat další jméno
     document.getElementById("add-name").addEventListener("click", function () {
-      nameCounter++;
       let nameInputs = document.getElementById("name-inputs");
       let newDiv = document.createElement("div");
       newDiv.classList.add("name-input-container", "mb-2");
       newDiv.innerHTML = `
-         <span class="me-2 fw-bold">${nameCounter}.</span>
+         <span class="me-2 fw-bold">X.</span>
          <input type="text" class="form-control name-field" placeholder="Nové jméno" maxlength="30">
          <button class="btn btn-danger btn-sm ms-2 remove-name">✖</button>
       `;
@@ -579,14 +580,31 @@ document.addEventListener("DOMContentLoaded", function () {
       let inputElement = newDiv.querySelector('.name-field');
       applyFontAndSize(inputElement, selectedFont);
 
-      // Event pro smazání
+      // Tlačítko pro smazání
       newDiv.querySelector('.remove-name').addEventListener("click", function() {
           newDiv.remove();
+          reindexNames();
       });
 
       // Nastavíme barvu + placeholder
       updateFieldColor(inputElement);
+
+      // Po přidání nové kolonky => reindex
+      reindexNames();
     });
+
+    // Funkce pro přeznačení indexů (1., 2., 3., ...)
+    function reindexNames() {
+      let allContainers = document.querySelectorAll("#name-inputs .name-input-container");
+      let index = 1;
+      allContainers.forEach(container => {
+        let spanIndex = container.querySelector("span.me-2.fw-bold");
+        if (spanIndex) {
+          spanIndex.textContent = index + ".";
+          index++;
+        }
+      });
+    }
 
     // Přidat všechna jména do košíku
     document.getElementById("add-all-to-cart").addEventListener("click", function () {
@@ -613,10 +631,10 @@ document.addEventListener("DOMContentLoaded", function () {
             let connectorSymbol = "";
             switch (selectedConnectorKey) {
               case "arrow": connectorSymbol = "→"; break;
-              case "circle": connectorSymbol = "○"; break;
               case "flash": connectorSymbol = "⚡"; break;
               case "heart": connectorSymbol = "❤️"; break;
               case "infinity": connectorSymbol = "∞"; break;
+              case "plane": connectorSymbol = "✈"; break;
               case "ring1": connectorSymbol = "①"; break;
               case "ring2": connectorSymbol = "②"; break;
               case "ring3": connectorSymbol = "③"; break;
@@ -666,7 +684,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Reset formuláře
     function resetForm() {
-      nameCounter = 1;
       let nameInputs = document.getElementById("name-inputs");
       nameInputs.innerHTML = `
         <div class="name-input-container mb-2">
@@ -679,6 +696,8 @@ document.addEventListener("DOMContentLoaded", function () {
       let firstInput = nameInputs.querySelector('.name-field');
       applyFontAndSize(firstInput, selectedFont);
       updateFieldColor(firstInput);
+      // nameCounter se vrátí na 1
+      nameCounter = 1;
     }
 
     // Inicializace

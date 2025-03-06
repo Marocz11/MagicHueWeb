@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="cs">
+
 <head>
     <meta charset="utf-8">
     <title>Jmenovky - Print M</title>
@@ -11,28 +12,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <!-- Icon Font Stylesheet -->
-    <link
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
-        rel="stylesheet"
-    >
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css"
-        rel="stylesheet"
-    >
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
     <!-- Libraries Stylesheet -->
-    <link
-        href="lib/animate/animate.min.css"
-        rel="stylesheet"
-    >
-    <link
-        href="lib/owlcarousel/assets/owl.carousel.min.css"
-        rel="stylesheet"
-    >
-    <link
-        href="lib/lightbox/css/lightbox.min.css"
-        rel="stylesheet"
-    >
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -44,26 +30,32 @@
             font-family: 'Cassandra';
             src: url('fonts/CassandraPersonalUsuFixed.otf') format('opentype');
         }
+
         @font-face {
             font-family: 'Catchland';
             src: url('fonts/Catchland_PERSONAL_USE_ONLY.otf') format('opentype');
         }
+
         @font-face {
             font-family: 'Damion';
             src: url('fonts/Damion-Regular.ttf') format('truetype');
         }
+
         @font-face {
             font-family: 'MarketingScript';
             src: url('fonts/MarketingScript.ttf') format('truetype');
         }
+
         @font-face {
             font-family: 'Pacifico';
             src: url('fonts/Pacifico-Regular.ttf') format('truetype');
         }
+
         @font-face {
             font-family: 'RemoraCamilla';
             src: url('fonts/remoracamillascript-vm1az.otf') format('opentype');
         }
+
         @font-face {
             font-family: 'Sarina';
             src: url('fonts/Sarina-Regular.ttf') format('truetype');
@@ -71,12 +63,16 @@
 
         /* Výchozí styl pro name-field */
         .name-field {
-            font-family: 'Cassandra', cursive; /* dočasný default */
-            font-size: 2rem;        /* Později se přepíše v JavaScriptu */
-            height: 40px;          /* Fixní výška kvůli zarovnání na střed jedné řádky */
+            font-family: 'Cassandra', cursive;
+            /* dočasný default */
+            font-size: 2rem;
+            /* Později se přepíše v JavaScriptu */
+            height: 40px;
+            /* Fixní výška kvůli zarovnání na střed jedné řádky */
             line-height: 30px;
-            padding: 5px 5px;      /* Bude se přepočítávat v JS (top+bottom) */
-            
+            padding: 5px 5px;
+            /* Bude se přepočítávat v JS (top+bottom) */
+
             width: 70%;
             text-align: center;
             border: 2px solid #ccc;
@@ -89,7 +85,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 70%;
+            width: 40%;
             max-width: 500px;
             margin: auto;
         }
@@ -97,32 +93,60 @@
         /* -- Nastavení tlačítek na šířku 70 %, stejně jako .name-field -- */
         #add-name,
         #add-all-to-cart {
-            width: 53%;
+            width: 40%;
             margin: 0 auto;
             display: block;
         }
+
+        .font-selector-container {
+            display: flex;
+            align-items: center;
+            /* Zarovná label a select na stejnou úroveň */
+            justify-content: center;
+            /* Zarovná na střed stránky */
+            gap: 10px;
+            /* Přidá mezery mezi textem a dropdownem */
+            margin-bottom: 1rem;
+        }
+
+        #font-selector {
+            width: 50%;
+            /* Zmenší šířku dropdown menu */
+            max-width: 200px;
+            /* Omezí maximální šířku */
+            padding: 5px;
+            /* Zmenší vnitřní odsazení */
+            font-size: 0.9rem;
+            /* Zmenší velikost písma */
+            text-align-last: center;
+            /* Zarovná text ve selectu na střed */
+        }
     </style>
 </head>
+
 <body>
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
         <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
             <h2 class="m-0 text-primary">Print M</h2>
         </a>
-        <button
-            type="button"
-            class="navbar-toggler me-4"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarCollapse"
-        >
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
                 <a href="index.html" class="nav-item nav-link">Domů</a>
-                <a href="jmenovky.html" class="nav-item nav-link active">Jmenovky</a>
-                <a href="cart.html" class="nav-item nav-link">Košík (<span id="cart-count">0</span>)</a>
+                <a href="service.html" class="nav-item nav-link">Služby</a>
+                <a href="project.html" class="nav-item nav-link">Projekty</a>
+                <a href="cenik.html" class="nav-item nav-link">Ceník</a>
+                <a href="about.html" class="nav-item nav-link">O nás</a>
+                <a href="spztky.html" class="nav-item nav-link">SPZtky</a>
+                <a href="spztky.html" class="nav-item nav-link active">Jmenovky</a>
+                <a href="cart.html" class="nav-item nav-link">Košík <span id="cart-count">(0)</span></a>
+                <a href="quote.html" class="nav-item nav-link">Poptávka</a>
             </div>
+            <a href="" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Získat cenovou nabídku<i
+                    class="fa fa-arrow-right ms-3"></i></a>
         </div>
     </nav>
     <!-- Navbar End -->
@@ -136,11 +160,7 @@
                 <div class="col-md-8">
                     <div class="service-item border rounded overflow-hidden shadow text-center">
                         <div class="overflow-hidden">
-                            <img
-                                class="img-fluid"
-                                src="img/service-1.jpg"
-                                alt="Jmenovka 3D"
-                            >
+                            <img class="img-fluid" src="img/service-1.jpg" alt="Jmenovka 3D">
                         </div>
                         <div class="p-4">
                             <h4 class="mb-3">Jmenovka 3D</h4>
@@ -148,7 +168,7 @@
                             <p class="text-primary fw-bold">15 Kč / jméno</p>
 
                             <!-- Rozbalovací seznam pro výběr fontu (abecedně) -->
-                            <div class="mb-3">
+                            <div class="font-selector-container">
                                 <label for="font-selector" class="form-label">Vyberte font:</label>
                                 <select id="font-selector" class="form-select">
                                     <option value="Cassandra" selected>Cassandra</option>
@@ -161,6 +181,8 @@
                                 </select>
                             </div>
 
+
+
                             <!-- Tlačítko přidat další jméno -->
                             <button class="btn btn-primary mb-3" id="add-name">
                                 Přidat další jméno
@@ -170,17 +192,9 @@
                             <div id="name-inputs" class="d-flex flex-column align-items-center">
                                 <div class="name-input-container mb-2">
                                     <span class="me-2 fw-bold">1.</span>
-                                    <input
-                                        type="text"
-                                        id="name1"
-                                        class="form-control name-field"
-                                        placeholder="Nové jméno"
-                                        maxlength="30"
-                                    >
-                                    <button
-                                        class="btn btn-danger btn-sm ms-2 remove-name"
-                                        onclick="removeName(this)"
-                                    >
+                                    <input type="text" id="name1" class="form-control name-field"
+                                        placeholder="Nové jméno" maxlength="30">
+                                    <button class="btn btn-danger btn-sm ms-2 remove-name" onclick="removeName(this)">
                                         ✖
                                     </button>
                                 </div>
@@ -199,10 +213,10 @@
 
     <!-- Skript -->
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             let nameCounter = 1;
 
-            // 1) Číselné velikosti pro každý font (pouze NUMBER, bez "rem")
+            // Velikosti fontů v "rem"
             const rawFontSizes = {
                 'Cassandra': 2,
                 'Catchland': 2,
@@ -213,24 +227,18 @@
                 'Sarina': 3.2
             };
 
-            // 2) Konstanta, kterou násobíme všechny fonty
-            const globalFactor = 0.5; // Tím si měníme "základní" velikost všech fontů
-
-            // 3) Připravíme mapu s výslednými velikostmi fontů v "rem"
+            const globalFactor = 0.5; // Upravuje celkovou velikost fontů
             const fontSizes = {};
             for (const fontName in rawFontSizes) {
                 fontSizes[fontName] = (rawFontSizes[fontName] * globalFactor) + 'rem';
             }
 
-            // Některé fonty můžeme posouvat pomocí top paddingu (kvůli vertical centering)
             const fontTopPadding = {
                 'Catchland': 20
             };
-            // Výška boxu je 80 (height=80), line-height=50, takže na padding zbývá 30 px
             const totalVerticalPadding = 30;
             const defaultTopPadding = 15;
 
-            // Funkce pro nastavení fontu a vertical posunu
             function applyFontAndSize(inputElem, font) {
                 let size = fontSizes[font] || '2rem';
                 inputElem.style.fontFamily = font;
@@ -239,112 +247,106 @@
                 let topPad = fontTopPadding[font] || defaultTopPadding;
                 let bottomPad = totalVerticalPadding - topPad;
                 inputElem.style.padding = `${topPad}px 15px ${bottomPad}px 15px`;
-                inputElem.style.lineHeight = "50px"; // aby se text udržel na jedné řádce
+                inputElem.style.lineHeight = "50px";
             }
 
-            // Přidání nového pole pro jméno
-            document.getElementById("add-name").addEventListener("click", function() {
+            // Přidání nového jména
+            document.getElementById("add-name").addEventListener("click", function () {
                 nameCounter++;
                 let nameInputs = document.getElementById("name-inputs");
-                
+
                 let newInput = document.createElement("div");
                 newInput.classList.add("name-input-container", "mb-2");
-                newInput.innerHTML = 
+                newInput.innerHTML =
                     `<span class="me-2 fw-bold">${nameCounter}.</span>
-                     <input
-                        type="text"
-                        id="name${nameCounter}"
-                        class="form-control name-field"
-                        placeholder="Nové jméno"
-                        maxlength="30"
-                     >
-                     <button
-                        class="btn btn-danger btn-sm ms-2 remove-name"
-                        onclick="removeName(this)"
-                     >
-                        ✖
-                     </button>`;
-                
+             <input type="text" class="form-control name-field" placeholder="Nové jméno" maxlength="30">
+             <button class="btn btn-danger btn-sm ms-2 remove-name">✖</button>`;
+
                 nameInputs.appendChild(newInput);
 
-                // Nastavit font i pro nově vytvořený input
                 let selectedFont = document.getElementById("font-selector").value;
                 let inputElement = newInput.querySelector('.name-field');
                 applyFontAndSize(inputElement, selectedFont);
+
+                newInput.querySelector('.remove-name').addEventListener("click", function () {
+                    newInput.remove();
+                });
             });
 
+            // Aktualizace počtu položek v košíku
+            function updateCartCount() {
+                let cart = JSON.parse(localStorage.getItem("cart")) || [];
+                let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+                let cartCounter = document.getElementById("cart-count");
+                if (cartCounter) {
+                    cartCounter.textContent = totalItems;
+                }
+            }
+
             // Přidání všech jmen do košíku
-            document.getElementById("add-all-to-cart").addEventListener("click", function() {
+            document.getElementById("add-all-to-cart").addEventListener("click", function () {
                 let nameFields = document.querySelectorAll(".name-field");
                 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
                 nameFields.forEach(field => {
-                    if (field.value.trim() !== "") {
-                        cart.push({
-                            name: `Jmenovka 3D - ${field.value.trim()}`,
-                            price: 15,
-                            quantity: 1
-                        });
+                    let nameValue = field.value.trim();
+                    if (nameValue !== "") {
+                        let existingItem = cart.find(item => item.name === `Jmenovka 3D - ${nameValue}`);
+                        if (existingItem) {
+                            existingItem.quantity += 1;
+                        } else {
+                            cart.push({
+                                name: `Jmenovka 3D - ${nameValue}`,
+                                price: 15,
+                                quantity: 1
+                            });
+                        }
                     }
                 });
 
                 localStorage.setItem("cart", JSON.stringify(cart));
                 alert("Všechna jména byla přidána do košíku.");
+
+                updateCartCount();
                 resetForm();
             });
 
-            // Odstranění konkrétního pole
-            window.removeName = function(button) {
-                button.parentElement.remove();
-            }
-
-            // Reset po přidání do košíku
             function resetForm() {
                 nameCounter = 1;
                 let nameInputs = document.getElementById("name-inputs");
 
                 nameInputs.innerHTML = `
-                    <div class="name-input-container mb-2">
-                        <span class="me-2 fw-bold">1.</span>
-                        <input
-                            type="text"
-                            id="name1"
-                            class="form-control name-field"
-                            placeholder="Nové jméno"
-                            maxlength="30"
-                        >
-                        <button
-                            class="btn btn-danger btn-sm ms-2 remove-name"
-                            onclick="removeName(this)"
-                        >
-                            ✖
-                        </button>
-                    </div>
-                `;
+            <div class="name-input-container mb-2">
+                <span class="me-2 fw-bold">1.</span>
+                <input type="text" class="form-control name-field" placeholder="Nové jméno" maxlength="30">
+                <button class="btn btn-danger btn-sm ms-2 remove-name">✖</button>
+            </div>
+        `;
 
-                // Znovu nastavíme font a styl pro jediný input
                 let selectedFont = document.getElementById("font-selector").value;
                 let firstInput = nameInputs.querySelector('.name-field');
                 if (firstInput) {
                     applyFontAndSize(firstInput, selectedFont);
                 }
+
+                document.querySelector('.remove-name').addEventListener("click", function () {
+                    this.parentElement.remove();
+                });
             }
 
-            // Když se změní font v selectu, aplikujeme ho všem inputům
-            document.getElementById("font-selector").addEventListener("change", function() {
+            document.getElementById("font-selector").addEventListener("change", function () {
                 let selectedFont = this.value;
                 document.querySelectorAll(".name-field").forEach(field => {
                     applyFontAndSize(field, selectedFont);
                 });
             });
 
-            // Při prvním načtení stránky aplikujeme výchozí (zvolený) font
-            let defaultFont = document.getElementById("font-selector").value;
-            document.querySelectorAll(".name-field").forEach(field => {
-                applyFontAndSize(field, defaultFont);
-            });
+            updateCartCount();
         });
-    </script>
 
+    </script>
+<script src="js/script.js"></script>
 </body>
+
 </html>

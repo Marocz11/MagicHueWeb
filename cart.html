@@ -113,7 +113,7 @@
 </head>
 
 <body>
-<!-- NAVBAR Start -->
+<!-- Sjednocený Navbar s Košíkem místo "Získat cenovou nabídku" a přidanými Jmenovkami -->
 <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
     <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
         <h2 class="m-0 text-primary">Print M</h2>
@@ -124,37 +124,33 @@
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav ms-auto p-4 p-lg-0">
             <a href="index.html" class="nav-item nav-link">Domů</a>
-            <a href="service.html" class="nav-item nav-link">Služby</a>
-            <a href="project.html" class="nav-item nav-link">Projekty</a>
-            <a href="cenik.html" class="nav-item nav-link">Ceník</a>
-            <a href="about.html" class="nav-item nav-link">O nás</a>
+            <a href="service.html" class="nav-item nav-link ">Služby</a>
+            <a href="project.html" class="nav-item nav-link ">Projekty</a>
+            <a href="cenik.html" class="nav-item nav-link ">Ceník</a>
+            <a href="about.html" class="nav-item nav-link ">O nás</a>
+            <a href="quote.html" class="nav-item nav-link ">Poptávka</a>
             <a href="spztky.html" class="nav-item nav-link">SPZtky</a>
-            <a href="cart.html" class="nav-item nav-link">
-                Košík (<span id="cart-count">0</span>)
-            </a>
-            <a href="quote.html" class="nav-item nav-link">Poptávka</a>
+            <a href="jmenovky.html" class="nav-item nav-link">Jmenovky</a>
         </div>
-        <a href="quote.html" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">
-            Získat cenovou nabídku
-            <i class="fa fa-arrow-right ms-3"></i>
-        </a>
+        <a href="cart.html" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Košík (<span id="cart-count">0</span>)<i class="fa fa-shopping-cart ms-3"></i></a>
     </div>
 </nav>
-<!-- NAVBAR End -->
+    <!-- Navbar End -->
+
 
 <!-- Šedá sekce (košík + formulář), styl jako spztky -->
 <div class="container-xxl bg-light overflow-hidden my-5 px-lg-5">
   <div class="container py-5">
     <!-- Nadpis Košík -->
     <div class="section-title text-center">
-      <h1 class="display-5 text-primary">Váš Košík plus</h1>
+      <h1 class="display-5 text-primary">Váš Košík</h1>
     </div>
     <!-- Košík Items -->
     <div class="row justify-content-center mb-5">
       <div class="col-lg-8 col-md-10">
         <div id="cart-items" class="mb-3"><!-- sem se vkládají položky --></div>
         <div class="text-end">
-          <p class="fw-bold mb-0">Zásilkovna + 80 Kčs</p>
+          <p class="fw-bold mb-0">Zásilkovna + 80 Kč</p>
           <p class="mb-1">
             Celková cena (zboží + doprava): 
             <span id="cart-total" class="fw-bold">0 Kč</span>
@@ -420,5 +416,7 @@ window.addEventListener("click", e => {
   }
 });
 </script>
+<script src="js/navbar.js"></script>
 </body>
+
 </html>

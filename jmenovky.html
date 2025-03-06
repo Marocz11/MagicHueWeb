@@ -97,7 +97,7 @@
 </head>
 
 <body>
-<!-- Navbar Start -->
+<!-- Sjednocený Navbar s Košíkem místo "Získat cenovou nabídku" a přidanými Jmenovkami -->
 <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
     <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
         <h2 class="m-0 text-primary">Print M</h2>
@@ -107,22 +107,18 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav ms-auto p-4 p-lg-0">
-            <a href="index.html" class="nav-item nav-link">Domů</a>
+            <a href="index.html" class="nav-item nav-link active">Domů</a>
             <a href="service.html" class="nav-item nav-link">Služby</a>
             <a href="project.html" class="nav-item nav-link">Projekty</a>
             <a href="cenik.html" class="nav-item nav-link">Ceník</a>
             <a href="about.html" class="nav-item nav-link">O nás</a>
+            <a href="quote.html" class="nav-item nav-link">Poptávka</a>
             <a href="spztky.html" class="nav-item nav-link">SPZtky</a>
             <a href="jmenovky.html" class="nav-item nav-link active">Jmenovky</a>
-            <a href="cart.html" class="nav-item nav-link">Košík <span id="cart-count">(0)</span></a>
-            <a href="quote.html" class="nav-item nav-link">Poptávka</a>
         </div>
-        <a href="quote.html" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Získat cenovou nabídku
-            <i class="fa fa-arrow-right ms-3"></i>
-        </a>
+        <a href="cart.html" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Košík (<span id="cart-count">0</span>)<i class="fa fa-shopping-cart ms-3"></i></a>
     </div>
 </nav>
-<!-- Navbar End -->
 
 <div class="container-xxl py-5">
     <div class="container">
@@ -292,7 +288,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
         let cartCounter = document.getElementById("cart-count");
         if (cartCounter) {
-            cartCounter.textContent = `(${totalItems})`;
+            cartCounter.textContent = totalItems;
         }
     }
 
@@ -321,5 +317,6 @@ document.addEventListener("DOMContentLoaded", function () {
     updateCartCount();
 });
 </script>
+<script src="js/navbar.js"></script>
 </body>
 </html>

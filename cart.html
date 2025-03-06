@@ -23,13 +23,6 @@
 
     <style>
       /* ==============================
-         NAV úprava: Košík jako nav-link
-      ============================== */
-      .navbar-nav .nav-item .nav-link.btn {
-        /* Odstraníme nadbytečné styly, pokud tam byly */
-      }
-
-      /* ==============================
          Košík - styl položek
       ============================== */
       .cart-item {
@@ -68,23 +61,27 @@
         border-color: #0dcaf0;
       }
 
-      /* Vzhled dropdownu s pobočkami */
+      /* Vzhled "rolovacího okna" s pobočkami – STEJNĚ jako spztky.html */
       #pickupLocation {
-        display: none; /* Ve výchozím stavu skryté */
         position: absolute;
         z-index: 999;
-        top: 60px; 
         width: 100%;
-        max-height: 230px;
-        overflow-y: auto;
         background-color: #fff;
-        border: 1px solid #ccc;
-      }
-      #pickupLocation option {
-        padding: 5px;
+        border: 1px solid #ddd;
+        max-height: 300px;
+        overflow-y: auto;
+        display: none; /* skryté dokud se neukáže */
       }
       #pickupLocation.show {
-        display: block;
+        display: block; /* zobrazíme při vyhledávání */
+      }
+      /* Každá adresa pobočky bude <div> */
+      .pickup-item {
+        padding: 8px;
+        cursor: pointer;
+      }
+      .pickup-item:hover {
+        background-color: #f0f0f0;
       }
 
       /* Pro modální okno (QR kód) */
@@ -132,7 +129,6 @@
             <a href="cenik.html" class="nav-item nav-link">Ceník</a>
             <a href="about.html" class="nav-item nav-link">O nás</a>
             <a href="spztky.html" class="nav-item nav-link">SPZtky</a>
-            <!-- Košík jako nav-link (ne .btn) -->
             <a href="cart.html" class="nav-item nav-link">
                 Košík (<span id="cart-count">0</span>)
             </a>
@@ -146,10 +142,7 @@
 </nav>
 <!-- NAVBAR End -->
 
-<!-- 
-  1) Šedá sekce, ve které je i košík, i formulář
-  Podobné spztky: container-xxl bg-light ...
--->
+<!-- Šedá sekce (košík + formulář), styl jako spztky -->
 <div class="container-xxl bg-light overflow-hidden my-5 px-lg-5">
   <div class="container py-5">
     <!-- Nadpis Košík -->
@@ -159,9 +152,7 @@
     <!-- Košík Items -->
     <div class="row justify-content-center mb-5">
       <div class="col-lg-8 col-md-10">
-        <div id="cart-items" class="mb-3">
-          <!-- Sem se vkládají položky z JS -->
-        </div>
+        <div id="cart-items" class="mb-3"><!-- sem se vkládají položky --></div>
         <div class="text-end">
           <p class="fw-bold mb-0">Zásilkovna + 80 Kč</p>
           <p class="mb-1">
@@ -177,7 +168,7 @@
       <h1 class="display-5 mb-4">Dokončení objednávky</h1>
     </div>
     <p class="mb-4 pb-2">
-      Vyplňte prosím své údaje a vyberte pobočku Zásilkovny.
+      Vyplňte prosím své údaje a vyberte pobočku Zásilkovny (stejně jako v SPZtkách).
     </p>
 
     <form id="order-form" action="send_email_spztky.php" method="POST" enctype="multipart/form-data">
@@ -191,12 +182,17 @@
         <div class="col-12 col-sm-6">
           <input type="text" id="phone" name="phone" class="form-control border-0" placeholder="Telefon" required>
         </div>
-        <!-- Zásilkovna vyhledávání -->
+        <!-- Zásilkovna vyhledávání (stejné design. Princip) -->
         <div class="col-12 col-sm-6 position-relative">
           <input type="text" id="search" class="form-control border-0" placeholder="Vyhledat výdejní místo" required>
-          <select id="pickupLocation" name="pickup_location" size="1">
-            <option value="">Vyberte výdejní místo</option>
-          </select>
+          <!-- 
+            Místo <select> je tady <div> – stejný styl jako spztky 
+            Do něj budeme vkládat <div class="pickup-item">Jedna adresa</div>
+          -->
+          <div id="pickupLocation"></div>
+
+          <!-- Skrytý input, kam uložíme vybranou adresu pro odeslání -->
+          <input type="hidden" id="pickupLocationValue" name="pickup_location">
         </div>
         <!-- Poznámka (volitelné) -->
         <div class="col-12">
@@ -278,101 +274,116 @@ document.addEventListener("DOMContentLoaded", () => {
   renderCart();
 });
 
-// =============================================
-// 2) Vyhledávání poboček (CSV) - stejný styl
-// =============================================
-let locations = [];
-let filteredLocations = [];
-let debounceTimeout;
-let currentVisibleLocations = 100;
-let allFilteredLoaded = false;
-let ignoreBlur = false;
 
-const searchInput = document.getElementById("search");
-const pickupSelect = document.getElementById("pickupLocation");
+// =============================================
+// 2) Vyhledávání poboček - STEJNÉ JAKO SPZTKY
+//    <div id="pickupLocation"> s .pickup-item
+// =============================================
+let allLocations = [];      // CSV
+let filteredLocs = [];      // vyfiltrované
+let debounceTimer;
+let currentIndex = 0;       // kolik jich už zobrazeno
+let allLoaded = false;      // jestli jsme zobrazili vše
+let ignoreBlur = false;     // pro focus/blur
 
-fetch('pickup_locations.csv')
+const searchEl     = document.getElementById("search");
+const locationDiv  = document.getElementById("pickupLocation");
+const hiddenInput  = document.getElementById("pickupLocationValue");
+
+fetch("pickup_locations.csv")
   .then(resp => resp.text())
-  .then(csvText => {
-    locations = csvText.trim().split('\n');
-    locations.sort((a,b) => a.localeCompare(b, 'cs', {sensitivity:'base'}));
+  .then(csv => {
+    allLocations = csv.trim().split("\n");
+    allLocations.sort((a,b) => a.localeCompare(b, 'cs', {sensitivity:'base'}));
 
-    searchInput.addEventListener('focus', () => {
-      if (!searchInput.value) {
-        filterLocations('');
-        showSelect();
+    // Když se klikne do inputu a nic tam není, zobrazíme vše
+    searchEl.addEventListener("focus", () => {
+      if(!searchEl.value) {
+        filterLocations("");
+        showLocations();
       }
     });
-    searchInput.addEventListener('input', () => {
-      clearTimeout(debounceTimeout);
-      debounceTimeout = setTimeout(() => {
-        filterLocations(searchInput.value.toLowerCase());
-        showSelect();
+
+    // Debounce při psaní
+    searchEl.addEventListener("input", () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        filterLocations(searchEl.value.toLowerCase());
+        showLocations();
       }, 300);
     });
-    searchInput.addEventListener('blur', () => {
-      if(!ignoreBlur && !searchInput.value) {
-        closeDropdown();
+
+    // Blur
+    searchEl.addEventListener("blur", () => {
+      if(!ignoreBlur && !searchEl.value) {
+        closeLocations();
       }
     });
-    pickupSelect.addEventListener('mousedown', () => {
+    // Mousedown uvnitř divu
+    locationDiv.addEventListener("mousedown", () => {
       ignoreBlur = true;
     });
-    pickupSelect.addEventListener('mouseup', () => {
+    locationDiv.addEventListener("mouseup", () => {
       ignoreBlur = false;
-      const selectedOpt = pickupSelect.options[pickupSelect.selectedIndex].text;
-      searchInput.value = selectedOpt;
-      closeDropdown();
     });
-    pickupSelect.addEventListener('scroll', () => {
-      if (pickupSelect.scrollTop + pickupSelect.clientHeight >= pickupSelect.scrollHeight) {
-        if (!allFilteredLoaded) loadMore();
+    // Scroll infinite
+    locationDiv.addEventListener("scroll", () => {
+      if(locationDiv.scrollTop + locationDiv.clientHeight >= locationDiv.scrollHeight) {
+        if(!allLoaded) loadMore();
       }
     });
   })
   .catch(err => console.error(err));
 
+// Filtrovat
 function filterLocations(query) {
-  filteredLocations = locations.filter(loc => loc.toLowerCase().includes(query));
-  currentVisibleLocations = 100;
-  allFilteredLoaded = filteredLocations.length <= currentVisibleLocations;
-  populateSelect(filteredLocations.slice(0, currentVisibleLocations), false);
-  pickupSelect.size = Math.min(filteredLocations.length, 10);
-  pickupSelect.scrollTop = 0;
+  filteredLocs = allLocations.filter(loc => loc.toLowerCase().includes(query));
+  currentIndex = 0;
+  allLoaded = false;
+  locationDiv.scrollTop = 0;
+  locationDiv.innerHTML = "";
+  loadMore(); // načteme první batch
 }
 
-function populateSelect(list, append) {
-  if(!append) pickupSelect.innerHTML = '';
-  list.forEach(loc => {
-    const opt = document.createElement("option");
-    opt.value = loc;
-    opt.textContent = loc;
-    pickupSelect.appendChild(opt);
-  });
-}
-
-function showSelect() {
-  const optionCount = pickupSelect.options.length;
-  if (searchInput.value || document.activeElement === searchInput) {
-    pickupSelect.size = Math.min(optionCount, 10);
-    pickupSelect.classList.add('show');
+// Zobrazit "dropdown"
+function showLocations() {
+  if(filteredLocs.length > 0) {
+    locationDiv.classList.add("show");
   } else {
-    closeDropdown();
+    locationDiv.classList.remove("show");
   }
 }
-function closeDropdown() {
-  pickupSelect.size = 1;
-  pickupSelect.classList.remove('show');
+
+// Zavřít "dropdown"
+function closeLocations() {
+  locationDiv.classList.remove("show");
 }
+
+// Načíst další batch
 function loadMore() {
-  const prevScrollTop = pickupSelect.scrollTop;
-  if (filteredLocations.length > currentVisibleLocations) {
-    const nextBatch = filteredLocations.slice(currentVisibleLocations, currentVisibleLocations + 100);
-    populateSelect(nextBatch, true);
-    currentVisibleLocations += 100;
-    allFilteredLoaded = currentVisibleLocations >= filteredLocations.length;
+  const batchSize = 100;
+  let end = currentIndex + batchSize;
+  if(end >= filteredLocs.length) {
+    end = filteredLocs.length;
+    allLoaded = true;
   }
-  pickupSelect.scrollTop = prevScrollTop;
+  const batch = filteredLocs.slice(currentIndex, end);
+  currentIndex = end;
+
+  batch.forEach(addr => {
+    const div = document.createElement("div");
+    div.className = "pickup-item";
+    div.textContent = addr;
+    // Po kliknutí: vyplníme input + hidden field
+    div.addEventListener("click", () => {
+      searchEl.value = addr;
+      hiddenInput.value = addr;
+      closeLocations();
+    });
+    locationDiv.appendChild(div);
+  });
+
+  showLocations();
 }
 
 // =============================================
@@ -384,10 +395,19 @@ const closeBtn  = document.getElementById("closeModalBtn");
 const orderForm = document.getElementById("order-form");
 
 showQrBtn.addEventListener("click", () => {
+  // Ověříme, že input "search" není prázdný
+  // (protože jsme zrušili "required" přímo na <input> – teď to je jen v code)
+  if(!searchEl.value) {
+    alert("Vyberte výdejní místo (Zásilkovna)!");
+    searchEl.focus();
+    return;
+  }
+  // Ověříme, jestli form je validní
   if(!orderForm.checkValidity()) {
     orderForm.reportValidity();
     return;
   }
+  // Zobrazit popup
   qrModal.style.display = "flex";
 });
 closeBtn.addEventListener("click", () => {

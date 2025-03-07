@@ -16,8 +16,42 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet"> 
 
-    <!-- Vlastní styl pro jmenovky -->
+    <!-- Vlastní styl pro jmenovky a vlastní slider -->
     <style>
+        /* Vlastní slider */
+        .slider {
+          position: relative;
+          overflow: hidden;
+          max-width: 100%;
+          margin: auto;
+        }
+        .slider img {
+          display: none;
+          width: 100%;
+          height: auto;
+        }
+        .slider img.active {
+          display: block;
+        }
+        .slider .arrow {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          background-color: rgba(0, 0, 0, 0.5);
+          border: none;
+          color: #fff;
+          padding: 10px;
+          cursor: pointer;
+          font-size: 1.5rem;
+          z-index: 2;
+        }
+        .slider .prev {
+          left: 10px;
+        }
+        .slider .next {
+          right: 10px;
+        }
+
         /* Různé fonty (ukázka) */
         @font-face {
             font-family: 'Cassandra';
@@ -213,12 +247,6 @@
         .color-selector-container input[type="radio"]:checked + span {
             border-color: #0d6efd;
         }
-
-        /* Styl pro carousel obrázků */
-        .carousel-item img {
-            width: 100%; 
-            height: auto; /* aby se výška přizpůsobila obsahu */
-        }
     </style>
 </head>
 
@@ -257,31 +285,14 @@
             <div class="col-md-8">
                 <div class="service-item border rounded overflow-hidden shadow text-center">
 
-                    <!-- Více fotek v Carouselu -->
-                    <div id="carouselJmenovky" class="carousel slide" data-bs-ride="carousel">
-                      <div class="carousel-inner">
-                        <!-- První obrázek -->
-                        <div class="carousel-item active">
-                          <img class="img-fluid" src="img/jmenovky/Jmenovky1.jpg" alt="Jmenovka 3D 1">
-                        </div>
-                        <!-- Druhý obrázek -->
-                        <div class="carousel-item">
-                          <img class="img-fluid" src="img/jmenovky/Jmenovky2.jpg" alt="Jmenovka 3D 2">
-                        </div>
-                        <!-- Třetí obrázek -->
-                        <div class="carousel-item">
-                          <img class="img-fluid" src="img/jmenovky/Jmenovky3.jpg" alt="Jmenovka 3D 3">
-                        </div>
-                      </div>
-                      <!-- Ovládací šipky -->
-                      <button class="carousel-control-prev" type="button" data-bs-target="#carouselJmenovky" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Předchozí</span>
-                      </button>
-                      <button class="carousel-control-next" type="button" data-bs-target="#carouselJmenovky" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Další</span>
-                      </button>
+                    <!-- Vlastní slider -->
+                    <div class="slider" id="customSlider">
+                        <img src="img/jmenovky/Jmenovky1.jpg" alt="Jmenovka 3D 1" class="active">
+                        <img src="img/jmenovky/Jmenovky2.jpg" alt="Jmenovka 3D 2">
+                        <img src="img/jmenovky/Jmenovky3.jpg" alt="Jmenovka 3D 3">
+                        <img src="img/jmenovky/JmenovkyUprava.jpg" alt="Jmenovka 3D Uprava">
+                        <button class="arrow prev" id="prevBtn">&#10094;</button>
+                        <button class="arrow next" id="nextBtn">&#10095;</button>
                     </div>
 
                     <div class="p-4">
@@ -444,8 +455,38 @@
     </div>
 </div>
 
+<!-- Skript pro vlastní slider -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const slider = document.getElementById("customSlider");
+    const images = slider.querySelectorAll("img");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    let currentIndex = 0;
+    
+    function showImage(index) {
+        images.forEach((img, i) => {
+            if(i === index) {
+                img.classList.add("active");
+            } else {
+                img.classList.remove("active");
+            }
+        });
+    }
+    
+    prevBtn.addEventListener("click", function(){
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        showImage(currentIndex);
+    });
+    
+    nextBtn.addEventListener("click", function(){
+        currentIndex = (currentIndex + 1) % images.length;
+        showImage(currentIndex);
+    });
+});
+</script>
+
 <!-- Skript: logika jmenovek, přidání do localStorage, reindexace, atd. -->
-<script src="js/bootstrap.bundle.min.js"></script> <!-- Potřebné pro funkci Carouselu (ovládací šipky) -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     let nameCounter = 1;
@@ -558,9 +599,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (colorInput) {
         let chosenColor = colorMap[colorInput.value];
         field.style.color = chosenColor;
-        // Pokud je text bílý => #6c757d, jinak bílá
         field.style.backgroundColor = (chosenColor.toLowerCase() === "#ffffff" ? "#6c757d" : "#ffffff");
-        // Placeholder barvu nastavíme stejně jako text
         field.style.setProperty('--placeholder-color', chosenColor);
       }
     }
@@ -612,16 +651,12 @@ document.addEventListener("DOMContentLoaded", function () {
       let inputElement = newDiv.querySelector('.name-field');
       applyFontAndSize(inputElement, selectedFont);
 
-      // Tlačítko pro smazání
       newDiv.querySelector('.remove-name').addEventListener("click", function() {
           newDiv.remove();
           reindexNames();
       });
 
-      // Nastavíme barvu + placeholder
       updateFieldColor(inputElement);
-
-      // Po přidání nové kolonky => reindex
       reindexNames();
     });
 
@@ -643,12 +678,10 @@ document.addEventListener("DOMContentLoaded", function () {
       let nameFields = document.querySelectorAll(".name-field");
       let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-      // Zjištění vybraného fontu, barvy, symbolu
       let selectedFontKey = document.querySelector('input[name="font-sample"]:checked').value;
       let selectedColorKey = document.querySelector('input[name="color"]:checked').value;
       let connectorInput = document.querySelector('input[name="connector"]:checked');
 
-      // Srozumitelné názvy
       let selectedFontName = fontNameMap[selectedFontKey] || selectedFontKey;
       let selectedColorName = colorNameMap[selectedColorKey] || selectedColorKey;
       let selectedConnectorKey = connectorInput ? connectorInput.value : 'none';
@@ -657,7 +690,6 @@ document.addEventListener("DOMContentLoaded", function () {
       nameFields.forEach(field => {
         let nameValue = field.value.trim();
         if (nameValue !== "") {
-          // Pokud dvě slova a symbol != none, vložíme symbol
           let words = nameValue.split(/\s+/);
           if (words.length === 2 && selectedConnectorKey !== 'none') {
             let connectorSymbol = "";
@@ -728,7 +760,6 @@ document.addEventListener("DOMContentLoaded", function () {
       let firstInput = nameInputs.querySelector('.name-field');
       applyFontAndSize(firstInput, selectedFont);
       updateFieldColor(firstInput);
-      // nameCounter se vrátí na 1
       nameCounter = 1;
     }
 
@@ -744,7 +775,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-<!-- Knihovna Bootstrapu pro Carousel (a další funkce) -->
+<!-- Knihovna Bootstrapu pro další funkce a vlastní skript pro navigaci -->
 <script src="js/bootstrap.bundle.min.js"></script>
 <script src="js/navbar.js"></script>
 </body>

@@ -18,17 +18,20 @@
 
     <!-- Vlastní styl pro jmenovky a vlastní slider -->
     <style>
-        /* Vlastní slider */
+        /* Vlastní slider s pevným oknem */
         .slider {
           position: relative;
+          width: 600px;   /* Pevná šířka slideru */
+          height: 400px;  /* Pevná výška slideru */
+          background-color: #ffffff; /* Bílé pozadí pro případné okraje */
           overflow: hidden;
-          max-width: 100%;
           margin: auto;
         }
         .slider img {
           display: none;
           width: 100%;
-          height: auto;
+          height: 100%;
+          object-fit: contain;  /* Obrázek se přizpůsobí a zůstane celý viditelný */
         }
         .slider img.active {
           display: block;
@@ -99,14 +102,11 @@
             --placeholder-color: #000000; 
             --placeholder-font-family: 'Cassandra';
         }
-
-        /* Placeholder dědí styl přes CSS proměnné */
         .name-field::placeholder {
             color: var(--placeholder-color);
             font-family: var(--placeholder-font-family);
             opacity: 1;
         }
-
         .name-input-container {
             display: flex;
             align-items: center;
@@ -115,14 +115,12 @@
             max-width: 500px;
             margin: auto;
         }
-
         #add-name,
         #add-all-to-cart {
             width: 40%;
             margin: 0 auto;
             display: block;
         }
-
         /* Výběr fontu pomocí ukázek */
         .font-sample-selector-container {
             display: flex;
@@ -161,7 +159,6 @@
         .font-sample-selector-container input[type="radio"]:checked + span {
             border-color: #0d6efd;
         }
-        
         /* Popis produktu */
         .product-description {
             text-align: left;
@@ -171,7 +168,6 @@
         .product-description ul {
             margin: 0.5rem 0;
         }
-        
         /* Propojení */
         .connector-description {
             text-align: center;
@@ -211,7 +207,6 @@
         .connector-selector-container input[type="radio"]:checked + span {
             border-color: #0d6efd;
         }
-        
         /* Výběr barvy */
         .color-selector-container {
             display: flex;

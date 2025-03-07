@@ -51,7 +51,7 @@
          Form input styl (jako spztky)
       ============================== */
       .form-control.border-0 {
-        background-color: #fff; /* bílý podklad */
+        background-color: #fff;
         border: 2px solid #ddd;
         border-radius: 5px;
         height: 55px;
@@ -61,7 +61,7 @@
         border-color: #0dcaf0;
       }
 
-      /* Vzhled "rolovacího okna" s pobočkami – STEJNĚ jako spztky.html */
+      /* Styl pro dropdown výběr poboček */
       #pickupLocation {
         position: absolute;
         z-index: 999;
@@ -70,12 +70,11 @@
         border: 1px solid #ddd;
         max-height: 300px;
         overflow-y: auto;
-        display: none; /* skryté dokud se neukáže */
+        display: none;
       }
       #pickupLocation.show {
-        display: block; /* zobrazíme při vyhledávání */
+        display: block;
       }
-      /* Každá adresa pobočky bude <div> */
       .pickup-item {
         padding: 8px;
         cursor: pointer;
@@ -84,14 +83,15 @@
         background-color: #f0f0f0;
       }
 
-      /* Pro modální okno (QR kód) */
+      /* Styl modálního okna pro QR kód */
       .modal {
         position: fixed;
         top: 0; left: 0;
         width: 100%; height: 100%;
         background-color: rgba(0,0,0,0.5);
         display: none;
-        justify-content: center; align-items: center;
+        justify-content: center;
+        align-items: center;
       }
       .modal-content {
         background-color: #fff;
@@ -113,7 +113,7 @@
 </head>
 
 <body>
-<!-- Sjednocený Navbar s Košíkem místo "Získat cenovou nabídku" a přidanými Jmenovkami -->
+<!-- Navbar -->
 <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
     <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
         <h2 class="m-0 text-primary">Print M</h2>
@@ -124,31 +124,31 @@
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav ms-auto p-4 p-lg-0">
             <a href="index.html" class="nav-item nav-link">Domů</a>
-            <a href="service.html" class="nav-item nav-link ">Služby</a>
-            <a href="project.html" class="nav-item nav-link ">Projekty</a>
-            <a href="cenik.html" class="nav-item nav-link ">Ceník</a>
-            <a href="about.html" class="nav-item nav-link ">O nás</a>
-            <a href="quote.html" class="nav-item nav-link ">Poptávka</a>
+            <a href="service.html" class="nav-item nav-link">Služby</a>
+            <a href="project.html" class="nav-item nav-link">Projekty</a>
+            <a href="cenik.html" class="nav-item nav-link">Ceník</a>
+            <a href="about.html" class="nav-item nav-link">O nás</a>
+            <a href="quote.html" class="nav-item nav-link">Poptávka</a>
             <a href="spztky.html" class="nav-item nav-link">SPZtky</a>
             <a href="jmenovky.html" class="nav-item nav-link">Jmenovky</a>
         </div>
-        <a href="cart.html" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Košík (<span id="cart-count">0</span>)<i class="fa fa-shopping-cart ms-3"></i></a>
+        <a href="cart.html" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">
+            Košík (<span id="cart-count">0</span>)<i class="fa fa-shopping-cart ms-3"></i>
+        </a>
     </div>
 </nav>
-    <!-- Navbar End -->
+<!-- Konec navbaru -->
 
-
-<!-- Šedá sekce (košík + formulář), styl jako spztky -->
+<!-- Hlavní obsah -->
 <div class="container-xxl bg-light overflow-hidden my-5 px-lg-5">
   <div class="container py-5">
-    <!-- Nadpis Košík -->
     <div class="section-title text-center">
       <h1 class="display-5 text-primary">Váš Košík</h1>
     </div>
-    <!-- Košík Items -->
+    <!-- Zobrazení položek košíku -->
     <div class="row justify-content-center mb-5">
       <div class="col-lg-8 col-md-10">
-        <div id="cart-items" class="mb-3"><!-- sem se vkládají položky --></div>
+        <div id="cart-items" class="mb-3"></div>
         <div class="text-end">
           <p class="fw-bold mb-0">Zásilkovna + 80 Kč</p>
           <p class="mb-1">
@@ -159,15 +159,11 @@
       </div>
     </div>
 
-    <!-- Formulář: Dokončení objednávky -->
-    <div class="section-title text-start">
-      <!-- <h1 class="display-5 mb-4">Dokončení objednávky</h1> -->
-    </div>
+    <!-- Formulář pro dokončení objednávky -->
     <p class="mb-4 pb-2">
       Vyplňte prosím své údaje a vyberte pobočku Zásilkovny
     </p>
-
-    <form id="order-form" action="send_email_spztky.php" method="POST" enctype="multipart/form-data">
+    <form id="order-form" action="send_email_cart.php" method="POST" enctype="multipart/form-data">
       <div class="row g-3">
         <div class="col-12 col-sm-6">
           <input type="text" id="name" name="name" class="form-control border-0" placeholder="Jméno" required>
@@ -178,22 +174,18 @@
         <div class="col-12 col-sm-6">
           <input type="text" id="phone" name="phone" class="form-control border-0" placeholder="Telefon" required>
         </div>
-        <!-- Zásilkovna vyhledávání (stejné design. Princip) -->
+        <!-- Výběr pobočky Zásilkovny -->
         <div class="col-12 col-sm-6 position-relative">
           <input type="text" id="search" class="form-control border-0" placeholder="Vyhledat výdejní místo" required>
-          <!-- 
-            Místo <select> je tady <div> – stejný styl jako spztky 
-            Do něj budeme vkládat <div class="pickup-item">Jedna adresa</div>
-          -->
           <div id="pickupLocation"></div>
-
-          <!-- Skrytý input, kam uložíme vybranou adresu pro odeslání -->
-          <input type="hidden" id="pickupLocationValue" name="pickup_location">
+          <input type="hidden" id="pickupLocationValue" name="pickupLocation">
         </div>
-        <!-- Poznámka (volitelné) -->
+        <!-- Poznámka -->
         <div class="col-12">
           <textarea name="message" class="form-control border-0" rows="4" placeholder="Poznámka (volitelné)"></textarea>
         </div>
+        <!-- Skryté pole pro položky košíku -->
+        <input type="hidden" id="cart_items" name="cart_items">
       </div>
 
       <button type="button" id="show-qr-btn" class="btn btn-primary w-100 py-3 mt-4">
@@ -203,12 +195,12 @@
   </div>
 </div>
 
-<!-- MODÁL - QR KÓD -->
+<!-- MODÁLNÍ OKNO pro QR kód -->
 <div class="modal" id="qrModal">
   <div class="modal-content">
     <h3>Platba</h3>
     <div class="qr-container">
-      <img src="img/qr-kod.png" alt="QR kód pro platbu" style="max-width:200px;">
+      <img id="qrCodeImage" src="" alt="QR kód pro platbu" style="max-width:200px;">
     </div>
     <p>Prosíme, proskenujte tento QR kód ve své bankovní aplikaci.</p>
     <button class="close-btn" id="closeModalBtn">Zavřít</button>
@@ -218,9 +210,7 @@
 <!-- Skripty -->
 <script src="js/bootstrap.bundle.min.js"></script>
 <script>
-// =============================================
-// 1) Logika Košíku (localStorage)
-// =============================================
+// === Logika košíku (localStorage) ===
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 const shippingCost = 80;
 
@@ -234,10 +224,9 @@ function renderCart() {
   let totalCount = 0;
 
   cart.forEach((item, index) => {
-    let itemPrice = item.price * item.quantity;
+    const itemPrice = item.price * item.quantity;
     totalPriceItems += itemPrice;
     totalCount += item.quantity;
-
     const div = document.createElement("div");
     div.className = "cart-item";
     div.innerHTML = `
@@ -253,11 +242,9 @@ function renderCart() {
     cartItemsEl.appendChild(div);
   });
 
-  // Celková cena
-  let totalPriceAll = totalPriceItems + shippingCost;
+  const totalPriceAll = totalPriceItems + shippingCost;
   cartCountEl.textContent = totalCount;
   cartTotalEl.textContent = totalPriceAll + " Kč";
-
   localStorage.setItem("cart", JSON.stringify(cart));
 }
 
@@ -270,37 +257,31 @@ document.addEventListener("DOMContentLoaded", () => {
   renderCart();
 });
 
-
-// =============================================
-// 2) Vyhledávání poboček - STEJNÉ JAKO SPZTKY
-//    <div id="pickupLocation"> s .pickup-item
-// =============================================
-let allLocations = [];      // CSV
-let filteredLocs = [];      // vyfiltrované
+// === Vyhledávání poboček (stejně jako ve spztky.html) ===
+let allLocations = [];
+let filteredLocs = [];
 let debounceTimer;
-let currentIndex = 0;       // kolik jich už zobrazeno
-let allLoaded = false;      // jestli jsme zobrazili vše
-let ignoreBlur = false;     // pro focus/blur
+let currentIndex = 0;
+let allLoaded = false;
+let ignoreBlur = false;
 
-const searchEl     = document.getElementById("search");
-const locationDiv  = document.getElementById("pickupLocation");
-const hiddenInput  = document.getElementById("pickupLocationValue");
+const searchEl = document.getElementById("search");
+const locationDiv = document.getElementById("pickupLocation");
+const hiddenInput = document.getElementById("pickupLocationValue");
 
 fetch("pickup_locations.csv")
   .then(resp => resp.text())
   .then(csv => {
     allLocations = csv.trim().split("\n");
-    allLocations.sort((a,b) => a.localeCompare(b, 'cs', {sensitivity:'base'}));
+    allLocations.sort((a, b) => a.localeCompare(b, 'cs', {sensitivity:'base'}));
 
-    // Když se klikne do inputu a nic tam není, zobrazíme vše
     searchEl.addEventListener("focus", () => {
-      if(!searchEl.value) {
+      if (!searchEl.value) {
         filterLocations("");
         showLocations();
       }
     });
 
-    // Debounce při psaní
     searchEl.addEventListener("input", () => {
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(() => {
@@ -309,20 +290,13 @@ fetch("pickup_locations.csv")
       }, 300);
     });
 
-    // Blur
     searchEl.addEventListener("blur", () => {
-      if(!ignoreBlur && !searchEl.value) {
+      if (!ignoreBlur && !searchEl.value) {
         closeLocations();
       }
     });
-    // Mousedown uvnitř divu
-    locationDiv.addEventListener("mousedown", () => {
-      ignoreBlur = true;
-    });
-    locationDiv.addEventListener("mouseup", () => {
-      ignoreBlur = false;
-    });
-    // Scroll infinite
+    locationDiv.addEventListener("mousedown", () => { ignoreBlur = true; });
+    locationDiv.addEventListener("mouseup", () => { ignoreBlur = false; });
     locationDiv.addEventListener("scroll", () => {
       if(locationDiv.scrollTop + locationDiv.clientHeight >= locationDiv.scrollHeight) {
         if(!allLoaded) loadMore();
@@ -331,17 +305,15 @@ fetch("pickup_locations.csv")
   })
   .catch(err => console.error(err));
 
-// Filtrovat
 function filterLocations(query) {
   filteredLocs = allLocations.filter(loc => loc.toLowerCase().includes(query));
   currentIndex = 0;
   allLoaded = false;
   locationDiv.scrollTop = 0;
   locationDiv.innerHTML = "";
-  loadMore(); // načteme první batch
+  loadMore();
 }
 
-// Zobrazit "dropdown"
 function showLocations() {
   if(filteredLocs.length > 0) {
     locationDiv.classList.add("show");
@@ -350,12 +322,10 @@ function showLocations() {
   }
 }
 
-// Zavřít "dropdown"
 function closeLocations() {
   locationDiv.classList.remove("show");
 }
 
-// Načíst další batch
 function loadMore() {
   const batchSize = 100;
   let end = currentIndex + batchSize;
@@ -365,12 +335,10 @@ function loadMore() {
   }
   const batch = filteredLocs.slice(currentIndex, end);
   currentIndex = end;
-
   batch.forEach(addr => {
     const div = document.createElement("div");
     div.className = "pickup-item";
     div.textContent = addr;
-    // Po kliknutí: vyplníme input + hidden field
     div.addEventListener("click", () => {
       searchEl.value = addr;
       hiddenInput.value = addr;
@@ -378,45 +346,10 @@ function loadMore() {
     });
     locationDiv.appendChild(div);
   });
-
   showLocations();
 }
-
-// =============================================
-// 3) QR Popup
-// =============================================
-const showQrBtn = document.getElementById("show-qr-btn");
-const qrModal   = document.getElementById("qrModal");
-const closeBtn  = document.getElementById("closeModalBtn");
-const orderForm = document.getElementById("order-form");
-
-showQrBtn.addEventListener("click", () => {
-  // Ověříme, že input "search" není prázdný
-  // (protože jsme zrušili "required" přímo na <input> – teď to je jen v code)
-  if(!searchEl.value) {
-    alert("Vyberte výdejní místo (Zásilkovna)!");
-    searchEl.focus();
-    return;
-  }
-  // Ověříme, jestli form je validní
-  if(!orderForm.checkValidity()) {
-    orderForm.reportValidity();
-    return;
-  }
-  // Zobrazit popup
-  qrModal.style.display = "flex";
-});
-closeBtn.addEventListener("click", () => {
-  qrModal.style.display = "none";
-  // orderForm.submit(); // pokud chcete odeslat hned
-});
-window.addEventListener("click", e => {
-  if(e.target === qrModal) {
-    qrModal.style.display = "none";
-  }
-});
 </script>
 <script src="js/navbar.js"></script>
+<script src="js/popup_cart.js"></script>
 </body>
-
 </html>

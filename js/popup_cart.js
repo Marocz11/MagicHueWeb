@@ -44,12 +44,26 @@ document.getElementById('show-qr-btn').addEventListener('click', function () {
     });
 });
 
+function clearCart() {
+    // Vymažeme data košíku
+    cart = [];
+    localStorage.removeItem("cart");
+    // Aktualizujeme zobrazení košíku (funkce renderCart musí být dostupná)
+    if (typeof renderCart === "function") {
+        renderCart();
+    }
+    // Resetujeme formulář objednávky
+    document.getElementById("order-form").reset();
+}
+
 document.getElementById('closeModalBtn').addEventListener('click', function () {
     document.getElementById('qrModal').style.display = 'none';
+    clearCart();
 });
 window.addEventListener('click', function(e){
     const modal = document.getElementById('qrModal');
     if (e.target === modal){
         modal.style.display = 'none';
+        clearCart();
     }
 });

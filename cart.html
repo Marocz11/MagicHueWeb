@@ -109,6 +109,34 @@
         border-radius: 4px;
         cursor: pointer;
       }
+
+      /* ==============================
+         Slevový kód (vlevo) + cena (vpravo)
+      ============================== */
+      .discount-code-container {
+        margin: 0;           /* Zrušení auto marginů */
+        width: 100%;         /* Na malých displejích 100% */
+      }
+      @media (min-width: 576px) {
+        .discount-code-container {
+          width: 50%;
+        }
+      }
+      @media (min-width: 992px) {
+        .discount-code-container {
+          width: 30%;
+        }
+      }
+
+      .price-info-container {
+        margin-left: auto;   /* Pomůže zarovnat box vpravo */
+        text-align: right;   /* Zarovnání textu doprava */
+      }
+
+      /* Pomocné třídy pro zvýraznění */
+      .fw-bold {
+        font-weight: 700;
+      }
     </style>
 </head>
 
@@ -145,16 +173,35 @@
     <div class="section-title text-center">
       <h1 class="display-5 text-primary">Váš Košík</h1>
     </div>
+
     <!-- Zobrazení položek košíku -->
     <div class="row justify-content-center mb-5">
       <div class="col-lg-8 col-md-10">
         <div id="cart-items" class="mb-3"></div>
-        <div class="text-end">
-          <p class="fw-bold mb-0">Zásilkovna + 80 Kč</p>
-          <p class="mb-1">
-            Celková cena (zboží + doprava): 
-            <span id="cart-total" class="fw-bold">0 Kč</span>
-          </p>
+
+        <!-- Flex kontejner: slevový kód vlevo, cena a doprava vpravo -->
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start">
+          <!-- Levá část: slevový kód -->
+          <div class="discount-code-container mb-3 mb-lg-0">
+            <label for="discount-code" class="form-label">Slevový kód</label>
+            <div class="input-group">
+              <!-- ZMĚNA: Použita třída btn-primary místo btn-secondary -->
+              <input type="text" id="discount-code" class="form-control" placeholder="Zadejte slevový kód">
+              <button class="btn btn-primary" id="apply-discount-btn" type="button">Použít</button>
+            </div>
+            <div id="discount-message" class="mt-2 text-success"></div>
+          </div>
+
+          <!-- Pravá část: info o cenách a slevách -->
+          <div class="price-info-container ms-lg-3">
+            <p id="goods-price" class="mb-1">Cena za zboží: 0 Kč</p>
+            <p id="goods-discount" class="mb-1" style="display: none;">Sleva na zboží: - 0 Kč</p>
+            <p id="shipping-price" class="mb-1">Cena za dopravu: 80 Kč</p>
+            <p id="shipping-discount" class="mb-1" style="display: none;">Sleva na dopravu: - 0 Kč</p>
+            <p class="mb-0 fw-bold">
+              Celková cena: <span id="cart-total">0 Kč</span>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -210,16 +257,28 @@
 <!-- Skripty -->
 <script src="js/bootstrap.bundle.min.js"></script>
 <script>
-// === Logika košíku (localStorage) ===
+// === Globální proměnné pro košík a slevy ===
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
-const shippingCost = 80;
+const baseShippingCost = 80;            // Základní cena dopravy
+let goodsDiscountPercentage = 0;        // Sleva na zboží (0 = žádná)
+let shippingDiscountAmount = 0;         // Sleva na dopravu (0 = žádná)
 
+// === Funkce pro zobrazení položek košíku a výpočet cen ===
 function renderCart() {
   const cartItemsEl = document.getElementById("cart-items");
   const cartCountEl = document.getElementById("cart-count");
+
+  // Elementy pro zobrazení cen a slev
+  const goodsPriceEl = document.getElementById("goods-price");
+  const goodsDiscountEl = document.getElementById("goods-discount");
+  const shippingPriceEl = document.getElementById("shipping-price");
+  const shippingDiscountEl = document.getElementById("shipping-discount");
   const cartTotalEl = document.getElementById("cart-total");
 
+  // Vymazat předchozí výpis
   cartItemsEl.innerHTML = "";
+
+  // Spočítat cenu zboží
   let totalPriceItems = 0;
   let totalCount = 0;
 
@@ -227,6 +286,8 @@ function renderCart() {
     const itemPrice = item.price * item.quantity;
     totalPriceItems += itemPrice;
     totalCount += item.quantity;
+
+    // Vytvořit HTML položky
     const div = document.createElement("div");
     div.className = "cart-item";
     div.innerHTML = `
@@ -242,19 +303,102 @@ function renderCart() {
     cartItemsEl.appendChild(div);
   });
 
-  const totalPriceAll = totalPriceItems + shippingCost;
+  // Spočítat slevu na zboží (zaokrouhlíme na celé Kč)
+  const goodsDiscountValue = Math.round(totalPriceItems * goodsDiscountPercentage);
+  const finalGoodsPrice = totalPriceItems - goodsDiscountValue;
+
+  // Spočítat slevu na dopravu
+  // (cena dopravy se nesmí dostat pod 0)
+  const finalShippingPrice = Math.max(0, baseShippingCost - shippingDiscountAmount);
+
+  // Celková cena
+  const totalPriceAll = finalGoodsPrice + finalShippingPrice;
+
+  // Zobrazení počtu položek v košíku (vpravo nahoře)
   cartCountEl.textContent = totalCount;
-  cartTotalEl.textContent = totalPriceAll + " Kč";
+
+  // Zobrazení "Cena za zboží"
+  goodsPriceEl.textContent = `Cena za zboží: ${totalPriceItems} Kč`;
+
+  // Zobrazení "Sleva na zboží" (jen pokud je > 0)
+  if (goodsDiscountValue > 0) {
+    goodsDiscountEl.style.display = "block";
+    goodsDiscountEl.textContent = `Sleva na zboží: - ${goodsDiscountValue} Kč`;
+  } else {
+    goodsDiscountEl.style.display = "none";
+  }
+
+  // Zobrazení "Cena za dopravu"
+  shippingPriceEl.textContent = `Cena za dopravu: ${baseShippingCost} Kč`;
+
+  // Zobrazení "Sleva na dopravu" (jen pokud je > 0)
+  if (shippingDiscountAmount > 0) {
+    shippingDiscountEl.style.display = "block";
+    shippingDiscountEl.textContent = `Sleva na dopravu: - ${shippingDiscountAmount} Kč`;
+  } else {
+    shippingDiscountEl.style.display = "none";
+  }
+
+  // Celková cena
+  cartTotalEl.textContent = `${totalPriceAll} Kč`;
+
+  // Uložit košík do localStorage
   localStorage.setItem("cart", JSON.stringify(cart));
 }
 
+// Odebrání jedné položky z košíku
 function removeItem(idx) {
   cart.splice(idx, 1);
   renderCart();
 }
 
+// Po načtení stránky vykreslit košík
 document.addEventListener("DOMContentLoaded", () => {
   renderCart();
+});
+
+// === Obsluha zadání slevového kódu ===
+document.getElementById("apply-discount-btn").addEventListener("click", function(){
+    const code = document.getElementById("discount-code").value.trim();
+    const discountMessageEl = document.getElementById("discount-message");
+
+    // Pokud je kód "Vyzvednu", jde o slevu na dopravu (-80 Kč)
+    if (code.toLowerCase() === "vyzvednu") {
+      // Pokud sleva na dopravu ještě nebyla použita
+      if (shippingDiscountAmount === 0) {
+        shippingDiscountAmount = 80;
+        discountMessageEl.textContent = "Sleva na dopravu -80 Kč byla uplatněna.";
+      } else {
+        discountMessageEl.textContent = "Sleva na dopravu už je použita.";
+      }
+      renderCart();
+      return;
+    }
+
+    // Jinak zkusíme slevy na zboží
+    switch (code.toUpperCase()) {
+      case "SLEVA10":
+        // Lze použít jen pokud ještě nemáme žádnou slevu na zboží
+        if (goodsDiscountPercentage === 0) {
+          goodsDiscountPercentage = 0.10;
+          discountMessageEl.textContent = "Sleva 10% na zboží byla uplatněna.";
+        } else {
+          discountMessageEl.textContent = "Jiná sleva na zboží je již použita. Nelze kombinovat.";
+        }
+        break;
+      case "SLEVA20":
+        if (goodsDiscountPercentage === 0) {
+          goodsDiscountPercentage = 0.20;
+          discountMessageEl.textContent = "Sleva 20% na zboží byla uplatněna.";
+        } else {
+          discountMessageEl.textContent = "Jiná sleva na zboží je již použita. Nelze kombinovat.";
+        }
+        break;
+      default:
+        discountMessageEl.textContent = "Neplatný slevový kód.";
+    }
+
+    renderCart();
 });
 
 // === Vyhledávání poboček (stejně jako ve spztky.html) ===

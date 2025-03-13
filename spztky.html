@@ -17,7 +17,7 @@
   <link href="css/style.css" rel="stylesheet">
 
   <style>
-    /* === SLIDER - DESKTOP === */
+    /* === SLIDER === */
     .slider {
       position: relative;
       width: 600px;
@@ -25,7 +25,7 @@
       background-color: #ffffff;
       overflow: hidden;
       margin: auto;
-      cursor: pointer; /* Ukazuje, že lze kliknout pro zvětšení */
+      cursor: pointer; /* Označuje, že lze kliknout pro zvětšení */
     }
     .slider img {
       display: none;
@@ -54,8 +54,6 @@
     .slider .next {
       right: 10px;
     }
-
-    /* === SLIDER - MOBIL === */
     @media (max-width: 768px) {
       .slider {
         width: 100%;
@@ -66,7 +64,7 @@
         scroll-behavior: smooth;
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
-        cursor: default; /* Na mobilu nechceme lightbox */
+        cursor: default;
       }
       .slider img {
         display: block;
@@ -81,24 +79,23 @@
       }
     }
 
-    /* --- Lightbox styly --- */
+    /* Lightbox styly */
     .lightbox-modal {
       display: none;
       position: fixed;
       z-index: 9999;
-      padding-top: 60px;
       left: 0;
       top: 0;
       width: 100%;
       height: 100%;
+      background-color: rgba(0,0,0,0.9);
       overflow: auto;
-      background-color: rgba(0, 0, 0, 0.9);
     }
     .lightbox-content {
-      margin: auto;
       display: block;
-      max-width: 90%;
-      max-height: 80%;
+      margin: auto;
+      max-width: 100%;
+      max-height: 100%;
     }
     .lightbox-prev,
     .lightbox-next {
@@ -112,7 +109,7 @@
       font-size: 2rem;
       transition: 0.3s;
       user-select: none;
-      background-color: rgba(0, 0, 0, 0.5);
+      background-color: rgba(0,0,0,0.5);
     }
     .lightbox-prev {
       left: 0;
@@ -122,7 +119,7 @@
     }
     .lightbox-prev:hover,
     .lightbox-next:hover {
-      background-color: rgba(0, 0, 0, 0.8);
+      background-color: rgba(0,0,0,0.8);
     }
     .lightbox-close {
       position: absolute;
@@ -137,7 +134,7 @@
       color: #bbb;
     }
 
-    /* --- Styly tlačítek a inputů podle původního kódu --- */
+    /* Tlačítka a vstupy dle původního kódu */
     button, .btn {
       background-color: #00CEF1;
       color: white;
@@ -247,8 +244,8 @@
           <div class="service-item border rounded overflow-hidden shadow text-center">
             <!-- Slider -->
             <div class="slider" id="customSlider">
-              <img src="img/spz/daniel.jpg" alt="SPZ 1" class="active">
-              <img src="img/spz/spz.jpg" alt="SPZ 2">
+              <img src="img/daniel.jpg" alt="SPZ 1" class="active">
+              <img src="img/spztky/spz2.jpg" alt="SPZ 2">
               <img src="img/spztky/spz3.jpg" alt="SPZ 3">
               <button class="arrow prev" id="prevBtn">&#10094;</button>
               <button class="arrow next" id="nextBtn">&#10095;</button>
@@ -260,7 +257,6 @@
                 <h5 class="text-primary">50 Kč / SPZ</h5>
                 <p class="mb-4">Díky 3D tisku je každý kousek pevný a zároveň lehký. Stačí napsat svůj text, upravit náhled a přidat do košíku.</p>
               </div>
-              <!-- Tlačítka mají stejnou šířku -->
               <button class="add-spz-btn" id="addSpzBtn">Přidat další SPZtku</button>
               <div id="spzListContainer"></div>
               <button id="addAllToCart" class="btn mt-3">Přidat všechny SPZtky do košíku</button>
@@ -288,7 +284,6 @@
       const nextBtn = document.getElementById("nextBtn");
       let currentIndex = 0;
       
-      // Přepínání obrázků
       if (window.innerWidth <= 768) {
         slider.style.display = "flex";
         slider.style.overflowX = "auto";
@@ -317,7 +312,6 @@
           currentIndex = (currentIndex + 1) % images.length;
           showImage(currentIndex);
         });
-        // Přidání dotykových gest i na desktop
         let touchstartX = 0, touchendX = 0;
         slider.addEventListener('touchstart', e => {
           touchstartX = e.changedTouches[0].screenX;
@@ -333,8 +327,7 @@
             showImage(currentIndex);
           }
         }, false);
-        
-        // Přidání lightbox funkce na desktop – kliknutím na obrázek
+        // Přidání lightbox funkce: kliknutím na obrázek se otevře lightbox
         images.forEach((img, index) => {
           img.addEventListener("click", function() {
             openLightbox(index);
@@ -382,11 +375,23 @@
         closeLightbox();
       }
     });
+    
+    // Přidání podpory pro klávesnici
+    document.addEventListener("keydown", function(e) {
+      if (lightboxModal.style.display === "block") {
+        if (e.key === "ArrowLeft") {
+          lightboxPrev.click();
+        } else if (e.key === "ArrowRight") {
+          lightboxNext.click();
+        } else if (e.key === "Escape") {
+          closeLightbox();
+        }
+      }
+    });
   </script>
 
   <!-- Skript generátor SPZ -->
   <script>
-    // Načteme podkladový obrázek
     const backgroundImage = new Image();
     backgroundImage.src = 'img/spztka2.png'; // Upravte cestu dle potřeby
 
@@ -412,7 +417,8 @@
       wrapper.id = `spzWrapper${spzCount}`;
       wrapper.innerHTML = `
         <div class="spz-input-container">
-          <input type="text" class="spz-input" id="spzInput${spzCount}" value="${defaultValue}" placeholder="Zadejte text SPZ" oninput="drawSpz(${spzCount})" maxlength="20">
+          <input type="text" class="spz-input" id="spzInput${spzCount}" value="${defaultValue}" 
+                 placeholder="Zadejte text SPZ" oninput="drawSpz(${spzCount})" maxlength="20">
           <button class="remove-btn" onclick="removeSpz(${spzCount})">x</button>
         </div>
         <canvas id="spzCanvas${spzCount}" class="spz-canvas"></canvas>

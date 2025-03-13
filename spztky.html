@@ -1,487 +1,517 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-    <meta charset="utf-8">
-    <title>SPZtky - Print M</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="img/favicon.ico" rel="icon">
+  <meta charset="utf-8">
+  <title>SPZtky - Print M</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="img/favicon.ico" rel="icon">
 
-    <!-- Google Web Fonts, Font Awesome, Bootstrap Icons, atd. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Google Web Fonts, Font Awesome, Bootstrap Icons, atd. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- Bootstrap Stylesheet -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+  <!-- Bootstrap Stylesheet -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
 
-    <style>
-        /* === SLIDER - DESKTOP === */
-        .slider {
-            position: relative;
-            width: 600px;
-            height: 400px;
-            background-color: #ffffff;
-            overflow: hidden;
-            margin: auto;
-        }
-        .slider img {
-            display: none;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-        .slider img.active {
-            display: block;
-        }
-        .slider .arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(0, 0, 0, 0.5);
-            border: none;
-            color: #fff;
-            padding: 10px;
-            cursor: pointer;
-            font-size: 1.5rem;
-            z-index: 2;
-        }
-        .slider .prev {
-            left: 10px;
-        }
-        .slider .next {
-            right: 10px;
-        }
+  <style>
+    /* === SLIDER - DESKTOP === */
+    .slider {
+      position: relative;
+      width: 600px;
+      height: 400px;
+      background-color: #ffffff;
+      overflow: hidden;
+      margin: auto;
+      cursor: pointer; /* Ukazuje, že lze kliknout pro zvětšení */
+    }
+    .slider img {
+      display: none;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .slider img.active {
+      display: block;
+    }
+    .slider .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0, 0, 0, 0.5);
+      border: none;
+      color: #fff;
+      padding: 10px;
+      cursor: pointer;
+      font-size: 1.5rem;
+      z-index: 2;
+    }
+    .slider .prev {
+      left: 10px;
+    }
+    .slider .next {
+      right: 10px;
+    }
 
-        /* === SLIDER - MOBIL === */
-        @media (max-width: 768px) {
-            .slider {
-                width: 100%;
-                height: auto;
-                display: flex;
-                flex-direction: row;
-                overflow-x: auto;
-                scroll-behavior: smooth;
-                scroll-snap-type: x mandatory;
-                -webkit-overflow-scrolling: touch;
-            }
-            .slider img {
-                display: block;
-                flex-shrink: 0;
-                width: 100%;
-                height: auto;
-                object-fit: contain;
-                scroll-snap-align: center;
-            }
-            .slider .arrow {
-                display: none; /* Skryjeme šipky na mobilu */
-            }
-        }
+    /* === SLIDER - MOBIL === */
+    @media (max-width: 768px) {
+      .slider {
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        cursor: default; /* Na mobilu nechceme lightbox */
+      }
+      .slider img {
+        display: block;
+        flex-shrink: 0;
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        scroll-snap-align: center;
+      }
+      .slider .arrow {
+        display: none;
+      }
+    }
 
-        /* Ostatní styl pro generátor SPZ */
+    /* --- Lightbox styly --- */
+    .lightbox-modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      padding-top: 60px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.9);
+    }
+    .lightbox-content {
+      margin: auto;
+      display: block;
+      max-width: 90%;
+      max-height: 80%;
+    }
+    .lightbox-prev,
+    .lightbox-next {
+      cursor: pointer;
+      position: absolute;
+      top: 50%;
+      padding: 16px;
+      margin-top: -50px;
+      color: white;
+      font-weight: bold;
+      font-size: 2rem;
+      transition: 0.3s;
+      user-select: none;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+    .lightbox-prev {
+      left: 0;
+    }
+    .lightbox-next {
+      right: 0;
+    }
+    .lightbox-prev:hover,
+    .lightbox-next:hover {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 35px;
+      color: #fff;
+      font-size: 2rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .lightbox-close:hover {
+      color: #bbb;
+    }
 
-        /* Tlačítka – stejné barvy a stejné šířky */
-        button, .btn {
-            background-color: #00CEF1; /* barva z původního kódu */
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            cursor: pointer;
-        }
-        button:active, .btn:active {
-            background-color: #0d6efd;
-            color: white;
-        }
-        .add-spz-btn {
-            display: block;
-            margin: 0 auto 15px auto;
-            background-color: #0dcaf0; /* barva z původního kódu */
-            width: 100%;
-            max-width: 300px; /* obě tlačítka max 300px */
-        }
-        #addAllToCart {
-            display: block;
-            margin: 0 auto 15px auto;
-            width: 100%;
-            max-width: 300px; /* obě tlačítka max 300px */
-        }
-
-        /* Tlačítko odstranit (X) – #ff4d4d z původního kódu */
-        .remove-btn {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 30px;
-            height: 30px;
-            margin-left: 10px;
-            border-radius: 5px;
-            background-color: #ff4d4d;
-            color: white;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-        }
-        .remove-btn:hover {
-            background-color: #c82333;
-        }
-
-        /* Kontejner pro textové pole a X */
-        /* Bude dynamicky nastavena šířka v JS, ale
-           pro mobil dáme max-width: 100% */
-        .spz-input-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
-            max-width: 100%;
-        }
-        .spz-input {
-            flex: 1;
-            border: 2px solid #ccc;
-            border-radius: 4px;
-            padding: 8px;
-        }
-
-        /* Canvas – stejná max šířka jako input */
-        .spz-canvas {
-            display: block;
-            margin: 10px auto 0 auto;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            max-width: 100%;
-        }
-
-        /* Odsazení mezi jednotlivými SPZ */
-        .my-3 {
-            margin-top: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        /* Responsivita – pokud menší než 768px, ať se to chová slušně */
-        @media (max-width: 768px) {
-            .spz-input {
-                margin-right: 5px;
-            }
-        }
-    </style>
+    /* --- Styly tlačítek a inputů podle původního kódu --- */
+    button, .btn {
+      background-color: #00CEF1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+    button:active, .btn:active {
+      background-color: #0d6efd;
+    }
+    .add-spz-btn {
+      display: block;
+      margin: 0 auto 15px auto;
+      background-color: #0dcaf0;
+      width: 100%;
+      max-width: 300px;
+    }
+    #addAllToCart {
+      display: block;
+      margin: 0 auto 15px auto;
+      width: 100%;
+      max-width: 300px;
+    }
+    .remove-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 30px;
+      height: 30px;
+      margin-left: 10px;
+      border-radius: 5px;
+      background-color: #ff4d4d;
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+    .remove-btn:hover {
+      background-color: #c82333;
+    }
+    .spz-input-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      max-width: 100%;
+    }
+    .spz-input {
+      flex: 1;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      padding: 8px;
+    }
+    .spz-canvas {
+      display: block;
+      margin: 10px auto 0 auto;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      max-width: 100%;
+    }
+    .my-3 {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+    @media (max-width: 768px) {
+      .spz-input {
+        margin-right: 5px;
+      }
+    }
+  </style>
 </head>
-
 <body>
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
     <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-        <h2 class="m-0 text-primary">Print M</h2>
+      <h2 class="m-0 text-primary">Print M</h2>
     </a>
     <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-        <span class="navbar-toggler-icon"></span>
+      <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarCollapse">
-        <div class="navbar-nav ms-auto p-4 p-lg-0">
-            <a href="index.html" class="nav-item nav-link">Domů</a>
-            <a href="service.html" class="nav-item nav-link">Služby</a>
-            <a href="project.html" class="nav-item nav-link">Projekty</a>
-            <a href="cenik.html" class="nav-item nav-link">Ceník</a>
-            <a href="about.html" class="nav-item nav-link">O nás</a>
-            <a href="quote.html" class="nav-item nav-link">Poptávka</a>
-            <a href="spztky.html" class="nav-item nav-link active">SPZtky</a>
-            <a href="jmenovky.html" class="nav-item nav-link">Jmenovky</a>
-        </div>
-        <a href="cart.html" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">
-            Košík (<span id="cart-count">0</span>)<i class="fa fa-shopping-cart ms-3"></i>
-        </a>
+      <div class="navbar-nav ms-auto p-4 p-lg-0">
+        <a href="index.html" class="nav-item nav-link">Domů</a>
+        <a href="service.html" class="nav-item nav-link">Služby</a>
+        <a href="project.html" class="nav-item nav-link">Projekty</a>
+        <a href="cenik.html" class="nav-item nav-link">Ceník</a>
+        <a href="about.html" class="nav-item nav-link">O nás</a>
+        <a href="quote.html" class="nav-item nav-link">Poptávka</a>
+        <a href="spztky.html" class="nav-item nav-link active">SPZtky</a>
+        <a href="jmenovky.html" class="nav-item nav-link">Jmenovky</a>
+      </div>
+      <a href="cart.html" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">
+        Košík (<span id="cart-count">0</span>)<i class="fa fa-shopping-cart ms-3"></i>
+      </a>
     </div>
-</nav>
+  </nav>
 
-<!-- Nadpis a slider -->
-<div class="container-xxl py-5">
+  <!-- Nadpis a slider -->
+  <div class="container-xxl py-5">
     <div class="container">
-        <div class="section-title text-center">
-            <h1 class="display-5 text-primary">SPZtka 3D</h1>
-        </div>
-        <div class="row g-4 justify-content-center">
-            <div class="col-md-8">
-                <div class="service-item border rounded overflow-hidden shadow text-center">
-
-                    <!-- Slider -->
-                    <div class="slider" id="customSlider">
-                        <img src="img/daniel.jpg" alt="SPZ 1" class="active">
-                        <img src="img/spztky/spz2.jpg" alt="SPZ 2">
-                        <img src="img/spztky/spz3.jpg" alt="SPZ 3">
-                        <button class="arrow prev" id="prevBtn">&#10094;</button>
-                        <button class="arrow next" id="nextBtn">&#10095;</button>
-                    </div>
-
-                    <div class="p-4">
-                        <h4 class="mb-3">SPZtka 3D</h4>
-                        
-                        <!-- Popis produktu -->
-                        <div class="product-description">
-                            <p>Vytvořte si vlastní SPZtku! Každou lze personalizovat libovolným textem, který se následně vytiskne a poslouží jako originální klíčenka nebo ozdoba.</p>
-                            <h5 class="text-primary">50 Kč / SPZ</h5>
-                            <p class="mb-4">Díky 3D tisku je každý kousek pevný a zároveň lehký. Stačí napsat svůj text, upravit náhled a přidat do košíku.</p>
-                        </div>
-
-                        <!-- Generátor SPZ: Tlačítko + Kontejnery + Tlačítko přidat do košíku -->
-                        <button class="add-spz-btn" id="addSpzBtn">Přidat další SPZtku</button>
-
-                        <div id="spzListContainer"></div>
-
-                        <button id="addAllToCart" class="btn mt-3">
-                            Přidat všechny SPZtky do košíku
-                        </button>
-                    </div>
-                </div>
+      <div class="section-title text-center">
+        <h1 class="display-5 text-primary">SPZtka 3D</h1>
+      </div>
+      <div class="row g-4 justify-content-center">
+        <div class="col-md-8">
+          <div class="service-item border rounded overflow-hidden shadow text-center">
+            <!-- Slider -->
+            <div class="slider" id="customSlider">
+              <img src="img/spz/daniel.jpg" alt="SPZ 1" class="active">
+              <img src="img/spz/spz.jpg" alt="SPZ 2">
+              <img src="img/spztky/spz3.jpg" alt="SPZ 3">
+              <button class="arrow prev" id="prevBtn">&#10094;</button>
+              <button class="arrow next" id="nextBtn">&#10095;</button>
             </div>
+            <div class="p-4">
+              <h4 class="mb-3">SPZtka 3D</h4>
+              <div class="product-description">
+                <p>Vytvořte si vlastní SPZtku! Každou lze personalizovat libovolným textem, který se následně vytiskne a poslouží jako originální klíčenka nebo ozdoba.</p>
+                <h5 class="text-primary">50 Kč / SPZ</h5>
+                <p class="mb-4">Díky 3D tisku je každý kousek pevný a zároveň lehký. Stačí napsat svůj text, upravit náhled a přidat do košíku.</p>
+              </div>
+              <!-- Tlačítka mají stejnou šířku -->
+              <button class="add-spz-btn" id="addSpzBtn">Přidat další SPZtku</button>
+              <div id="spzListContainer"></div>
+              <button id="addAllToCart" class="btn mt-3">Přidat všechny SPZtky do košíku</button>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
+  </div>
 
-<!-- Skript slider -->
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const slider = document.getElementById("customSlider");
-    const images = slider.querySelectorAll("img");
-    const prevBtn = document.getElementById("prevBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    let currentIndex = 0;
+  <!-- Lightbox modal -->
+  <div id="lightboxModal" class="lightbox-modal">
+    <span class="lightbox-close" id="lightboxClose">&times;</span>
+    <button class="lightbox-prev" id="lightboxPrev">&#10094;</button>
+    <img class="lightbox-content" id="lightboxImage">
+    <button class="lightbox-next" id="lightboxNext">&#10095;</button>
+  </div>
 
-    if (window.innerWidth <= 768) {
-        // Mobil: flex + scroll-snap
+  <!-- Skript slider -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const slider = document.getElementById("customSlider");
+      const images = slider.querySelectorAll("img");
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      let currentIndex = 0;
+      
+      // Přepínání obrázků
+      if (window.innerWidth <= 768) {
         slider.style.display = "flex";
         slider.style.overflowX = "auto";
         slider.style.scrollBehavior = "smooth";
         slider.style.scrollSnapType = "x mandatory";
-
         prevBtn.style.display = "none";
         nextBtn.style.display = "none";
-
         images.forEach(img => {
-            img.style.display = "block";
-            img.style.flexShrink = "0";
-            img.style.width = "100%";
-            img.style.height = "auto";
-            img.style.scrollSnapAlign = "center";
+          img.style.display = "block";
+          img.style.flexShrink = "0";
+          img.style.width = "100%";
+          img.style.height = "auto";
+          img.style.scrollSnapAlign = "center";
         });
-    } else {
-        // Desktop: .active
+      } else {
         function showImage(index) {
-            images.forEach(img => img.classList.remove("active"));
-            images[index].classList.add("active");
+          images.forEach(img => img.classList.remove("active"));
+          images[index].classList.add("active");
         }
         showImage(currentIndex);
-
         prevBtn.addEventListener("click", () => {
-            currentIndex = (currentIndex - 1 + images.length) % images.length;
-            showImage(currentIndex);
+          currentIndex = (currentIndex - 1 + images.length) % images.length;
+          showImage(currentIndex);
         });
         nextBtn.addEventListener("click", () => {
+          currentIndex = (currentIndex + 1) % images.length;
+          showImage(currentIndex);
+        });
+        // Přidání dotykových gest i na desktop
+        let touchstartX = 0, touchendX = 0;
+        slider.addEventListener('touchstart', e => {
+          touchstartX = e.changedTouches[0].screenX;
+        }, false);
+        slider.addEventListener('touchend', e => {
+          touchendX = e.changedTouches[0].screenX;
+          if (touchendX < touchstartX - 50) {
             currentIndex = (currentIndex + 1) % images.length;
             showImage(currentIndex);
+          }
+          if (touchendX > touchstartX + 50) {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            showImage(currentIndex);
+          }
+        }, false);
+        
+        // Přidání lightbox funkce na desktop – kliknutím na obrázek
+        images.forEach((img, index) => {
+          img.addEventListener("click", function() {
+            openLightbox(index);
+          });
         });
+      }
+    });
 
-        // Dotyková gesta i na desktopu
-        let touchstartX = 0;
-        let touchendX = 0;
-
-        slider.addEventListener('touchstart', function(e) {
-            touchstartX = e.changedTouches[0].screenX;
-        }, false);
-
-        slider.addEventListener('touchend', function(e) {
-            touchendX = e.changedTouches[0].screenX;
-            if (touchendX < touchstartX - 50) {
-                currentIndex = (currentIndex + 1) % images.length;
-                showImage(currentIndex);
-            }
-            if (touchendX > touchstartX + 50) {
-                currentIndex = (currentIndex - 1 + images.length) % images.length;
-                showImage(currentIndex);
-            }
-        }, false);
+    // Lightbox funkce
+    const lightboxModal = document.getElementById("lightboxModal");
+    const lightboxImage = document.getElementById("lightboxImage");
+    const lightboxClose = document.getElementById("lightboxClose");
+    const lightboxPrev = document.getElementById("lightboxPrev");
+    const lightboxNext = document.getElementById("lightboxNext");
+    let lightboxIndex = 0;
+    
+    function openLightbox(index) {
+      lightboxIndex = index;
+      const sliderImages = document.querySelectorAll("#customSlider img");
+      lightboxImage.src = sliderImages[lightboxIndex].src;
+      lightboxModal.style.display = "block";
     }
-});
-</script>
+    
+    function closeLightbox() {
+      lightboxModal.style.display = "none";
+    }
+    
+    lightboxClose.addEventListener("click", closeLightbox);
+    
+    lightboxPrev.addEventListener("click", function() {
+      const sliderImages = document.querySelectorAll("#customSlider img");
+      lightboxIndex = (lightboxIndex - 1 + sliderImages.length) % sliderImages.length;
+      lightboxImage.src = sliderImages[lightboxIndex].src;
+    });
+    
+    lightboxNext.addEventListener("click", function() {
+      const sliderImages = document.querySelectorAll("#customSlider img");
+      lightboxIndex = (lightboxIndex + 1) % sliderImages.length;
+      lightboxImage.src = sliderImages[lightboxIndex].src;
+    });
+    
+    // Zavření lightboxu při kliknutí mimo obrázek
+    lightboxModal.addEventListener("click", function(e) {
+      if (e.target === lightboxModal) {
+        closeLightbox();
+      }
+    });
+  </script>
 
-<!-- Skript generátor SPZ -->
-<script>
-// Načteme podkladový obrázek
-const backgroundImage = new Image();
-backgroundImage.src = 'img/spztka2.png'; // Set the correct path to your image
+  <!-- Skript generátor SPZ -->
+  <script>
+    // Načteme podkladový obrázek
+    const backgroundImage = new Image();
+    backgroundImage.src = 'img/spztka2.png'; // Upravte cestu dle potřeby
 
-let spzCount = 0;          // Počítadlo SPZ
-let spzIDs = [];           // Uloží ID všech SPZ
-const spzListContainer = document.getElementById('spzListContainer');
-const addSpzBtn = document.getElementById('addSpzBtn');
+    let spzCount = 0;
+    let spzIDs = [];
+    const spzListContainer = document.getElementById('spzListContainer');
+    const addSpzBtn = document.getElementById('addSpzBtn');
 
-// Po načtení stránky (DOM) automaticky přidáme jednu SPZ
-window.addEventListener('DOMContentLoaded', () => {
-    addSpzItem('CZ 1234');
-    updateCartCount();
-});
+    window.addEventListener('DOMContentLoaded', () => {
+      addSpzItem('CZ 1234');
+      updateCartCount();
+    });
 
-// Tlačítko "Přidat další SPZtku"
-addSpzBtn.addEventListener('click', () => {
-    addSpzItem('');
-});
+    addSpzBtn.addEventListener('click', () => {
+      addSpzItem('');
+    });
 
-// Vytvoření nové SPZ (input + canvas)
-function addSpzItem(defaultValue) {
-    spzCount++;
-    spzIDs.push(spzCount);
+    function addSpzItem(defaultValue) {
+      spzCount++;
+      spzIDs.push(spzCount);
+      const wrapper = document.createElement('div');
+      wrapper.className = "my-3";
+      wrapper.id = `spzWrapper${spzCount}`;
+      wrapper.innerHTML = `
+        <div class="spz-input-container">
+          <input type="text" class="spz-input" id="spzInput${spzCount}" value="${defaultValue}" placeholder="Zadejte text SPZ" oninput="drawSpz(${spzCount})" maxlength="20">
+          <button class="remove-btn" onclick="removeSpz(${spzCount})">x</button>
+        </div>
+        <canvas id="spzCanvas${spzCount}" class="spz-canvas"></canvas>
+      `;
+      spzListContainer.appendChild(wrapper);
+      drawSpz(spzCount);
+    }
 
-    const wrapper = document.createElement('div');
-    wrapper.className = "my-3";
-    wrapper.id = `spzWrapper${spzCount}`;
+    function removeSpz(id) {
+      const el = document.getElementById(`spzWrapper${id}`);
+      if (el) el.remove();
+      spzIDs = spzIDs.filter(x => x !== id);
+    }
 
-    // Všimněte si `maxlength="20"` v inputu
-    wrapper.innerHTML = `
-      <div class="spz-input-container">
-         <input type="text" class="spz-input" id="spzInput${spzCount}" value="${defaultValue}" 
-                placeholder="Zadejte text SPZ" oninput="drawSpz(${spzCount})" maxlength="20">
-         <button class="remove-btn" onclick="removeSpz(${spzCount})">x</button>
-      </div>
-      <canvas id="spzCanvas${spzCount}" class="spz-canvas"></canvas>
-    `;
-    spzListContainer.appendChild(wrapper);
-
-    // Ihned vykreslit (pokud je obrázek načten)
-    drawSpz(spzCount);
-}
-
-// Odebrat jednu SPZ
-function removeSpz(id) {
-    const el = document.getElementById(`spzWrapper${id}`);
-    if (el) el.remove();
-    spzIDs = spzIDs.filter(x => x !== id);
-}
-
-// Funkce pro vykreslení SPZ se stejným poměrem jako ve starém kódu
-// + nastavení šířky input-containeru na šířku canvasu
-function drawSpz(id) {
-    const inputEl = document.getElementById(`spzInput${id}`);
-    const canvas = document.getElementById(`spzCanvas${id}`);
-    if (!inputEl || !canvas) return;
-
-    const ctx = canvas.getContext('2d');
-
-    // Pokud obrázek není načten, tak nic (onload pak překreslí)
-    if (!backgroundImage.complete) return;
-
-    // 1) Výška plátna = dvojnásobek výšky inputu
-    const inputFieldHeight = inputEl.offsetHeight;
-    canvas.height = inputFieldHeight * 2;
-
-    // 2) Poměr stran z obrázku
-    const aspectRatio = backgroundImage.width / backgroundImage.height;
-
-    // 3) Šířka plátna podle poměru
-    canvas.width = canvas.height * aspectRatio;
-
-    // 4) Vyčistit plátno
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // 5) Vykreslit podkladový obrázek na celou plochu
-    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-
-    // 6) Nastavení textu (stejné jako starý kód)
-    let text = inputEl.value.trim() || "";
-    let fontSize = 48; // Výchozí velký font
-    ctx.font = `bold ${fontSize}px Arial`;
-    ctx.fillStyle = 'black';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-
-    // Bílá plocha = cca 0.2 zleva, 0.83 z šířky
-    const whiteAreaStartX = canvas.width * 0.2; 
-    const whiteAreaWidth = canvas.width * 0.83;
-    // Horizontální střed v bílé ploše (posunutí -0.045 kvůli starému offsetu)
-    const textX = whiteAreaStartX + (whiteAreaWidth / 2) - (canvas.width * 0.045);
-
-    // Vertikální posun: střed canvasu + drobný shift 1%
-    const verticalShiftPercentage = 0.01; 
-    const textY = (canvas.height / 2) + (canvas.height * verticalShiftPercentage);
-
-    // 7) Zmenšovat font, dokud se text nevejde
-    while (ctx.measureText(text).width > whiteAreaWidth && fontSize > 10) {
+    function drawSpz(id) {
+      const inputEl = document.getElementById(`spzInput${id}`);
+      const canvas = document.getElementById(`spzCanvas${id}`);
+      if (!inputEl || !canvas) return;
+      const ctx = canvas.getContext('2d');
+      if (!backgroundImage.complete) return;
+      const inputFieldHeight = inputEl.offsetHeight;
+      canvas.height = inputFieldHeight * 2;
+      const aspectRatio = backgroundImage.width / backgroundImage.height;
+      canvas.width = canvas.height * aspectRatio;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+      let text = inputEl.value.trim() || "";
+      let fontSize = 48;
+      ctx.font = `bold ${fontSize}px Arial`;
+      ctx.fillStyle = 'black';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      const whiteAreaStartX = canvas.width * 0.2; 
+      const whiteAreaWidth = canvas.width * 0.83;
+      const textX = whiteAreaStartX + (whiteAreaWidth / 2) - (canvas.width * 0.045);
+      const verticalShiftPercentage = 0.01; 
+      const textY = (canvas.height / 2) + (canvas.height * verticalShiftPercentage);
+      while (ctx.measureText(text).width > whiteAreaWidth && fontSize > 10) {
         fontSize -= 2;
         ctx.font = `bold ${fontSize}px Arial`;
-    }
-
-    // 8) Vykreslit text
-    ctx.fillText(text, textX, textY);
-
-    // 9) Nastavíme šířku .spz-input-container podle canvas.width
-    const container = document.querySelector(`#spzWrapper${id} .spz-input-container`);
-    if (container) {
+      }
+      ctx.fillText(text, textX, textY);
+      const container = document.querySelector(`#spzWrapper${id} .spz-input-container`);
+      if (container) {
         container.style.width = canvas.width + "px";
-        container.style.maxWidth = "100%"; // pro mobil
+        container.style.maxWidth = "100%";
+      }
     }
-}
 
-// Jakmile se obrázek podkladu načte, překreslíme všechny existující
-backgroundImage.onload = function() {
-    spzIDs.forEach(id => drawSpz(id));
-};
+    backgroundImage.onload = function() {
+      spzIDs.forEach(id => drawSpz(id));
+    };
 
-// Přidat všechny SPZ do košíku (LocalStorage) + resetovat SPZ
-document.getElementById('addAllToCart').addEventListener('click', () => {
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const pricePerSpz = 50;
-
-    spzIDs.forEach(id => {
+    document.getElementById('addAllToCart').addEventListener('click', () => {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const pricePerSpz = 50;
+      spzIDs.forEach(id => {
         const inputEl = document.getElementById(`spzInput${id}`);
         if (!inputEl) return;
         const spzText = inputEl.value.trim();
         if (spzText) {
-            const itemName = `SPZtka 3D - ${spzText}`;
-            let existing = cart.find(item => item.name === itemName);
-            if (existing) {
-                existing.quantity++;
-            } else {
-                cart.push({
-                    name: itemName,
-                    price: pricePerSpz,
-                    quantity: 1
-                });
-            }
+          const itemName = `SPZtka 3D - ${spzText}`;
+          let existing = cart.find(item => item.name === itemName);
+          if (existing) {
+            existing.quantity++;
+          } else {
+            cart.push({
+              name: itemName,
+              price: pricePerSpz,
+              quantity: 1
+            });
+          }
         }
+      });
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert("Všechny SPZtky byly přidány do košíku!");
+      resetSpzList();
+      updateCartCount();
     });
-    localStorage.setItem("cart", JSON.stringify(cart));
-    alert("Všechny SPZtky byly přidány do košíku!");
 
-    // Po přidání do košíku: resetujeme SPZ do původní podoby
-    resetSpzList();
-
-    // Aktualizace košíku
-    updateCartCount();
-});
-
-// Funkce pro reset do původního stavu
-function resetSpzList() {
-    // Vymažeme obsah
-    spzListContainer.innerHTML = "";
-    // Vynulujeme pole ID a čítač
-    spzIDs = [];
-    spzCount = 0;
-    // Znovu přidáme výchozí SPZ
-    addSpzItem("CZ 1234");
-}
-
-// Aktualizace čísla v košíku
-function updateCartCount() {
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const total = cart.reduce((sum, item) => sum + item.quantity, 0);
-    const cartEl = document.getElementById("cart-count");
-    if (cartEl) {
-        cartEl.textContent = total;
+    function resetSpzList() {
+      spzListContainer.innerHTML = "";
+      spzIDs = [];
+      spzCount = 0;
+      addSpzItem("CZ 1234");
     }
-}
-</script>
 
-<!-- Bootstrap + navigační skript -->
-<script src="js/bootstrap.bundle.min.js"></script>
-<script src="js/navbar.js"></script>
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const cartEl = document.getElementById("cart-count");
+      if (cartEl) {
+        cartEl.textContent = total;
+      }
+    }
+  </script>
+
+  <!-- Bootstrap + navigační skript -->
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/navbar.js"></script>
 </body>
 </html>

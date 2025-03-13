@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="utf-8">
+    <title>Print M</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Roboto:wght@500;700;900&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/popup2.css" rel="stylesheet">
+
+    <style>
+        .spz-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .spz-item {
+            width: 48%;
+            margin-bottom: 10px;
+        }
+
+        .remove-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 30px;
+            height: 30px;
+            margin-left: 10px;
+            border-radius: 5px;
+            background-color: #ff4d4d;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        .add-spz-btn {
+            display: inline-block;
+            background-color: #0dcaf0;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .status-box {
+            display: inline-block;
+            padding: 10px;
+            border-radius: 5px;
+            margin-left: 10px;
+            margin-bottom: 15px;
+        }
+
+        .status-text {
+            font-size: 18px;
+        }
+
+        .green-box {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .blue-box {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        .counter-container {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        .counter-container span {
+            font-weight: bold;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+            max-width: 90%;
+            text-align: center;
+            transform: translate(-50%, -50%);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+
+
+
+        .close-btn {
+            background-color: #00CEF1;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Centering QR code */
+        .qr-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .qr-container img {
+            max-width: 100%;
+            height: auto;
+        }
+                /* Timeline container */
+                .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Line connecting the circles */
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background-color: #ddd;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -1px;
+        }
+
+        /* Container for each timeline item */
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            margin-bottom: 30px;
+        }
+
+        /* Right-side container */
+        .timeline-item-right {
+            left: 50%;
+        }
+
+        /* Left-side container */
+        .timeline-item-left {
+            left: 0;
+        }
+
+        /* Circles for the timeline */
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 4px solid #2196F3;
+            top: 15px;
+            left: 50%;
+            margin-left: -17px;
+            z-index: 1;
+        }
+
+        /* Content boxes */
+        .timeline-item-content {
+            padding: 20px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+        }
+
+        /* Adjust the position of the text */
+        .timeline-item-right .timeline-item-content {
+            text-align: left;
+        }
+
+        .timeline-item-left .timeline-item-content {
+            text-align: right;
+        }
+
+        /* Images */
+        .timeline-item img {
+            border-radius: 50%;
+            max-width: 100px;
+            height: auto;
+            display: block;
+            margin: 0 auto 15px auto;
+        }
+
+        /* Všechny tlačítka s výchozí barvou */
+        button, .btn {
+            background-color: #00CEF1;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        /* Tlačítka při stisknutí */
+        button:active, .btn:active {
+            background-color: #0d6efd;
+            color: white;
+        }
+        /* Stylování pro vyhledávací pole */
+        #pickupLocation {
+            position: absolute; /* Ujistíme se, že bude nad ostatními prvky */
+            z-index: 999; /* Vysoký z-index, aby se překryl nad ostatními elementy */
+            width: 100%; /* Aby měl výběrový seznam stejnou šířku jako vstupní pole */
+            background-color: white; /* Bílé pozadí pro čitelnost */
+            border: 1px solid #ddd; /* Mírný rámeček kolem seznamu */
+            max-height: 300px; /* Maximální výška pro scrollování */
+            overflow-y: auto; /* Povolit scrollování uvnitř výběrového seznamu */
+            display: none; /* Skryto, dokud se neaktivuje */
+        }
+
+        #pickupLocation.show {
+            display: block; /* Zobrazí výběrový seznam při otevření */
+        }
+
+
+
+        /* Mobilní zobrazení */
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 100%;
+                max-width: 90%;
+                padding: 15px;
+            }
+            .spz-container {
+                display: block;
+            }
+
+            .spz-item {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .spz-input {
+                margin-bottom: 10px;
+            }
+
+            .spz-item canvas {
+                margin-top: 10px;
+                width: 100%;
+            }
+
+            .status-box {
+                display: block;
+                margin-left: 0; /* Zarovná status box vlevo */
+            }
+
+            .remove-btn {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 30px;
+                height: 30px;
+                margin-left: 10px;
+                border-radius: 5px;
+                background-color: #ff4d4d;
+                color: white;
+                font-weight: bold;
+                border: none;
+                cursor: pointer;
+            }
+
+            .add-spz-btn {
+                width: 100%;
+            }
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+
+            /* Make the content box full width */
+            .timeline-item-right,
+            .timeline-item-left {
+                left: 0%;
+            }
+
+            .timeline-item::before {
+                left: 30px;
+            }
+
+            .timeline-item-content {
+                text-align: left;
+            }
+
+            .row.align-items-center > .col-md-6 img {
+            max-width: 90%; /* Obrázek bude menší, aby lépe seděl na obrazovce */
+            }
+            .row.align-items-center > .col-md-6.text-center.text-md-start {
+                text-align: center; /* Text se zarovná na střed */
+            }
+            .row.align-items-center h2 {
+                font-size: 1.5rem; /* Zmenšíme velikost nadpisu pro mobil */
+            }
+            .row.align-items-center p {
+                font-size: 1rem; /* Zmenšíme velikost textu pro mobil */
+            }
+            .row.align-items-center a.btn {
+                padding: 10px 15px; /* Menší tlačítko */
+                font-size: 0.9rem;
+            }
+            
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Sjednocený Navbar s Košíkem místo "Získat cenovou nabídku" a přidanými Jmenovkami -->
+<nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
+    <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+        <h2 class="m-0 text-primary">Print M</h2>
+    </a>
+    <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto p-4 p-lg-0">
+            <a href="index.html" class="nav-item nav-link">Domů</a>
+            <a href="service.html" class="nav-item nav-link ">Služby</a>
+            <a href="project.html" class="nav-item nav-link ">Projekty</a>
+            <a href="cenik.html" class="nav-item nav-link ">Ceník</a>
+            <a href="about.html" class="nav-item nav-link ">O nás</a>
+            <a href="quote.html" class="nav-item nav-link ">Poptávka</a>
+            <a href="spztky.html" class="nav-item nav-link active">SPZtky</a>
+            <a href="jmenovky.html" class="nav-item nav-link">Jmenovky</a>
+        </div>
+        <a href="cart.html" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Košík (<span id="cart-count">0</span>)<i class="fa fa-shopping-cart ms-3"></i></a>
+    </div>
+</nav>
+    <!-- Navbar End -->
+
+    <!-- Page Header Start -->
+    <div class="container-fluid py-1">
+        <div class="container text-center py-1">
+            <h1 class="display-4 text-primary">SPZtky</h1>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+    <body>
+    <!-- Obrázek s textem na začátku stránky -->
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <!-- Obrázek -->
+            <div class="col-md-6 text-center mb-4 mb-md-0">
+                <img src="img/daniel.jpg" class="img-fluid" alt="Daniel" style="max-width: 100%; height: auto; border-radius: 10px;">
+            </div>
+            
+            <!-- Text -->
+            <div class="col-md-6 text-center text-md-start">
+                <h2 class="text-primary">Vytvořte si personalizovanou SPZtku!</h2>
+                <p class="fs-5">Jedna za 50 Kč. <br><strong>Nyní akce 4+1 Zdarma!</strong></p>
+                <a href="javascript:void(0);" class="btn btn-primary" id="scrollToQuote">Chci SPZtku</a>
+            </div>
+        </div>
+    </div>
+        
+    <!-- Feature Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <!-- Section title -->
+            <div class="section-title text-center">
+                <h1 class="fw-bold">Jak to funguje?</h1>
+            </div>
+
+            <div class="row g-5 text-center">
+                <!-- Step 1 -->
+                <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.1s">
+                    <h1 class="display-1 text-primary mb-3">1</h1>
+                    <h5 class="mb-3">Objednání</h5>
+                    <p>Vytvořte si jednotlivé SPZtky dle vašeho přání.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.3s">
+                    <h1 class="display-1 text-primary mb-3">2</h1>
+                    <h5 class="mb-3">Platba</h5>
+                    <p>QR kód pro zaplacení objednávky se zobrazí po odeslání objednávky. Příjde vám také shrnutí celé objednávky na email.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.5s">
+                    <h1 class="display-1 text-primary mb-3">3</h1>
+                    <h5 class="mb-3">Odeslání</h5>
+                    <p>Ihned po přijetí platby, vytiskneme vaše SPZtky a odešleme na vámi vybranou zásilkovnu.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Feature End -->
+
+    <!-- Form Section Start -->
+    <div id="quote-section" class="container-fluid bg-light overflow-hidden my-5 px-lg-5">
+        <div class="container quote px-lg-0">
+            <div class="row g-0 mx-lg-0">
+                <div class="col-lg-12 quote-text py-5 wow fadeIn" data-wow-delay="0.5s">
+                    <div class="p-lg-5 pe-lg-0">
+                        <div class="section-title text-start">
+                            <h1 class="display-5 mb-4">Vygeneruj SPZtku</h1>
+                        </div>
+                        <p class="mb-4 pb-2">Buďte originální s jedinečnou klíčenkou. Vymyslete si vlastní SPZtku a my vám ji vytiskneme na 3D tiskárně.</p>
+
+                        <button id="addSpzButton" class="add-spz-btn">Přidat SPZtku</button>
+                        
+                        <!-- Status boxes for SPZ and delivery -->
+                        <div class="status-box blue-box">
+                            <span id="spzStatusText" class="status-text">Přidej ještě 5 pro SPZtku ZDARMA</span>
+                        </div>
+                        <div class="status-box blue-box">
+                            <span id="deliveryStatusText" class="status-text">Přidej ještě 5 pro Dopravu ZDARMA</span>
+                        </div>
+
+                        <!-- Form starts here -->
+                        <form id="quoteForm" action="send_email_spztky.php" method="POST" enctype="multipart/form-data">
+                            <div class="row g-3">
+                                <!-- Dynamic SPZ Inputs -->
+                                <div id="spz-container" class="spz-container"></div>
+
+                                <!-- Hidden input to store SPZ images -->
+                                <input type="hidden" name="spz_images" id="spzImagesInput">
+                                <input type="hidden" name="total_spz_count" id="totalSpzCountInput">
+                                <input type="hidden" name="free_spz_count" id="freeSpzCountInput">
+                                <input type="hidden" name="shipping_cost" id="shippingCostInput">
+                                <input type="hidden" name="total_price" id="totalPriceInput">
+
+                                <!-- Pickup Location Hidden Field -->
+                                <input type="hidden" name="pickupLocation" id="pickupLocationValue">
+
+                                <!-- Counter -->
+                                <div id="spzCounter" class="counter-container">
+                                    Celkový počet SPZtek: <span id="totalSpz">0</span>, z toho zdarma: <span id="freeSpz">0</span><br>
+                                    Doprava: <span id="shippingCost">80</span> Kč (Zásilkovna)<br>
+                                    Celková cena včetně dopravy: <span id="totalPrice">80</span> Kč
+                                </div>
+
+                                <!-- Other Form Inputs -->
+                                <div class="col-12 col-sm-6">
+                                    <input type="text" name="name" class="form-control border-0" placeholder="Jméno" style="height: 55px;" required>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <input type="email" name="email" class="form-control border-0" placeholder="E-mail" style="height: 55px;" required>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <input type="text" name="phone" class="form-control border-0" placeholder="Telefon" style="height: 55px;" required>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <!-- Vstupní pole pro vyhledávání -->
+                                    <input type="text" id="search" class="form-control border-0" placeholder="Vyhledat výdejní místo" style="height: 55px;">
+                                    
+                                    <!-- Skrytý výběrový box -->
+                                    <select id="pickupLocation" class="form-control border-0" style="height: 55px; display:none; overflow-y: scroll;" required>
+                                        <option value="">Vyberte výdejní místo</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-12">
+                                    <textarea name="request" class="form-control border-0" placeholder="Poznámka" rows="4"></textarea>
+                                </div>
+
+                                <!-- Hidden Subject Field -->
+                                <input type="hidden" name="subject" value="Nová objednávka SPZ">
+
+                                <!-- Submit Button -->
+                                <div class="col-12">
+                                    <button class="btn btn-primary w-100 py-3" type="submit">Odeslat</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Form Section End -->
+
+    <!-- Popup Modal for Success -->
+    <div id="confirmationPopup" class="modal" style="display: none;">
+        <div class="modal-content">
+            <p>Děkujeme za vaši objednávku. Potvrzení objednávky vám příjde na email. Objednávku můžete ihned zaplatit tímto QR kódem.</p>
+            <div class="qr-container">
+                <img id="qrCodeImage" src="" alt="QR kód">
+            </div>
+            <button class="close-btn">Zavřít</button>
+        </div>
+    </div>
+
+    <script>
+        // Load the background image (SPZ template)
+        const backgroundImage = new Image();
+        backgroundImage.src = 'img/spztka2.png'; // Set the correct path to your image
+    
+        // Track the number of SPZs with a unique identifier
+        let spzCount = 0;
+        let spzList = [];  // List to track existing SPZs
+    
+        const spzContainer = document.getElementById('spz-container');
+        const addSpzButton = document.getElementById('addSpzButton');
+        const spzStatusText = document.getElementById('spzStatusText');
+        const deliveryStatusText = document.getElementById('deliveryStatusText');
+        const spzStatusBox = spzStatusText.parentElement;
+        const deliveryStatusBox = deliveryStatusText.parentElement;
+        const totalSpzElem = document.getElementById('totalSpz');
+        const freeSpzElem = document.getElementById('freeSpz');
+        const totalPriceElem = document.getElementById('totalPrice');
+        const shippingCostElem = document.getElementById('shippingCost');
+        const pricePerSpz = 50;
+        const shippingPrice = 80;
+        const freeShippingThreshold = 10;
+    
+        // Default SPZ texts
+        const defaultSpzTexts = ["3T9 1234", "Miriam", "SUPERB"];
+    
+        function updateFreeSpzText() {
+            const freeSpzCount = Math.floor(spzList.length / 5); // Every 5th SPZ is free
+            let totalPrice = pricePerSpz * (spzList.length - freeSpzCount); // Calculate total with free SPZ
+            
+            // Update SPZ status text and color
+            const remainingSpz = 5 - (spzList.length % 5); // SPZs remaining for the next free one
+            if (remainingSpz === 5) { // When the count is exactly a multiple of 5
+                spzStatusText.innerHTML = `Tato SPZtka je ZDARMA!`;
+                spzStatusBox.classList.replace('blue-box', 'green-box');
+            } else {
+                spzStatusText.innerHTML = `Přidej ještě ${remainingSpz} pro SPZtka ZDARMA`;
+                spzStatusBox.classList.replace('green-box', 'blue-box');
+            }
+    
+            // Calculate shipping
+            if (spzList.length >= freeShippingThreshold) {
+                deliveryStatusText.innerHTML = "Doprava je ZDARMA!";
+                deliveryStatusBox.classList.replace('blue-box', 'green-box');
+                shippingCostElem.innerHTML = '0 Kč';
+            } else {
+                const remainingForFreeShipping = freeShippingThreshold - spzList.length;
+                deliveryStatusText.innerHTML = `Přidej ještě ${remainingForFreeShipping} pro Dopravu ZDARMA`;
+                deliveryStatusBox.classList.replace('green-box', 'blue-box');
+                shippingCostElem.innerHTML = `${shippingPrice} Kč`;
+                totalPrice += shippingPrice; // Add shipping cost if below threshold
+            }
+    
+            // Update DOM elements
+            totalSpzElem.innerHTML = spzList.length;
+            freeSpzElem.innerHTML = freeSpzCount;
+            totalPriceElem.innerHTML = `${totalPrice}`;
+        }
+    
+        // Add SPZ input with default text
+        function addSpzWithText(text) {
+            spzCount++;
+            spzList.push(spzCount);  // Add SPZ ID to list
+    
+            const spzDiv = document.createElement('div');
+            spzDiv.classList.add('spz-item');
+            spzDiv.id = `spz-item-${spzCount}`;
+            spzDiv.innerHTML = `
+                <div class="spz-item">
+                    <div class="d-flex">
+                        <input type="text" name="spz[]" class="form-control border-0 spz-input" id="spzInput${spzCount}" value="${text}" maxlength="20" style="flex-grow: 1;" onfocus="clearDefaultText(${spzCount}, '${text}')" oninput="updateSPZPreview(${spzCount})">
+                        <button type="button" class="remove-btn" onclick="removeSpz(${spzCount})">&times;</button>
+                    </div>
+                    <canvas id="spzCanvas${spzCount}" style="margin-top: 10px;"></canvas>
+                </div>
+            `;
+    
+            spzContainer.appendChild(spzDiv);
+    
+            // Draw the SPZ with the default text
+            drawSPZ(spzCount, text);
+    
+            // Update free SPZ text and counter
+            updateFreeSpzText();
+        }
+    
+
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+           
+            const pickupLocationSelect = document.getElementById('pickupLocation');
+            const searchInput = document.getElementById('search');
+            const pickupLocationValue = document.getElementById('pickupLocationValue'); // Skryté pole pro výdejní místo
+
+            let locations = [];
+            let filteredLocations = [];
+            let debounceTimeout;
+            let currentVisibleLocations = 100; // Start by showing first 100 locations
+            let allFilteredLoaded = false; // Track if all filtered locations are loaded
+
+            let ignoreBlur = false; // Flag pro ignorování blur eventu, když se vybírá z dropdownu
+
+            // Načtení CSV souboru
+            fetch('pickup_locations.csv')
+                .then(response => response.text())
+                .then(csvText => {
+                    locations = csvText.trim().split('\n');
+
+                    // Seřadit adresy podle abecedy
+                    locations.sort((a, b) => a.localeCompare(b, 'cs', { sensitivity: 'base' }));
+
+                    // Při zaměření na vyhledávací pole zobrazit první blok adres
+                    searchInput.addEventListener('focus', () => {
+                        if (!searchInput.value) {
+                            filterLocations(''); // Při prázdném textu zobrazí všechny adresy
+                            adjustDropdownVisibility();
+                        }
+                    });
+
+                    // Implementovat debounce při zadávání textu do vyhledávání
+                    searchInput.addEventListener('input', () => {
+                        clearTimeout(debounceTimeout);
+                        debounceTimeout = setTimeout(() => {
+                            filterLocations(searchInput.value.toLowerCase());
+                            adjustDropdownVisibility();
+                        }, 300); // Zpoždění 300ms pro optimalizaci vyhledávání
+                    });
+
+                    searchInput.addEventListener('blur', () => {
+                        if (!ignoreBlur && !searchInput.value) {
+                            closeDropdown();
+                        }
+                    });
+
+                    pickupLocationSelect.addEventListener('mousedown', () => {
+                        ignoreBlur = true;
+                    });
+
+                    pickupLocationSelect.addEventListener('mouseup', () => {
+                        ignoreBlur = false;
+                        const selectedOption = pickupLocationSelect.options[pickupLocationSelect.selectedIndex].text;
+                        searchInput.value = selectedOption; // Update search input with selected address
+                        pickupLocationValue.value = selectedOption; // Save selected address into hidden input
+                        closeDropdown(); // Close dropdown after selection
+                    });
+
+                    // Infinite scrolling listener
+                    pickupLocationSelect.addEventListener('scroll', function () {
+                        if (pickupLocationSelect.scrollTop + pickupLocationSelect.clientHeight >= pickupLocationSelect.scrollHeight) {
+                            if (!allFilteredLoaded) {
+                                loadMoreLocations(); // Load more locations when scrolled to bottom
+                            }
+                        }
+                    });
+                });
+
+            function populateSelect(locations, append = false) {
+                // Pokud append je true, přidáme nové položky, jinak smažeme existující a nahradíme je
+                if (!append) {
+                    pickupLocationSelect.innerHTML = ''; // Vymazat předchozí možnosti
+                }
+                locations.forEach(location => {
+                    const option = document.createElement('option');
+                    option.value = location;
+                    option.textContent = location;
+                    pickupLocationSelect.appendChild(option);
+                });
+            }
+
+            function filterLocations(query) {
+                // Filtrovat adresy podle zadání a zobrazit prvních 100 výsledků
+                filteredLocations = locations.filter(location => location.toLowerCase().includes(query));
+                currentVisibleLocations = 100; // Reset počtu viditelných adres
+                allFilteredLoaded = filteredLocations.length <= currentVisibleLocations; // Zda jsou všechny adresy již zobrazeny
+                populateSelect(filteredLocations.slice(0, currentVisibleLocations));
+                pickupLocationSelect.size = Math.min(filteredLocations.length, 10); // Adjust the number of visible options
+                pickupLocationSelect.scrollTop = 0; // Reset the scroll position to top
+            }
+
+            function adjustDropdownVisibility() {
+                const optionCount = pickupLocationSelect.options.length;
+                if (searchInput.value || document.activeElement === searchInput) {
+                    pickupLocationSelect.size = Math.min(optionCount, 10); // Zobrazíme maximálně 10 možností najednou
+                    pickupLocationSelect.style.display = 'block';
+                    pickupLocationSelect.style.height = '';
+                } else {
+                    closeDropdown();
+                }
+            }
+
+            function closeDropdown() {
+                pickupLocationSelect.size = 1;
+                pickupLocationSelect.style.display = 'none';
+            }
+
+            function loadMoreLocations() {
+                // Uložit aktuální scroll pozici
+                const previousScrollTop = pickupLocationSelect.scrollTop;
+
+                if (filteredLocations.length > currentVisibleLocations) {
+                    const nextBatch = filteredLocations.slice(currentVisibleLocations, currentVisibleLocations + 100);
+                    populateSelect(nextBatch, true); // True znamená, že chceme přidat nové položky, ne nahradit
+                    currentVisibleLocations += 100;
+                    allFilteredLoaded = currentVisibleLocations >= filteredLocations.length;
+                }
+
+                // Obnovit předchozí scroll pozici
+                pickupLocationSelect.scrollTop = previousScrollTop;
+            }
+        });
+
+
+
+
+    
+        // Function to clear the default text when the user clicks on the input
+        function clearDefaultText(index, defaultText) {
+            const spzInput = document.getElementById(`spzInput${index}`);
+            if (spzInput.value === defaultText) {
+                spzInput.value = ""; // Clear the default text
+            }
+        }
+    
+        // Function to draw the SPZ with text
+        function drawSPZ(index, text) {
+            const canvas = document.getElementById(`spzCanvas${index}`);
+            const ctx = canvas.getContext('2d');
+    
+            // Set the canvas height to match the input text field, and make the image twice as large
+            const inputFieldHeight = document.getElementById(`spzInput${index}`).offsetHeight;
+            const aspectRatio = backgroundImage.width / backgroundImage.height;
+    
+            canvas.height = inputFieldHeight * 2; // Make the image twice as high as the input field
+            canvas.width = canvas.height * aspectRatio; // Maintain the aspect ratio
+    
+            // Clear the canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+            // Draw the background image
+            ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+    
+            // Set the text properties
+            let fontSize = 48; // Start with a large font size
+            ctx.font = `bold ${fontSize}px Arial`;
+            ctx.fillStyle = 'black';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle'; // Ensure the text is aligned in the middle vertically
+    
+            // Calculate the white area (around 1:5, adjust if necessary)
+            const whiteAreaStartX = canvas.width * 0.2; // Assume the white starts after the blue CZ part
+            const whiteAreaWidth = canvas.width * 0.83; // White area occupies the remaining 75% width
+            const textX = whiteAreaStartX + (whiteAreaWidth / 2) - (canvas.width * 0.045); // Center horizontally
+    
+            // Vertically center the text, then move it down by 10% of the canvas height
+            const verticalShiftPercentage = 0.01; // 10% shift
+            const textY = (canvas.height / 2) + (canvas.height * verticalShiftPercentage);
+    
+            // Adjust the font size if the text is too wide for the white area
+            while (ctx.measureText(text).width > whiteAreaWidth && fontSize > 10) {
+                fontSize -= 2;
+                ctx.font = `bold ${fontSize}px Arial`;
+            }
+    
+            // Draw the text within the white area
+            ctx.fillText(text, textX, textY);
+        }
+    
+        // Function to update the SPZ canvas as the user types
+        function updateSPZPreview(index) {
+            const spzText = document.getElementById(`spzInput${index}`).value;
+            drawSPZ(index, spzText);
+        }
+    
+        // Add 3 default SPZ on page load
+        window.onload = function() {
+            defaultSpzTexts.forEach(text => addSpzWithText(text));
+        }
+    
+        // Add another SPZ input at the end
+        addSpzButton.addEventListener('click', function() {
+            addSpzWithText(''); // Pass an empty string to add a new blank input field
+        });
+    
+        // Remove SPZ input
+        function removeSpz(index) {
+            const spzItem = document.getElementById(`spz-item-${index}`);
+            if (spzItem) {
+                spzContainer.removeChild(spzItem);
+                spzList = spzList.filter(spz => spz !== index);  // Remove SPZ ID from list
+                updateFreeSpzText();
+            }
+        }
+    
+        function collectFormValues() {
+            // Collect SPZ images from canvases
+            const spzImages = [];
+            const canvases = document.querySelectorAll("canvas");
+            canvases.forEach(canvas => spzImages.push(canvas.toDataURL()));
+    
+            document.getElementById('spzImagesInput').value = JSON.stringify(spzImages);
+            document.getElementById('totalSpzCountInput').value = spzList.length;
+            document.getElementById('freeSpzCountInput').value = Math.floor(spzList.length / 5);
+            document.getElementById('shippingCostInput').value = spzList.length >= freeShippingThreshold ? 0 : shippingPrice;
+            document.getElementById('totalPriceInput').value = totalPriceElem.innerHTML.replace(' Kč', ''); // Only the number
+        }
+    
+        document.getElementById('quoteForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+    
+            // Disable the submit button to prevent multiple submissions
+            const submitButton = document.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+    
+            collectFormValues(); // Collect and populate hidden fields
+    
+            const formData = new FormData(this);
+    
+            fetch('send_email_spztky.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('qrCodeImage').src = data.qrCodeUrl; // Display the QR code
+                    document.getElementById('confirmationPopup').style.display = 'block'; // Show the popup
+                } else {
+                    alert('Chyba při odesílání objednávky: ' + data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error))
+            .finally(() => {
+                submitButton.disabled = false; // Re-enable the button after processing is complete
+            });
+        });
+
+
+
+        document.getElementById('scrollToQuote').addEventListener('click', function () {
+            const quoteSection = document.getElementById('quote-section');
+            quoteSection.scrollIntoView({ behavior: 'smooth' }); // Plynulé scrollování
+        });
+    </script>
+    
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/isotope/isotope.pkgd.min.js"></script>
+    <script src="lib/lightbox/js/lightbox.min.js"></script>
+    <script src="js/popup2.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+    <script src="js/navbar.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

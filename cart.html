@@ -31,8 +31,6 @@
     <link href="css/style.css" rel="stylesheet">
     <link href="css/popup2.css" rel="stylesheet">
 
-
-
     <!-- Styl pro cart.html -->
     <style>
       /* ==============================
@@ -150,6 +148,22 @@
       .fw-bold {
         font-weight: 700;
       }
+      
+      /* Styl pro zobrazení počtu položek v košíku */
+      .cart-summary {
+        text-align: right;
+        margin-bottom: 1rem;
+      }
+      /* Zde je nová úprava – rámeček jako tlačítko se zaoblenými rohy */
+      .cart-summary span {
+        font-weight: 500;
+        background-color: #00CEF1; /* světle modrá barva tlačítek */
+        border: 1px solid #00CEF1;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 5px; /* stejné zakulacení jako button */
+        display: inline-block;
+      }
     </style>
 </head>
 
@@ -171,6 +185,11 @@
   <div class="container py-5">
     <div class="section-title text-center">
       <h1 class="display-5 text-primary">Váš Košík</h1>
+    </div>
+    
+    <!-- Přidaný element pro zobrazení počtu položek -->
+    <div class="cart-summary">
+      Počet položek: <span id="cart-count">0</span>
     </div>
 
     <!-- Zobrazení položek košíku -->
@@ -309,7 +328,7 @@
     // Vymazat předchozí výpis
     cartItemsEl.innerHTML = "";
 
-    // Spočítat cenu zboží
+    // Spočítat cenu zboží a počet položek
     let totalPriceItems = 0;
     let totalCount = 0;
 
@@ -344,39 +363,31 @@
     // Celková cena
     const totalPriceAll = finalGoodsPrice + finalShippingPrice;
 
-    // Zobrazení počtu položek v košíku (vpravo nahoře)
+    // Aktualizace počtu položek v košíku
     cartCountEl.textContent = totalCount;
 
-    // Zobrazení "Cena za zboží"
+    // Zobrazení cen a slev
     goodsPriceEl.textContent = `Cena za zboží: ${totalPriceItems} Kč`;
-
-    // Zobrazení "Sleva na zboží" (jen pokud je > 0)
     if (goodsDiscountValue > 0) {
       goodsDiscountEl.style.display = "block";
       goodsDiscountEl.textContent = `Sleva na zboží: - ${goodsDiscountValue} Kč`;
     } else {
       goodsDiscountEl.style.display = "none";
     }
-
-    // Zobrazení "Cena za dopravu"
     shippingPriceEl.textContent = `Cena za dopravu: ${baseShippingCost} Kč`;
-
-    // Zobrazení "Sleva na dopravu" (jen pokud je > 0)
     if (shippingDiscountAmount > 0) {
       shippingDiscountEl.style.display = "block";
       shippingDiscountEl.textContent = `Sleva na dopravu: - ${shippingDiscountAmount} Kč`;
     } else {
       shippingDiscountEl.style.display = "none";
     }
-
-    // Celková cena
     cartTotalEl.textContent = `${totalPriceAll} Kč`;
 
-    // Uložit košík do localStorage
+    // Uložit aktuální košík do localStorage
     localStorage.setItem("cart", JSON.stringify(cart));
   }
 
-  // Odebrání jedné položky z košíku
+  // Odebrání položky z košíku
   function removeItem(idx) {
     cart.splice(idx, 1);
     renderCart();
@@ -387,7 +398,7 @@
     renderCart();
   });
 
-  // === Obsluha zadání slevového kódu ===
+  // Obsluha zadání slevového kódu
   document.getElementById("apply-discount-btn").addEventListener("click", function(){
       const code = document.getElementById("discount-code").value.trim();
       const discountMessageEl = document.getElementById("discount-message");
@@ -404,7 +415,7 @@
         return;
       }
 
-      // Jinak zkusíme slevy na zboží
+      // Zpracování slevových kódů na zboží
       switch (code.toUpperCase()) {
         case "SLEVA10":
           if (goodsDiscountPercentage === 0) {
@@ -428,7 +439,7 @@
       renderCart();
   });
 
-  // === Vyhledávání poboček Zásilkovny ===
+  // Vyhledávání poboček Zásilkovny
   let allLocations = [];
   let filteredLocs = [];
   let debounceTimer;
@@ -519,6 +530,14 @@
     });
     showLocations();
   }
+
+  // Po zavření modálního okna (QR kód) vyprázdnit košík
+  document.getElementById("closeModalBtn").addEventListener("click", function(){
+      document.getElementById("qrModal").style.display = "none";
+      cart = [];
+      localStorage.setItem("cart", JSON.stringify(cart));
+      renderCart();
+  });
 </script>
 </body>
 </html>

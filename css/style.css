@@ -657,3 +657,72 @@
 .footer .copyright a:hover {
     color: var(--primary);
 }
+
+
+/* -------------------------------------------
+   STEJNÁ VELIKOST A BARVA PRO HAMBURGER
+   I MOBILNÍ KOŠÍK
+-------------------------------------------- */
+
+/* Oba mají 48x48px, modré pozadí, bílou ikonu */
+
+/* --- Tlačítko hamburger (48x48, modré pozadí) --- */
+.navbar-toggler {
+    width: 48px;
+    height: 48px;
+    background-color: #00CEF1 !important; /* modrá barva pozadí */
+    border: none !important;
+    border-radius: .25rem !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 
+   Odstraníme výchozí background-image 
+   a nastavíme vlastní s bílými čárkami 
+*/
+.navbar-toggler-icon {
+    background-image: none !important;
+    background: url("data:image/svg+xml;charset=utf8,%3Csvg width='30' height='30' viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='%23fff' stroke-width='2' stroke-linecap='round' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") center/20px 20px no-repeat !important;
+    width: 20px;
+    height: 20px;
+}
+
+/* Hover/focus hamburger */
+.navbar-toggler:hover,
+.navbar-toggler:focus {
+    background-color: #00AAD3 !important; /* tmavší modrá při hoveru */
+    outline: none;
+    box-shadow: none;
+}
+
+
+
+/* 2) Mobilní košík: stejné rozměry a barva */
+.cart-toggler {
+    width: 48px;
+    height: 48px;
+    background-color: #00CEF1; /* stejná modrá */
+    border: none;
+    border-radius: .25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Bílá ikona košíku, velikost 20px */
+.cart-toggler i {
+    color: #ffffff;
+    font-size: 20px; 
+}
+
+/* Hover/focus pro košík */
+.cart-toggler:hover,
+.cart-toggler:focus {
+    background-color: #00AAD3;
+    text-decoration: none;
+    outline: none;
+    box-shadow: none;
+    color: #ffffff;
+}

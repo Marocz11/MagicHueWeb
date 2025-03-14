@@ -1,11 +1,20 @@
-<!-- navbar.html -->
 <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
     <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
         <h2 class="m-0 text-primary">Print M</h2>
     </a>
-    <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+
+    <div class="d-flex align-items-center">
+        <!-- HAMBURGER MENU -->
+        <button type="button" class="navbar-toggler me-2" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- KOŠÍK (mobilní verze) -->
+        <a href="cart.html" class="cart-toggler d-lg-none me-3" aria-label="Košík">
+            <i class="fa fa-shopping-cart"></i>
+        </a>
+    </div>
+
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav ms-auto p-4 p-lg-0">
             <a href="index.html" class="nav-item nav-link active">Domů</a>
@@ -17,6 +26,7 @@
             <a href="spztky.html" class="nav-item nav-link">SPZtky</a>
             <a href="jmenovky.html" class="nav-item nav-link">Jmenovky</a>
         </div>
+        <!-- Košík (desktop verze) -->
         <a href="cart.html" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">
             Košík (<span id="cart-count">0</span>)<i class="fa fa-shopping-cart ms-3"></i>
         </a>

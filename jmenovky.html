@@ -2,7 +2,7 @@
 <html lang="cs">
 <head>
     <meta charset="utf-8">
-    <title>printM</title>
+    <title>printM - Jmenovky 3D</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -32,878 +32,931 @@
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
 
-  <style>
-    /* === SLIDER - DESKTOP === */
-    .slider {
-      position: relative;
-      width: 600px;
-      height: 400px;
-      background-color: #ffffff;
-      overflow: hidden;
-      margin: auto;
-    }
-    .slider img {
-      display: none;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-    .slider img.active {
-      display: block;
-    }
-    .slider .arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background-color: rgba(0, 0, 0, 0.5);
-      border: none;
-      color: #fff;
-      padding: 10px;
-      cursor: pointer;
-      font-size: 1.5rem;
-      z-index: 2;
-    }
-    .slider .prev {
-      left: 10px;
-    }
-    .slider .next {
-      right: 10px;
-    }
+    <!-- Odstranění modrého efektu tlačítka hamburger menu -->
+    <style>
+      .navbar-toggler,
+      .navbar-toggler:hover,
+      .navbar-toggler:focus,
+      .navbar-toggler:active,
+      .navbar-toggler-icon:hover,
+      .navbar-toggler-icon:focus,
+      .navbar-toggler-icon:active {
+          background-color: transparent !important;
+          box-shadow: none !important;
+          outline: none !important;
+          border: none !important;
+          -webkit-tap-highlight-color: transparent;
+      }
+    </style>
 
-    /* === SLIDER - MOBIL === */
-    @media (max-width: 768px) {
+    <!-- Dodatečné styly pro stránku Jmenovky (slider, lightbox, atd.) -->
+    <style>
+      /* === SLIDER - DESKTOP === */
       .slider {
-        width: 100%;
-        height: auto;
-        display: flex;
-        flex-direction: row;
-        overflow-x: auto;
-        scroll-behavior: smooth;
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch;
+        position: relative;
+        width: 600px;
+        height: 400px;
+        background-color: #ffffff;
+        overflow: hidden;
+        margin: auto;
       }
       .slider img {
-        display: block;
-        flex-shrink: 0;
+        display: none;
         width: 100%;
-        height: auto;
+        height: 100%;
         object-fit: contain;
-        scroll-snap-align: center;
+      }
+      .slider img.active {
+        display: block;
       }
       .slider .arrow {
-        display: none;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        border: none;
+        color: #fff;
+        padding: 10px;
+        cursor: pointer;
+        font-size: 1.5rem;
+        z-index: 2;
       }
-    }
-    
-    /* === Lightbox styly === */
-    .lightbox-modal {
-      display: none; /* Skrytý ve výchozím stavu */
-      position: fixed;
-      z-index: 9999;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.9);
-      /* Flexbox vlastnosti použijeme až při otevření (JS nastaví display na flex) */
-      align-items: center;
-      justify-content: center;
-    }
-    .lightbox-content {
-      display: block;
-      max-width: 90%;
-      max-height: 90%;
-    }
-    .lightbox-prev,
-    .lightbox-next {
-      cursor: pointer;
-      position: absolute;
-      top: 50%;
-      padding: 16px;
-      margin-top: -50px;
-      color: white;
-      font-weight: bold;
-      font-size: 2rem;
-      transition: 0.3s;
-      user-select: none;
-      background-color: rgba(0,0,0,0.5);
-    }
-    .lightbox-prev {
-      left: 10px;
-    }
-    .lightbox-next {
-      right: 10px;
-    }
-    .lightbox-prev:hover,
-    .lightbox-next:hover {
-      background-color: rgba(0,0,0,0.8);
-    }
-    .lightbox-close {
-      position: absolute;
-      top: 20px;
-      right: 35px;
-      color: #fff;
-      font-size: 2rem;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .lightbox-close:hover {
-      color: #bbb;
-    }
-    
-    /* --- Původní styly pro jmenovky --- */
-    @font-face {
-      font-family: 'Cassandra';
-      src: url('fonts/CassandraPersonalUsuFixed.otf') format('opentype');
-    }
-    @font-face {
-      font-family: 'Catchland';
-      src: url('fonts/Catchland_PERSONAL_USE_ONLY.otf') format('opentype');
-    }
-    @font-face {
-      font-family: 'Damion';
-      src: url('fonts/Damion-Regular.ttf') format('truetype');
-    }
-    @font-face {
-      font-family: 'MarketingScript';
-      src: url('fonts/MarketingScript.ttf') format('truetype');
-    }
-    @font-face {
-      font-family: 'Pacifico';
-      src: url('fonts/Pacifico-Regular.ttf') format('truetype');
-    }
-    @font-face {
-      font-family: 'RemoraCamilla';
-      src: url('fonts/remoracamillascript-vm1az.otf') format('opentype');
-    }
-    @font-face {
-      font-family: 'Sarina';
-      src: url('fonts/Sarina-Regular.ttf') format('truetype');
-    }
-    .name-field {
-      font-family: 'Cassandra', cursive;
-      font-size: 2rem; 
-      height: 40px; 
-      line-height: 30px; 
-      padding: 5px;
-      width: 70%;
-      text-align: center;
-      border: 2px solid #ccc;
-      box-sizing: border-box;
-      overflow: hidden;
-      background-color: #ffffff;
-      --placeholder-color: #000000;
-      --placeholder-font-family: 'Cassandra';
-    }
-    .name-field::placeholder {
-      color: var(--placeholder-color);
-      font-family: var(--placeholder-font-family);
-      opacity: 1;
-    }
-    .name-input-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 40%;
-      max-width: 500px;
-      margin: auto;
-    }
-    #add-name,
-    #add-all-to-cart {
-      width: 40%;
-      margin: 0 auto;
-      display: block;
-    }
-    .font-sample-selector-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-bottom: 1rem;
-    }
-    .font-sample-selector-container p {
-      width: 100%;
-      text-align: center;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    .font-sample-selector-container input[type="radio"] {
-      position: absolute;
-      opacity: 0;
-      cursor: pointer;
-    }
-    .font-sample-selector-container label {
-      position: relative;
-      cursor: pointer;
-    }
-    .font-sample-selector-container input[type="radio"] + span {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px;
-      border: 2px solid #ccc;
-      border-radius: 4px;
-      transition: border-color 0.2s;
-      min-width: 120px;
-      min-height: 60px;
-      text-align: center;
-    }
-    .font-sample-selector-container input[type="radio"]:checked + span {
-      border-color: #0d6efd;
-    }
-    .product-description {
-      text-align: left;
-      margin-bottom: 1rem;
-    }
-    .product-description p,
-    .product-description ul {
-      margin: 0.5rem 0;
-    }
-    .connector-description {
-      text-align: center;
-      margin-bottom: 0.5rem;
-    }
-    .connector-selector-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-bottom: 1rem;
-    }
-    .connector-selector-container input[type="radio"] {
-      position: absolute;
-      opacity: 0;
-      cursor: pointer;
-    }
-    .connector-selector-container label {
-      position: relative;
-      cursor: pointer;
-    }
-    .connector-selector-container input[type="radio"] + img,
-    .connector-selector-container input[type="radio"] + span {
-      border: 2px solid #ccc;
-      border-radius: 4px;
-      padding: 4px;
-      transition: border-color 0.2s;
-      display: block;
-      width: 40px;
-      height: 40px;
-      text-align: center;
-      line-height: 40px;
-      font-size: 0.9rem;
-    }
-    .connector-selector-container input[type="radio"]:checked + img,
-    .connector-selector-container input[type="radio"]:checked + span {
-      border-color: #0d6efd;
-    }
-    .color-selector-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-bottom: 1rem;
-    }
-    .color-selector-container p {
-      width: 100%;
-      text-align: center;
-      margin: 0;
-      font-weight: bold;
-    }
-    .color-selector-container input[type="radio"] {
-      position: absolute;
-      opacity: 0;
-      cursor: pointer;
-    }
-    .color-selector-container label {
-      position: relative;
-      cursor: pointer;
-    }
-    .color-selector-container input[type="radio"] + span {
-      border: 2px solid #ccc;
-      border-radius: 4px;
-      display: block;
-      width: 40px;
-      height: 40px;
-      transition: border-color 0.2s;
-    }
-    .color-selector-container input[type="radio"]:checked + span {
-      border-color: #0d6efd;
-    }
-    @media (max-width: 768px) {
-      .name-input-container,
-      #add-name,
-      #add-all-to-cart {
+      .slider .prev {
+        left: 10px;
+      }
+      .slider .next {
+        right: 10px;
+      }
+
+      /* === SLIDER - MOBIL === */
+      @media (max-width: 768px) {
+        .slider {
+          width: 100%;
+          height: auto;
+          display: flex;
+          flex-direction: row;
+          overflow-x: auto;
+          scroll-behavior: smooth;
+          scroll-snap-type: x mandatory;
+          -webkit-overflow-scrolling: touch;
+        }
+        .slider img {
+          display: block;
+          flex-shrink: 0;
+          width: 100%;
+          height: auto;
+          object-fit: contain;
+          scroll-snap-align: center;
+        }
+        .slider .arrow {
+          display: none;
+        }
+      }
+      
+      /* === Lightbox styly === */
+      .lightbox-modal {
+        display: none; /* Skrytý ve výchozím stavu */
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
         width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.9);
+        align-items: center;
+        justify-content: center;
+      }
+      .lightbox-content {
+        display: block;
+        max-width: 90%;
+        max-height: 90%;
+      }
+      .lightbox-prev,
+      .lightbox-next {
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        padding: 16px;
+        margin-top: -50px;
+        color: white;
+        font-weight: bold;
+        font-size: 2rem;
+        transition: 0.3s;
+        user-select: none;
+        background-color: rgba(0,0,0,0.5);
+      }
+      .lightbox-prev {
+        left: 10px;
+      }
+      .lightbox-next {
+        right: 10px;
+      }
+      .lightbox-prev:hover,
+      .lightbox-next:hover {
+        background-color: rgba(0,0,0,0.8);
+      }
+      .lightbox-close {
+        position: absolute;
+        top: 20px;
+        right: 35px;
+        color: #fff;
+        font-size: 2rem;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .lightbox-close:hover {
+        color: #bbb;
+      }
+      
+      /* --- Původní styly pro jmenovky --- */
+      @font-face {
+        font-family: 'Cassandra';
+        src: url('fonts/CassandraPersonalUsuFixed.otf') format('opentype');
+      }
+      @font-face {
+        font-family: 'Catchland';
+        src: url('fonts/Catchland_PERSONAL_USE_ONLY.otf') format('opentype');
+      }
+      @font-face {
+        font-family: 'Damion';
+        src: url('fonts/Damion-Regular.ttf') format('truetype');
+      }
+      @font-face {
+        font-family: 'MarketingScript';
+        src: url('fonts/MarketingScript.ttf') format('truetype');
+      }
+      @font-face {
+        font-family: 'Pacifico';
+        src: url('fonts/Pacifico-Regular.ttf') format('truetype');
+      }
+      @font-face {
+        font-family: 'RemoraCamilla';
+        src: url('fonts/remoracamillascript-vm1az.otf') format('opentype');
+      }
+      @font-face {
+        font-family: 'Sarina';
+        src: url('fonts/Sarina-Regular.ttf') format('truetype');
       }
       .name-field {
-        width: 100%;
+        font-family: 'Cassandra', cursive;
+        font-size: 2rem; 
+        height: 40px; 
+        line-height: 30px; 
+        padding: 5px;
+        width: 70%;
+        text-align: center;
+        border: 2px solid #ccc;
+        box-sizing: border-box;
+        overflow: hidden;
+        background-color: #ffffff;
+        --placeholder-color: #000000;
+        --placeholder-font-family: 'Cassandra';
       }
-    }
-  </style>
+      .name-field::placeholder {
+        color: var(--placeholder-color);
+        font-family: var(--placeholder-font-family);
+        opacity: 1;
+      }
+      .name-input-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40%;
+        max-width: 500px;
+        margin: auto;
+      }
+      #add-name,
+      #add-all-to-cart {
+        width: 40%;
+        margin: 0 auto;
+        display: block;
+      }
+      .font-sample-selector-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        margin-bottom: 1rem;
+      }
+      .font-sample-selector-container p {
+        width: 100%;
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      .font-sample-selector-container input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+      }
+      .font-sample-selector-container label {
+        position: relative;
+        cursor: pointer;
+      }
+      .font-sample-selector-container input[type="radio"] + span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        transition: border-color 0.2s;
+        min-width: 120px;
+        min-height: 60px;
+        text-align: center;
+      }
+      .font-sample-selector-container input[type="radio"]:checked + span {
+        border-color: #0d6efd;
+      }
+      .product-description {
+        text-align: left;
+        margin-bottom: 1rem;
+      }
+      .product-description p,
+      .product-description ul {
+        margin: 0.5rem 0;
+      }
+      .connector-description {
+        text-align: center;
+        margin-bottom: 0.5rem;
+      }
+      .connector-selector-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 1rem;
+      }
+      .connector-selector-container input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+      }
+      .connector-selector-container label {
+        position: relative;
+        cursor: pointer;
+      }
+      .connector-selector-container input[type="radio"] + img,
+      .connector-selector-container input[type="radio"] + span {
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        padding: 4px;
+        transition: border-color 0.2s;
+        display: block;
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        line-height: 40px;
+        font-size: 0.9rem;
+      }
+      .connector-selector-container input[type="radio"]:checked + img,
+      .connector-selector-container input[type="radio"]:checked + span {
+        border-color: #0d6efd;
+      }
+      .color-selector-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 1rem;
+      }
+      .color-selector-container p {
+        width: 100%;
+        text-align: center;
+        margin: 0;
+        font-weight: bold;
+      }
+      .color-selector-container input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+      }
+      .color-selector-container label {
+        position: relative;
+        cursor: pointer;
+      }
+      .color-selector-container input[type="radio"] + span {
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        display: block;
+        width: 40px;
+        height: 40px;
+        transition: border-color 0.2s;
+      }
+      .color-selector-container input[type="radio"]:checked + span {
+        border-color: #0d6efd;
+      }
+      @media (max-width: 768px) {
+        .name-input-container,
+        #add-name,
+        #add-all-to-cart {
+          width: 100%;
+        }
+        .name-field {
+          width: 100%;
+        }
+      }
+    </style>
 </head>
+
 <body>
+    <!-- Spinner Start -->
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+      <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
+          <span class="sr-only">Načítání...</span>
+      </div>
+    </div>
+    <!-- Spinner End -->
+
+    <!-- Navbar (placeholder, načítá se skrze navbar.js) -->
     <div id="navbar-placeholder"></div>
 
-
-  <div class="container-xxl py-5">
-    <div class="container">
-      <div class="section-title text-center">
-        <h1 class="display-5 text-primary">Jmenovky 3D</h1>
-      </div>
-      <div class="row g-4 justify-content-center">
-        <div class="col-md-8">
-          <div class="service-item border rounded overflow-hidden shadow text-center">
-            <!-- Slider -->
-            <div class="slider" id="customSlider">
-              <img src="img/jmenovky/Jmenovky1.jpg" alt="Jmenovka 3D 1" class="active">
-              <img src="img/jmenovky/Jmenovky2.jpg" alt="Jmenovka 3D 2">
-              <img src="img/jmenovky/Jmenovky3.jpg" alt="Jmenovka 3D 3">
-              <img src="img/jmenovky/JmenovkyUprava.jpg" alt="Jmenovka 3D Uprava">
-              <button class="arrow prev" id="prevBtn">&#10094;</button>
-              <button class="arrow next" id="nextBtn">&#10095;</button>
-            </div>
-            <div class="p-4">
-              <h4 class="mb-3">Jmenovka 3D</h4>
-              <!-- Popis produktu -->
-              <div class="product-description">
-                <p>Ozdobte oslavu či svatební tabuli jedinečnými 3D jmenovkami. Každou můžete personalizovat vlastním jménem či nápisem. Vyberte správný font a barvu, které budou dokonale ladit s vaší výzdobou.</p>
-                <br>
-                <h5>Technické specifikace:</h5>
-                <ul>
-                  <li>Materiál: PLA</li>
-                  <li>Výroba: 3D tisk</li>
-                  <li>Font: Cassandra personal – písmena jsou navržena tak, aby tvořila jeden pevný objekt.</li>
-                  <li>Diakritika / interpunkce: Umisťujeme ji nad písmeno, aby zůstala pevně propojená s nápisem.</li>
-                  <li>Velikost: Průměrná velikost jmenovky je cca 40 × 80 × 3 mm (záleží na délce slova).</li>
-                  <li>Barevné varianty: Nabízíme více barev, abyste našli tu pravou pro svou akci.</li>
-                </ul>
+    <!-- Obsah stránky: Jmenovky 3D -->
+    <div class="container-xxl py-5">
+      <div class="container">
+        <div class="section-title text-center">
+          <h1 class="display-5 text-primary">Jmenovky 3D</h1>
+        </div>
+        <div class="row g-4 justify-content-center">
+          <div class="col-md-8">
+            <div class="service-item border rounded overflow-hidden shadow text-center">
+              <!-- Slider -->
+              <div class="slider" id="customSlider">
+                <img src="img/jmenovky/Jmenovky1.jpg" alt="Jmenovka 3D 1" class="active">
+                <img src="img/jmenovky/Jmenovky2.jpg" alt="Jmenovka 3D 2">
+                <img src="img/jmenovky/Jmenovky3.jpg" alt="Jmenovka 3D 3">
+                <img src="img/jmenovky/JmenovkyUprava.jpg" alt="Jmenovka 3D Uprava">
+                <button class="arrow prev" id="prevBtn">&#10094;</button>
+                <button class="arrow next" id="nextBtn">&#10095;</button>
               </div>
-              
-              <p class="text-primary fw-bold">15 Kč / jméno</p>
-
-              <!-- Výběr fontu -->
-              <div class="font-sample-selector-container">
-                <p>Vyberte font:</p>
-                <label title="Cassandra">
-                  <input type="radio" name="font-sample" value="Cassandra" checked>
-                  <span id="sample-cassandra">Cassandra</span>
-                </label>
-                <label title="Catchland">
-                  <input type="radio" name="font-sample" value="Catchland">
-                  <span id="sample-catchland">Catchland</span>
-                </label>
-                <label title="Damion">
-                  <input type="radio" name="font-sample" value="Damion">
-                  <span id="sample-damion">Damion</span>
-                </label>
-                <label title="MarketingScript">
-                  <input type="radio" name="font-sample" value="MarketingScript">
-                  <span id="sample-marketing">MarketingScript</span>
-                </label>
-                <label title="Pacifico">
-                  <input type="radio" name="font-sample" value="Pacifico">
-                  <span id="sample-pacifico">Pacifico</span>
-                </label>
-                <label title="RemoraCamilla">
-                  <input type="radio" name="font-sample" value="RemoraCamilla">
-                  <span id="sample-remora">RemoraCamilla</span>
-                </label>
-                <label title="Sarina">
-                  <input type="radio" name="font-sample" value="Sarina">
-                  <span id="sample-sarina">Sarina</span>
-                </label>
-              </div>
-              
-              <!-- Propojení -->
-              <div class="connector-description">
-                <p class="fw-bold mb-1">Propojení</p>
-                <p class="mb-2">Pokud chcete, aby jmenovka ze dvou či více slov tvořila jeden pevný kus, vyberte vhodný symbol místo mezery. Nezobrazí se v náhledu jména, ale přidává se ručně.</p>
-              </div>
-              <div class="connector-selector-container">
-                <label title="Žádný symbol">
-                  <input type="radio" name="connector" value="none" checked>
-                  <span></span>
-                </label>
-                <label title="Arrow">
-                  <input type="radio" name="connector" value="arrow">
-                  <img src="img/connect/arrow.png" alt="arrow">
-                </label>
-                <label title="Flash">
-                  <input type="radio" name="connector" value="flash">
-                  <img src="img/connect/flash.png" alt="flash">
-                </label>
-                <label title="Heart">
-                  <input type="radio" name="connector" value="heart">
-                  <img src="img/connect/heart.png" alt="heart">
-                </label>
-                <label title="Infinity">
-                  <input type="radio" name="connector" value="infinity">
-                  <img src="img/connect/infinity.png" alt="infinity">
-                </label>
-                <label title="Plane">
-                  <input type="radio" name="connector" value="plane">
-                  <img src="img/connect/plane.png" alt="plane">
-                </label>
-                <label title="Ring1">
-                  <input type="radio" name="connector" value="ring1">
-                  <img src="img/connect/Ring1.png" alt="Ring1">
-                </label>
-                <label title="Ring2">
-                  <input type="radio" name="connector" value="ring2">
-                  <img src="img/connect/Ring2.png" alt="Ring2">
-                </label>
-                <label title="Ring3">
-                  <input type="radio" name="connector" value="ring3">
-                  <img src="img/connect/Ring3.png" alt="Ring3">
-                </label>
-                <label title="Star">
-                  <input type="radio" name="connector" value="star">
-                  <img src="img/connect/star.png" alt="star">
-                </label>
-              </div>
-              
-              <!-- Výběr barvy -->
-              <div class="color-selector-container">
-                <p>Barva:</p>
-                <label title="Černá">
-                  <input type="radio" name="color" value="cerna" checked>
-                  <span style="background-color: #000000;"></span>
-                </label>
-                <label title="Bílá">
-                  <input type="radio" name="color" value="bila">
-                  <span style="background-color: #ffffff;"></span>
-                </label>
-                <label title="Modrá">
-                  <input type="radio" name="color" value="modra">
-                  <span style="background-color: #0d6efd;"></span>
-                </label>
-                <label title="Červená">
-                  <input type="radio" name="color" value="cervena">
-                  <span style="background-color: #dc3545;"></span>
-                </label>
-                <label title="Zlatá">
-                  <input type="radio" name="color" value="zlata">
-                  <span style="background-color: #ffd700;"></span>
-                </label>
-                <label title="Žlutá">
-                  <input type="radio" name="color" value="zluta">
-                  <span style="background-color: #ffc107;"></span>
-                </label>
-                <label title="Zelená">
-                  <input type="radio" name="color" value="zelena">
-                  <span style="background-color: #198754;"></span>
-                </label>
-                <label title="Šedá">
-                  <input type="radio" name="color" value="seda">
-                  <span style="background-color: #6c757d;"></span>
-                </label>
-              </div>
-
-              <button class="btn btn-primary mb-3" id="add-name">Přidat další jméno</button>
-
-              <!-- Kontejner pro inputy jmen -->
-              <div id="name-inputs" class="d-flex flex-column align-items-center">
-                <div class="name-input-container mb-2">
-                  <span class="me-2 fw-bold">1.</span>
-                  <input type="text" class="form-control name-field" placeholder="Nové jméno" maxlength="30">
-                  <button class="btn btn-danger btn-sm ms-2 remove-name" onclick="removeName(this)">✖</button>
+              <div class="p-4">
+                <h4 class="mb-3">Jmenovka 3D</h4>
+                <!-- Popis produktu -->
+                <div class="product-description">
+                  <p>Ozdobte oslavu či svatební tabuli jedinečnými 3D jmenovkami. Každou můžete personalizovat vlastním jménem či nápisem. Vyberte správný font a barvu, které budou dokonale ladit s vaší výzdobou.</p>
+                  <br>
+                  <h5>Technické specifikace:</h5>
+                  <ul>
+                    <li>Materiál: PLA</li>
+                    <li>Výroba: 3D tisk</li>
+                    <li>Font: Cassandra personal – písmena jsou navržena tak, aby tvořila jeden pevný objekt.</li>
+                    <li>Diakritika / interpunkce: Umisťujeme ji nad písmeno, aby zůstala pevně propojená s nápisem.</li>
+                    <li>Velikost: Průměrná velikost jmenovky je cca 40 × 80 × 3 mm (záleží na délce slova).</li>
+                    <li>Barevné varianty: Nabízíme více barev, abyste našli tu pravou pro svou akci.</li>
+                  </ul>
                 </div>
-              </div>
+                
+                <p class="text-primary fw-bold">15 Kč / jméno</p>
 
-              <button class="btn btn-primary" id="add-all-to-cart">
-                Přidat všechna jména do košíku
-              </button>
+                <!-- Výběr fontu -->
+                <div class="font-sample-selector-container">
+                  <p>Vyberte font:</p>
+                  <label title="Cassandra">
+                    <input type="radio" name="font-sample" value="Cassandra" checked>
+                    <span id="sample-cassandra">Cassandra</span>
+                  </label>
+                  <label title="Catchland">
+                    <input type="radio" name="font-sample" value="Catchland">
+                    <span id="sample-catchland">Catchland</span>
+                  </label>
+                  <label title="Damion">
+                    <input type="radio" name="font-sample" value="Damion">
+                    <span id="sample-damion">Damion</span>
+                  </label>
+                  <label title="MarketingScript">
+                    <input type="radio" name="font-sample" value="MarketingScript">
+                    <span id="sample-marketing">MarketingScript</span>
+                  </label>
+                  <label title="Pacifico">
+                    <input type="radio" name="font-sample" value="Pacifico">
+                    <span id="sample-pacifico">Pacifico</span>
+                  </label>
+                  <label title="RemoraCamilla">
+                    <input type="radio" name="font-sample" value="RemoraCamilla">
+                    <span id="sample-remora">RemoraCamilla</span>
+                  </label>
+                  <label title="Sarina">
+                    <input type="radio" name="font-sample" value="Sarina">
+                    <span id="sample-sarina">Sarina</span>
+                  </label>
+                </div>
+                
+                <!-- Propojení -->
+                <div class="connector-description">
+                  <p class="fw-bold mb-1">Propojení</p>
+                  <p class="mb-2">Pokud chcete, aby jmenovka ze dvou či více slov tvořila jeden pevný kus, vyberte vhodný symbol místo mezery. Nezobrazí se v náhledu jména, ale přidává se ručně.</p>
+                </div>
+                <div class="connector-selector-container">
+                  <label title="Žádný symbol">
+                    <input type="radio" name="connector" value="none" checked>
+                    <span></span>
+                  </label>
+                  <label title="Arrow">
+                    <input type="radio" name="connector" value="arrow">
+                    <img src="img/connect/arrow.png" alt="arrow">
+                  </label>
+                  <label title="Flash">
+                    <input type="radio" name="connector" value="flash">
+                    <img src="img/connect/flash.png" alt="flash">
+                  </label>
+                  <label title="Heart">
+                    <input type="radio" name="connector" value="heart">
+                    <img src="img/connect/heart.png" alt="heart">
+                  </label>
+                  <label title="Infinity">
+                    <input type="radio" name="connector" value="infinity">
+                    <img src="img/connect/infinity.png" alt="infinity">
+                  </label>
+                  <label title="Plane">
+                    <input type="radio" name="connector" value="plane">
+                    <img src="img/connect/plane.png" alt="plane">
+                  </label>
+                  <label title="Ring1">
+                    <input type="radio" name="connector" value="ring1">
+                    <img src="img/connect/Ring1.png" alt="Ring1">
+                  </label>
+                  <label title="Ring2">
+                    <input type="radio" name="connector" value="ring2">
+                    <img src="img/connect/Ring2.png" alt="Ring2">
+                  </label>
+                  <label title="Ring3">
+                    <input type="radio" name="connector" value="ring3">
+                    <img src="img/connect/Ring3.png" alt="Ring3">
+                  </label>
+                  <label title="Star">
+                    <input type="radio" name="connector" value="star">
+                    <img src="img/connect/star.png" alt="star">
+                  </label>
+                </div>
+                
+                <!-- Výběr barvy -->
+                <div class="color-selector-container">
+                  <p>Barva:</p>
+                  <label title="Černá">
+                    <input type="radio" name="color" value="cerna" checked>
+                    <span style="background-color: #000000;"></span>
+                  </label>
+                  <label title="Bílá">
+                    <input type="radio" name="color" value="bila">
+                    <span style="background-color: #ffffff;"></span>
+                  </label>
+                  <label title="Modrá">
+                    <input type="radio" name="color" value="modra">
+                    <span style="background-color: #0d6efd;"></span>
+                  </label>
+                  <label title="Červená">
+                    <input type="radio" name="color" value="cervena">
+                    <span style="background-color: #dc3545;"></span>
+                  </label>
+                  <label title="Zlatá">
+                    <input type="radio" name="color" value="zlata">
+                    <span style="background-color: #ffd700;"></span>
+                  </label>
+                  <label title="Žlutá">
+                    <input type="radio" name="color" value="zluta">
+                    <span style="background-color: #ffc107;"></span>
+                  </label>
+                  <label title="Zelená">
+                    <input type="radio" name="color" value="zelena">
+                    <span style="background-color: #198754;"></span>
+                  </label>
+                  <label title="Šedá">
+                    <input type="radio" name="color" value="seda">
+                    <span style="background-color: #6c757d;"></span>
+                  </label>
+                </div>
+
+                <button class="btn btn-primary mb-3" id="add-name">Přidat další jméno</button>
+
+                <!-- Kontejner pro inputy jmen -->
+                <div id="name-inputs" class="d-flex flex-column align-items-center">
+                  <div class="name-input-container mb-2">
+                    <span class="me-2 fw-bold">1.</span>
+                    <input type="text" class="form-control name-field" placeholder="Nové jméno" maxlength="30">
+                    <button class="btn btn-danger btn-sm ms-2 remove-name" onclick="removeName(this)">✖</button>
+                  </div>
+                </div>
+
+                <button class="btn btn-primary" id="add-all-to-cart">
+                  Přidat všechna jména do košíku
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Lightbox modal pro jmenovky -->
-  <div id="lightboxModal" class="lightbox-modal">
-    <span class="lightbox-close" id="lightboxClose">&times;</span>
-    <button class="lightbox-prev" id="lightboxPrev">&#10094;</button>
-    <img class="lightbox-content" id="lightboxImage">
-    <button class="lightbox-next" id="lightboxNext">&#10095;</button>
-  </div>
+    <!-- Lightbox modal pro jmenovky -->
+    <div id="lightboxModal" class="lightbox-modal">
+      <span class="lightbox-close" id="lightboxClose">&times;</span>
+      <button class="lightbox-prev" id="lightboxPrev">&#10094;</button>
+      <img class="lightbox-content" id="lightboxImage">
+      <button class="lightbox-next" id="lightboxNext">&#10095;</button>
+    </div>
 
-  <!-- Skript slider -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const slider = document.getElementById("customSlider");
-      const images = slider.querySelectorAll("img");
-      const prevBtn = document.getElementById("prevBtn");
-      const nextBtn = document.getElementById("nextBtn");
-      let currentIndex = 0;
-      
-      if (window.innerWidth <= 768) {
-        slider.style.display = "flex";
-        slider.style.overflowX = "auto";
-        slider.style.scrollBehavior = "smooth";
-        slider.style.scrollSnapType = "x mandatory";
-        prevBtn.style.display = "none";
-        nextBtn.style.display = "none";
-        images.forEach(img => {
-          img.style.display = "block";
-          img.style.flexShrink = "0";
-          img.style.width = "100%";
-          img.style.height = "auto";
-          img.style.scrollSnapAlign = "center";
-        });
-      } else {
-        function showImage(index) {
-          images.forEach(img => img.classList.remove("active"));
-          images[index].classList.add("active");
-        }
-        showImage(currentIndex);
-        prevBtn.addEventListener("click", () => {
-          currentIndex = (currentIndex - 1 + images.length) % images.length;
-          showImage(currentIndex);
-        });
-        nextBtn.addEventListener("click", () => {
-          currentIndex = (currentIndex + 1) % images.length;
-          showImage(currentIndex);
-        });
-        let touchstartX = 0, touchendX = 0;
-        slider.addEventListener('touchstart', e => {
-          touchstartX = e.changedTouches[0].screenX;
-        }, false);
-        slider.addEventListener('touchend', e => {
-          touchendX = e.changedTouches[0].screenX;
-          if (touchendX < touchstartX - 50) {
-            currentIndex = (currentIndex + 1) % images.length;
-            showImage(currentIndex);
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-light py-3">
+      <div class="container d-flex justify-content-center align-items-center">
+        <div class="d-flex justify-content-center align-items-center">
+          <a href="#" class="text-light"><i class="fab fa-instagram fa-2x"></i></a>
+        </div>
+        <div class="mx-4" style="border-left: 2px solid #fff; height: 30px;"></div>
+        <div class="d-flex justify-content-center align-items-center">
+          <a href="terms.html" class="text-light">Obchodní podmínky</a>
+        </div>
+      </div>
+    </div>
+    <!-- Footer End -->
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-0 back-to-top">
+      <i class="bi bi-arrow-up"></i>
+    </a>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/isotope/isotope.pkgd.min.js"></script>
+    <script src="lib/lightbox/js/lightbox.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+    <script src="js/navbar.js"></script>
+
+    <!-- Skript slider + lightbox -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const slider = document.getElementById("customSlider");
+        const images = slider.querySelectorAll("img");
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        let currentIndex = 0;
+        
+        if (window.innerWidth <= 768) {
+          slider.style.display = "flex";
+          slider.style.overflowX = "auto";
+          slider.style.scrollBehavior = "smooth";
+          slider.style.scrollSnapType = "x mandatory";
+          prevBtn.style.display = "none";
+          nextBtn.style.display = "none";
+          images.forEach(img => {
+            img.style.display = "block";
+            img.style.flexShrink = "0";
+            img.style.width = "100%";
+            img.style.height = "auto";
+            img.style.scrollSnapAlign = "center";
+          });
+        } else {
+          function showImage(index) {
+            images.forEach(img => img.classList.remove("active"));
+            images[index].classList.add("active");
           }
-          if (touchendX > touchstartX + 50) {
+          showImage(currentIndex);
+          prevBtn.addEventListener("click", () => {
             currentIndex = (currentIndex - 1 + images.length) % images.length;
             showImage(currentIndex);
-          }
-        }, false);
-        // Lightbox: Kliknutím na obrázek se otevře modal
-        images.forEach((img, index) => {
-          img.addEventListener("click", function() {
-            openLightbox(index);
           });
-        });
-      }
-    });
+          nextBtn.addEventListener("click", () => {
+            currentIndex = (currentIndex + 1) % images.length;
+            showImage(currentIndex);
+          });
+          let touchstartX = 0, touchendX = 0;
+          slider.addEventListener('touchstart', e => {
+            touchstartX = e.changedTouches[0].screenX;
+          }, false);
+          slider.addEventListener('touchend', e => {
+            touchendX = e.changedTouches[0].screenX;
+            if (touchendX < touchstartX - 50) {
+              currentIndex = (currentIndex + 1) % images.length;
+              showImage(currentIndex);
+            }
+            if (touchendX > touchstartX + 50) {
+              currentIndex = (currentIndex - 1 + images.length) % images.length;
+              showImage(currentIndex);
+            }
+          }, false);
+          images.forEach((img, index) => {
+            img.addEventListener("click", function() {
+              openLightbox(index);
+            });
+          });
+        }
+      });
 
-    // Lightbox funkce pro jmenovky
-    const lightboxModal = document.getElementById("lightboxModal");
-    const lightboxImage = document.getElementById("lightboxImage");
-    const lightboxClose = document.getElementById("lightboxClose");
-    const lightboxPrev = document.getElementById("lightboxPrev");
-    const lightboxNext = document.getElementById("lightboxNext");
-    let lightboxIndex = 0;
-    
-    function openLightbox(index) {
-      lightboxIndex = index;
-      const sliderImages = document.querySelectorAll("#customSlider img");
-      lightboxImage.src = sliderImages[lightboxIndex].src;
-      // Nastavíme modal na flex, aby se vycentroval obsah
-      lightboxModal.style.display = "flex";
-    }
-    
-    function closeLightbox() {
-      lightboxModal.style.display = "none";
-    }
-    
-    lightboxClose.addEventListener("click", closeLightbox);
-    
-    lightboxPrev.addEventListener("click", function() {
-      const sliderImages = document.querySelectorAll("#customSlider img");
-      lightboxIndex = (lightboxIndex - 1 + sliderImages.length) % sliderImages.length;
-      lightboxImage.src = sliderImages[lightboxIndex].src;
-    });
-    
-    lightboxNext.addEventListener("click", function() {
-      const sliderImages = document.querySelectorAll("#customSlider img");
-      lightboxIndex = (lightboxIndex + 1) % sliderImages.length;
-      lightboxImage.src = sliderImages[lightboxIndex].src;
-    });
-    
-    // Podpora klávesnice
-    document.addEventListener("keydown", function(e) {
-      if (lightboxModal.style.display === "flex") {
-        if (e.key === "ArrowLeft") {
-          lightboxPrev.click();
-        } else if (e.key === "ArrowRight") {
-          lightboxNext.click();
-        } else if (e.key === "Escape") {
+      // Lightbox funkce pro jmenovky
+      const lightboxModal = document.getElementById("lightboxModal");
+      const lightboxImage = document.getElementById("lightboxImage");
+      const lightboxClose = document.getElementById("lightboxClose");
+      const lightboxPrev = document.getElementById("lightboxPrev");
+      const lightboxNext = document.getElementById("lightboxNext");
+      let lightboxIndex = 0;
+      
+      function openLightbox(index) {
+        lightboxIndex = index;
+        const sliderImages = document.querySelectorAll("#customSlider img");
+        lightboxImage.src = sliderImages[lightboxIndex].src;
+        lightboxModal.style.display = "flex";
+      }
+      
+      function closeLightbox() {
+        lightboxModal.style.display = "none";
+      }
+      
+      lightboxClose.addEventListener("click", closeLightbox);
+      
+      lightboxPrev.addEventListener("click", function() {
+        const sliderImages = document.querySelectorAll("#customSlider img");
+        lightboxIndex = (lightboxIndex - 1 + sliderImages.length) % sliderImages.length;
+        lightboxImage.src = sliderImages[lightboxIndex].src;
+      });
+      
+      lightboxNext.addEventListener("click", function() {
+        const sliderImages = document.querySelectorAll("#customSlider img");
+        lightboxIndex = (lightboxIndex + 1) % sliderImages.length;
+        lightboxImage.src = sliderImages[lightboxIndex].src;
+      });
+      
+      document.addEventListener("keydown", function(e) {
+        if (lightboxModal.style.display === "flex") {
+          if (e.key === "ArrowLeft") {
+            lightboxPrev.click();
+          } else if (e.key === "ArrowRight") {
+            lightboxNext.click();
+          } else if (e.key === "Escape") {
+            closeLightbox();
+          }
+        }
+      });
+      
+      lightboxModal.addEventListener("click", function(e) {
+        if (e.target === lightboxModal) {
           closeLightbox();
         }
-      }
-    });
-    
-    // Zavření lightboxu při kliknutí mimo obrázek
-    lightboxModal.addEventListener("click", function(e) {
-      if (e.target === lightboxModal) {
-        closeLightbox();
-      }
-    });
-  </script>
+      });
+    </script>
 
-  <!-- Skript logiky jmenovek a správy košíku -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      let nameCounter = 1;
+    <!-- Skript logiky jmenovek a správy košíku -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        let nameCounter = 1;
 
-      const rawFontSizes = {
-        'Cassandra': 2,
-        'Catchland': 2,
-        'Damion': 3,
-        'MarketingScript': 3.2,
-        'Pacifico': 2.5,
-        'RemoraCamilla': 3.2,
-        'Sarina': 3.2
-      };
+        const rawFontSizes = {
+          'Cassandra': 2,
+          'Catchland': 2,
+          'Damion': 3,
+          'MarketingScript': 3.2,
+          'Pacifico': 2.5,
+          'RemoraCamilla': 3.2,
+          'Sarina': 3.2
+        };
 
-      const globalFactor = 0.5;
-      const previewFactor = 0.5;
+        const globalFactor = 0.5;
+        const previewFactor = 0.5;
 
-      const fontNameMap = {
-        'Cassandra': 'Cassandra',
-        'Catchland': 'Catchland',
-        'Damion': 'Damion',
-        'MarketingScript': 'MarketingScript',
-        'Pacifico': 'Pacifico',
-        'RemoraCamilla': 'RemoraCamilla',
-        'Sarina': 'Sarina'
-      };
-      const colorNameMap = {
-        'bila': 'Bílá',
-        'cerna': 'Černá',
-        'modra': 'Modrá',
-        'cervena': 'Červená',
-        'zlata': 'Zlatá',
-        'zluta': 'Žlutá',
-        'zelena': 'Zelená',
-        'seda': 'Šedá'
-      };
-      const connectorNameMap = {
-        'none': 'Žádný',
-        'arrow': 'Šipka',
-        'flash': 'Blesk',
-        'heart': 'Srdce',
-        'infinity': 'Nekonečno',
-        'plane': 'Letadlo',
-        'ring1': 'Kroužek 1',
-        'ring2': 'Kroužek 2',
-        'ring3': 'Kroužek 3',
-        'star': 'Hvězda'
-      };
+        const fontNameMap = {
+          'Cassandra': 'Cassandra',
+          'Catchland': 'Catchland',
+          'Damion': 'Damion',
+          'MarketingScript': 'MarketingScript',
+          'Pacifico': 'Pacifico',
+          'RemoraCamilla': 'RemoraCamilla',
+          'Sarina': 'Sarina'
+        };
+        const colorNameMap = {
+          'bila': 'Bílá',
+          'cerna': 'Černá',
+          'modra': 'Modrá',
+          'cervena': 'Červená',
+          'zlata': 'Zlatá',
+          'zluta': 'Žlutá',
+          'zelena': 'Zelená',
+          'seda': 'Šedá'
+        };
+        const connectorNameMap = {
+          'none': 'Žádný',
+          'arrow': 'Šipka',
+          'flash': 'Blesk',
+          'heart': 'Srdce',
+          'infinity': 'Nekonečno',
+          'plane': 'Letadlo',
+          'ring1': 'Kroužek 1',
+          'ring2': 'Kroužek 2',
+          'ring3': 'Kroužek 3',
+          'star': 'Hvězda'
+        };
 
-      let fontSizes = {};
-      for (const fontName in rawFontSizes) {
-        fontSizes[fontName] = (rawFontSizes[fontName] * globalFactor) + 'rem';
-      }
-      let fontPreviewSizes = {};
-      for (const fontName in rawFontSizes) {
-        fontPreviewSizes[fontName] = (rawFontSizes[fontName] * previewFactor) + 'rem';
-      }
-
-      const fontTopPadding = { 'Catchland': 20 };
-      const totalVerticalPadding = 30;
-      const defaultTopPadding = 15;
-
-      const colorMap = {
-        'bila': "#ffffff",
-        'cerna': "#000000",
-        'modra': "#0d6efd",
-        'cervena': "#dc3545",
-        'zlata': "#ffd700",
-        'zluta': "#ffc107",
-        'zelena': "#198754",
-        'seda': "#6c757d"
-      };
-
-      function applyFontAndSize(inputElem, font) {
-        let size = fontSizes[font] || '2rem';
-        inputElem.style.fontFamily = font;
-        inputElem.style.fontSize = size;
-        let topPad = fontTopPadding[font] || defaultTopPadding;
-        let bottomPad = totalVerticalPadding - topPad;
-        inputElem.style.padding = `${topPad}px 15px ${bottomPad}px 15px`;
-        inputElem.style.lineHeight = "50px";
-        inputElem.style.setProperty('--placeholder-font-family', font);
-        updateFieldColor(inputElem);
-      }
-
-      function applyFontPreview(spanElem, font) {
-        let size = fontPreviewSizes[font] || '2rem';
-        spanElem.style.fontFamily = font;
-        spanElem.style.fontSize = size;
-      }
-
-      function updateFieldColor(field) {
-        let colorInput = document.querySelector('input[name="color"]:checked');
-        if (colorInput) {
-          let chosenColor = colorMap[colorInput.value];
-          field.style.color = chosenColor;
-          field.style.backgroundColor = (chosenColor.toLowerCase() === "#ffffff" ? "#6c757d" : "#ffffff");
-          field.style.setProperty('--placeholder-color', chosenColor);
+        let fontSizes = {};
+        for (const fontName in rawFontSizes) {
+          fontSizes[fontName] = (rawFontSizes[fontName] * globalFactor) + 'rem';
         }
-      }
+        let fontPreviewSizes = {};
+        for (const fontName in rawFontSizes) {
+          fontPreviewSizes[fontName] = (rawFontSizes[fontName] * previewFactor) + 'rem';
+        }
 
-      function updateNameFieldsColor() {
-        document.querySelectorAll(".name-field").forEach(field => {
-          updateFieldColor(field);
-        });
-      }
+        const fontTopPadding = { 'Catchland': 20 };
+        const totalVerticalPadding = 30;
+        const defaultTopPadding = 15;
 
-      function updateNameFieldsFont() {
-        let selectedFont = document.querySelector('input[name="font-sample"]:checked').value;
-        document.querySelectorAll(".name-field").forEach(field => {
-          applyFontAndSize(field, selectedFont);
-        });
-      }
+        const colorMap = {
+          'bila': "#ffffff",
+          'cerna': "#000000",
+          'modra': "#0d6efd",
+          'cervena': "#dc3545",
+          'zlata': "#ffd700",
+          'zluta': "#ffc107",
+          'zelena': "#198754",
+          'seda': "#6c757d"
+        };
 
-      function initFontPreviews() {
-        document.querySelectorAll('.font-sample-selector-container input[name="font-sample"]').forEach(radio => {
-          let font = radio.value;
-          let spanElem = radio.nextElementSibling;
-          applyFontPreview(spanElem, font);
-        });
-      }
+        function applyFontAndSize(inputElem, font) {
+          let size = fontSizes[font] || '2rem';
+          inputElem.style.fontFamily = font;
+          inputElem.style.fontSize = size;
+          let topPad = fontTopPadding[font] || defaultTopPadding;
+          let bottomPad = totalVerticalPadding - topPad;
+          inputElem.style.padding = `${topPad}px 15px ${bottomPad}px 15px`;
+          inputElem.style.lineHeight = "50px";
+          inputElem.style.setProperty('--placeholder-font-family', font);
+          updateFieldColor(inputElem);
+        }
 
-      window.removeName = function(btn) {
-        let parentDiv = btn.parentElement;
-        parentDiv.remove();
-        reindexNames();
-      };
+        function applyFontPreview(spanElem, font) {
+          let size = fontPreviewSizes[font] || '2rem';
+          spanElem.style.fontFamily = font;
+          spanElem.style.fontSize = size;
+        }
 
-      document.getElementById("add-name").addEventListener("click", function () {
-        let nameInputs = document.getElementById("name-inputs");
-        let newDiv = document.createElement("div");
-        newDiv.classList.add("name-input-container", "mb-2");
-        newDiv.innerHTML = `
-           <span class="me-2 fw-bold">X.</span>
-           <input type="text" class="form-control name-field" placeholder="Nové jméno" maxlength="30">
-           <button class="btn btn-danger btn-sm ms-2 remove-name">✖</button>
-        `;
-        nameInputs.appendChild(newDiv);
+        function updateFieldColor(field) {
+          let colorInput = document.querySelector('input[name="color"]:checked');
+          if (colorInput) {
+            let chosenColor = colorMap[colorInput.value];
+            field.style.color = chosenColor;
+            field.style.backgroundColor = (chosenColor.toLowerCase() === "#ffffff" ? "#6c757d" : "#ffffff");
+            field.style.setProperty('--placeholder-color', chosenColor);
+          }
+        }
 
-        let selectedFont = document.querySelector('input[name="font-sample"]:checked').value;
-        let inputElement = newDiv.querySelector('.name-field');
-        applyFontAndSize(inputElement, selectedFont);
+        function updateNameFieldsColor() {
+          document.querySelectorAll(".name-field").forEach(field => {
+            updateFieldColor(field);
+          });
+        }
 
-        newDiv.querySelector('.remove-name').addEventListener("click", function() {
-          newDiv.remove();
+        function updateNameFieldsFont() {
+          let selectedFont = document.querySelector('input[name="font-sample"]:checked').value;
+          document.querySelectorAll(".name-field").forEach(field => {
+            applyFontAndSize(field, selectedFont);
+          });
+        }
+
+        function initFontPreviews() {
+          document.querySelectorAll('.font-sample-selector-container input[name="font-sample"]').forEach(radio => {
+            let font = radio.value;
+            let spanElem = radio.nextElementSibling;
+            applyFontPreview(spanElem, font);
+          });
+        }
+
+        window.removeName = function(btn) {
+          let parentDiv = btn.parentElement;
+          parentDiv.remove();
+          reindexNames();
+        };
+
+        document.getElementById("add-name").addEventListener("click", function () {
+          let nameInputs = document.getElementById("name-inputs");
+          let newDiv = document.createElement("div");
+          newDiv.classList.add("name-input-container", "mb-2");
+          newDiv.innerHTML = `
+             <span class="me-2 fw-bold">X.</span>
+             <input type="text" class="form-control name-field" placeholder="Nové jméno" maxlength="30">
+             <button class="btn btn-danger btn-sm ms-2 remove-name">✖</button>
+          `;
+          nameInputs.appendChild(newDiv);
+
+          let selectedFont = document.querySelector('input[name="font-sample"]:checked').value;
+          let inputElement = newDiv.querySelector('.name-field');
+          applyFontAndSize(inputElement, selectedFont);
+
+          newDiv.querySelector('.remove-name').addEventListener("click", function() {
+            newDiv.remove();
+            reindexNames();
+          });
+          updateFieldColor(inputElement);
           reindexNames();
         });
-        updateFieldColor(inputElement);
-        reindexNames();
-      });
 
-      function reindexNames() {
-        let allContainers = document.querySelectorAll("#name-inputs .name-input-container");
-        let index = 1;
-        allContainers.forEach(container => {
-          let spanIndex = container.querySelector("span.me-2.fw-bold");
-          if (spanIndex) {
-            spanIndex.textContent = index + ".";
-            index++;
-          }
-        });
-      }
-
-      document.getElementById("add-all-to-cart").addEventListener("click", function () {
-        let nameFields = document.querySelectorAll(".name-field");
-        let cart = JSON.parse(localStorage.getItem("cart")) || [];
-        let selectedFontKey = document.querySelector('input[name="font-sample"]:checked').value;
-        let selectedColorKey = document.querySelector('input[name="color"]:checked').value;
-        let connectorInput = document.querySelector('input[name="connector"]:checked');
-        let selectedFontName = fontNameMap[selectedFontKey] || selectedFontKey;
-        let selectedColorName = colorNameMap[selectedColorKey] || selectedColorKey;
-        let selectedConnectorKey = connectorInput ? connectorInput.value : 'none';
-        let selectedConnectorName = connectorNameMap[selectedConnectorKey] || 'Žádný';
-
-        nameFields.forEach(field => {
-          let nameValue = field.value.trim();
-          if (nameValue !== "") {
-            let words = nameValue.split(/\s+/);
-            if (words.length === 2 && selectedConnectorKey !== 'none') {
-              let connectorSymbol = "";
-              switch (selectedConnectorKey) {
-                case "arrow": connectorSymbol = "→"; break;
-                case "flash": connectorSymbol = "⚡"; break;
-                case "heart": connectorSymbol = "❤️"; break;
-                case "infinity": connectorSymbol = "∞"; break;
-                case "plane": connectorSymbol = "✈"; break;
-                case "ring1": connectorSymbol = "①"; break;
-                case "ring2": connectorSymbol = "②"; break;
-                case "ring3": connectorSymbol = "③"; break;
-                case "star": connectorSymbol = "⭐"; break;
-                default: connectorSymbol = "";
-              }
-              nameValue = `${words[0]} ${connectorSymbol} ${words[1]}`;
+        function reindexNames() {
+          let allContainers = document.querySelectorAll("#name-inputs .name-input-container");
+          let index = 1;
+          allContainers.forEach(container => {
+            let spanIndex = container.querySelector("span.me-2.fw-bold");
+            if (spanIndex) {
+              spanIndex.textContent = index + ".";
+              index++;
             }
-            let itemName = `Jmenovka 3D - ${nameValue} (Font: ${selectedFontName}, Barva: ${selectedColorName}, Symbol: ${selectedConnectorName})`;
-            let existing = cart.find(item => item.name === itemName);
-            if (existing) {
-              existing.quantity += 1;
-            } else {
-              cart.push({
-                name: itemName,
-                price: 15,
-                quantity: 1
-              });
-            }
-          }
-        });
-        localStorage.setItem("cart", JSON.stringify(cart));
-        alert("Všechna jména byla přidána do košíku.");
-        updateCartCount();
-        resetForm();
-      });
-
-      function updateCartCount() {
-        let cart = JSON.parse(localStorage.getItem("cart")) || [];
-        let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-        let cartCounter = document.getElementById("cart-count");
-        if (cartCounter) {
-          cartCounter.textContent = totalItems;
+          });
         }
-      }
 
-      function resetForm() {
-        let nameInputs = document.getElementById("name-inputs");
-        nameInputs.innerHTML = `
-          <div class="name-input-container mb-2">
-            <span class="me-2 fw-bold">1.</span>
-            <input type="text" class="form-control name-field" placeholder="Nové jméno" maxlength="30">
-            <button class="btn btn-danger btn-sm ms-2 remove-name" onclick="removeName(this)">✖</button>
-          </div>
-        `;
-        let selectedFont = document.querySelector('input[name="font-sample"]:checked').value;
-        let firstInput = nameInputs.querySelector('.name-field');
-        applyFontAndSize(firstInput, selectedFont);
-        updateFieldColor(firstInput);
-      }
+        document.getElementById("add-all-to-cart").addEventListener("click", function () {
+          let nameFields = document.querySelectorAll(".name-field");
+          let cart = JSON.parse(localStorage.getItem("cart")) || [];
+          let selectedFontKey = document.querySelector('input[name="font-sample"]:checked').value;
+          let selectedColorKey = document.querySelector('input[name="color"]:checked').value;
+          let connectorInput = document.querySelector('input[name="connector"]:checked');
+          let selectedFontName = fontNameMap[selectedFontKey] || selectedFontKey;
+          let selectedColorName = colorNameMap[selectedColorKey] || selectedColorKey;
+          let selectedConnectorKey = connectorInput ? connectorInput.value : 'none';
+          let selectedConnectorName = connectorNameMap[selectedConnectorKey] || 'Žádný';
 
-      document.querySelectorAll('input[name="font-sample"]').forEach(input => {
-        input.addEventListener("change", updateNameFieldsFont);
+          nameFields.forEach(field => {
+            let nameValue = field.value.trim();
+            if (nameValue !== "") {
+              let words = nameValue.split(/\s+/);
+              if (words.length === 2 && selectedConnectorKey !== 'none') {
+                let connectorSymbol = "";
+                switch (selectedConnectorKey) {
+                  case "arrow": connectorSymbol = "→"; break;
+                  case "flash": connectorSymbol = "⚡"; break;
+                  case "heart": connectorSymbol = "❤️"; break;
+                  case "infinity": connectorSymbol = "∞"; break;
+                  case "plane": connectorSymbol = "✈"; break;
+                  case "ring1": connectorSymbol = "①"; break;
+                  case "ring2": connectorSymbol = "②"; break;
+                  case "ring3": connectorSymbol = "③"; break;
+                  case "star": connectorSymbol = "⭐"; break;
+                  default: connectorSymbol = "";
+                }
+                nameValue = `${words[0]} ${connectorSymbol} ${words[1]}`;
+              }
+              let itemName = `Jmenovka 3D - ${nameValue} (Font: ${selectedFontName}, Barva: ${selectedColorName}, Symbol: ${selectedConnectorName})`;
+              let existing = cart.find(item => item.name === itemName);
+              if (existing) {
+                existing.quantity += 1;
+              } else {
+                cart.push({
+                  name: itemName,
+                  price: 15,
+                  quantity: 1
+                });
+              }
+            }
+          });
+          localStorage.setItem("cart", JSON.stringify(cart));
+          alert("Všechna jména byla přidána do košíku.");
+          updateCartCount();
+          resetForm();
+        });
+
+        function updateCartCount() {
+          let cart = JSON.parse(localStorage.getItem("cart")) || [];
+          let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+          let cartCounter = document.getElementById("cart-count");
+          if (cartCounter) {
+            cartCounter.textContent = totalItems;
+          }
+        }
+
+        function resetForm() {
+          let nameInputs = document.getElementById("name-inputs");
+          nameInputs.innerHTML = `
+            <div class="name-input-container mb-2">
+              <span class="me-2 fw-bold">1.</span>
+              <input type="text" class="form-control name-field" placeholder="Nové jméno" maxlength="30">
+              <button class="btn btn-danger btn-sm ms-2 remove-name" onclick="removeName(this)">✖</button>
+            </div>
+          `;
+          let selectedFont = document.querySelector('input[name="font-sample"]:checked').value;
+          let firstInput = nameInputs.querySelector('.name-field');
+          applyFontAndSize(firstInput, selectedFont);
+          updateFieldColor(firstInput);
+        }
+
+        document.querySelectorAll('input[name="font-sample"]').forEach(input => {
+          input.addEventListener("change", updateNameFieldsFont);
+        });
+        document.querySelectorAll('input[name="color"]').forEach(input => {
+          input.addEventListener("change", updateNameFieldsColor);
+        });
+
+        initFontPreviews();
+        let firstField = document.querySelector(".name-field");
+        if (firstField) {
+          let initialFont = document.querySelector('input[name="font-sample"]:checked').value;
+          applyFontAndSize(firstField, initialFont);
+          updateFieldColor(firstField);
+        }
+        updateCartCount();
       });
-      document.querySelectorAll('input[name="color"]').forEach(input => {
-        input.addEventListener("change", updateNameFieldsColor);
-      });
-
-      initFontPreviews();
-      let firstField = document.querySelector(".name-field");
-      if (firstField) {
-        let initialFont = document.querySelector('input[name="font-sample"]:checked').value;
-        applyFontAndSize(firstField, initialFont);
-        updateFieldColor(firstField);
-      }
-      updateCartCount();
-    });
-  </script>
-
-  <!-- Bootstrap a navigační skript -->
-  <script src="js/bootstrap.bundle.min.js"></script>
-  <script src="js/navbar.js"></script>
+    </script>
 </body>
 </html>

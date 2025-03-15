@@ -78,25 +78,28 @@
       right: 10px;
     }
 
-    /* === SLIDER - MOBIL === */
+    /* === SLIDER - MOBIL (Opraveno) === */
     @media (max-width: 768px) {
       .slider {
+        position: relative;
         width: 100%;
         height: auto;
         display: flex;
-        flex-direction: row;
+        flex-wrap: nowrap;             /* Aby se obrázky nezalamovaly */
         overflow-x: auto;
         scroll-behavior: smooth;
-        scroll-snap-type: x mandatory;
+        scroll-snap-type: x mandatory; /* Snapování na osu X */
         -webkit-overflow-scrolling: touch;
+        margin: 0 auto;
       }
       .slider img {
-        display: block;
-        flex-shrink: 0;
+        flex: 0 0 100%;               /* Každý obrázek má šířku 100 % slideru */
         width: 100%;
         height: auto;
         object-fit: contain;
         scroll-snap-align: center;
+        scroll-snap-stop: always;     /* Zabrání zastavení mezi obrázky */
+        display: block;
       }
       .slider .arrow {
         display: none;
@@ -158,10 +161,7 @@
       color: #bbb;
     }
 
-    /*
-      PŘEDDEFINOVANÉ FONTY PRO JMÉNA
-      (zde nepotlačujeme nic, co by zasahovalo do patičky)
-    */
+    /* Fonty pro jména */
     @font-face {
       font-family: 'Cassandra';
       src: url('fonts/CassandraPersonalUsuFixed.otf') format('opentype');
@@ -191,9 +191,7 @@
       src: url('fonts/Sarina-Regular.ttf') format('truetype');
     }
 
-    /*
-      STYL JMENOVEK
-    */
+    /* Styl jmenovek */
     .name-field {
       font-family: 'Cassandra', cursive;
       font-size: 2rem; 
@@ -215,7 +213,7 @@
       opacity: 1;
     }
 
-    /* Kontejner pro inputy jmen (číslo + input + tlačítko) */
+    /* Kontejner pro inputy jmen */
     .name-input-container {
       display: flex;
       align-items: center;
@@ -226,7 +224,7 @@
       margin: auto;
     }
 
-    /* Tlačítka "Přidat jméno" */
+    /* Tlačítka */
     #add-name,
     #add-all-to-cart {
       width: 40%;
@@ -273,7 +271,7 @@
       border-color: #0d6efd;
     }
 
-    /* Výběr (propojení) – arrow, heart apod. */
+    /* Výběr symbolu (connector) */
     .connector-description {
       text-align: center;
       margin-bottom: 0.5rem;
@@ -363,11 +361,11 @@
     
     /* Tlačítko s křížkem */
     button.remove-name, .remove-name {
-      background-color: #dc3545 !important; /* červené pozadí */
+      background-color: #dc3545 !important;
       border: none !important;
       appearance: none;
       -webkit-appearance: none;
-      color: transparent !important; 
+      color: transparent !important;
       text-shadow: 0 0 0 #fff !important;
       display: inline-flex;
       align-items: center;
@@ -392,12 +390,6 @@
       border-radius: 5px;
       display: inline-block;
     }
-
-    /*
-      NEUPRAVUJEME NIC, CO BY ZASAHOVALO DO PATIČKY
-      (bg-dark, text-light, atd.) => patička se bude chovat stejně
-      jako ve spztky.html
-    */
   </style>
 </head>
 
@@ -672,7 +664,7 @@
     <button class="lightbox-next" id="lightboxNext">&#10095;</button>
   </div>
 
-  <!-- Footer Start (stejný jako ve spztky.html) -->
+  <!-- Footer Start -->
   <div class="container-fluid bg-dark text-light py-3">
     <div class="container d-flex justify-content-center align-items-center">
       <div class="d-flex justify-content-center align-items-center">
@@ -721,23 +713,12 @@
       let currentIndex = 0;
       
       if (window.innerWidth <= 768) {
-        // MOBILNÍ REŽIM: horizontální scroll
-        slider.style.display = "flex";
-        slider.style.overflowX = "auto";
-        slider.style.scrollBehavior = "smooth";
-        slider.style.scrollSnapType = "x mandatory";
+        // MOBILNÍ REŽIM: horizontální scroll (již nastavené v CSS)
+        // Schováme šipky, protože posouvání je dotykem
         prevBtn.style.display = "none";
         nextBtn.style.display = "none";
 
-        images.forEach(img => {
-          img.style.display = "block";
-          img.style.flexShrink = "0";
-          img.style.width = "100%";
-          img.style.height = "auto";
-          img.style.scrollSnapAlign = "center";
-        });
-
-        // Po načtení všech zdrojů se nastaví scrollLeft na 0
+        // Při loadu vrátíme scroll na 0
         window.addEventListener("load", function() {
           slider.scrollLeft = 0;
         });
@@ -758,7 +739,7 @@
           showImage(currentIndex);
         });
 
-        // Swipe ovládání
+        // Swipe pro desktop (pokud někdo tahá myší)
         let touchstartX = 0, touchendX = 0;
         slider.addEventListener('touchstart', e => {
           touchstartX = e.changedTouches[0].screenX;
@@ -775,7 +756,7 @@
           }
         }, false);
 
-        // Otevření lightboxu kliknutím
+        // Otevření lightboxu
         images.forEach((img, index) => {
           img.addEventListener("click", function() {
             openLightbox(index);
@@ -938,7 +919,7 @@
         if (colorInput) {
           let chosenColor = colorMap[colorInput.value];
           field.style.color = chosenColor;
-          // Je-li text bílý, dáme tmavé pozadí, jinak bílé
+          // Pokud je text bílý, dáme tmavé pozadí, jinak bílé
           field.style.backgroundColor = 
             (chosenColor.toLowerCase() === "#ffffff" ? "#6c757d" : "#ffffff");
           field.style.setProperty('--placeholder-color', chosenColor);
@@ -1002,7 +983,7 @@
         reindexNames();
       });
 
-      // Přečíslování jmen (1., 2., 3., ...)
+      // Přečíslování jmen
       function reindexNames() {
         let allContainers = document.querySelectorAll("#name-inputs .name-input-container");
         let index = 1;
@@ -1031,7 +1012,7 @@
           let nameValue = field.value.trim();
           if (nameValue !== "") {
             let words = nameValue.split(/\s+/);
-            // Pokud je to dvouslovné a symbol != none, vsadíme symbol mezi slova
+            // Pokud je to dvouslovné a je vybrán symbol, vsadíme symbol mezi slova
             if (words.length === 2 && selectedConnectorKey !== 'none') {
               let connectorSymbol = "";
               switch (selectedConnectorKey) {
@@ -1067,7 +1048,7 @@
         resetForm();
       });
 
-      // Po přidání do košíku vyčistíme formulář
+      // Reset formuláře
       function resetForm() {
         let nameInputs = document.getElementById("name-inputs");
         nameInputs.innerHTML = `
@@ -1083,7 +1064,7 @@
         updateFieldColor(firstInput);
       }
 
-      // Aktualizovat indikátor počtu položek v košíku (pokud je na stránce)
+      // Aktualizace počtu položek v košíku (pokud existuje prvek #cart-count)
       function updateCartCount() {
         let cart = JSON.parse(localStorage.getItem("cart")) || [];
         let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);

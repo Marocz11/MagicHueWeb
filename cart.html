@@ -59,7 +59,7 @@
       }
 
       /* ==============================
-         Form input styl (podobně jako spztky)
+         Form input styl
       ============================== */
       .form-control.border-0 {
         background-color: #fff;
@@ -154,14 +154,16 @@
         text-align: right;
         margin-bottom: 1rem;
       }
-      /* Zde je nová úprava – rámeček jako tlačítko se zaoblenými rohy */
-      .cart-summary span {
+      /* Tlačítkový styl pro zobrazení počtu 
+         (použijeme .cart-count, abychom mohli
+         počet snadno aktualizovat i jinde) */
+      .cart-summary .cart-count {
         font-weight: 500;
-        background-color: #00CEF1; /* světle modrá barva tlačítek */
+        background-color: #00CEF1;
         border: 1px solid #00CEF1;
         color: #fff;
         padding: 5px 10px;
-        border-radius: 5px; /* stejné zakulacení jako button */
+        border-radius: 5px;
         display: inline-block;
       }
     </style>
@@ -180,6 +182,17 @@
 <!-- Navbar placeholder -->
 <div id="navbar-placeholder"></div>
 
+<!-- 
+  Příklad: pokud chcete mít počet položek i "vpravo nahoře" v navigaci, 
+  můžete tam dát třeba:
+
+  <div style="position: absolute; right: 20px; top: 10px;">
+    Košík: <span class="cart-count">0</span>
+  </div>
+
+  A bude se to také aktualizovat.
+-->
+
 <!-- Hlavní obsah -->
 <div class="container-xxl bg-light overflow-hidden my-5 px-lg-5">
   <div class="container py-5">
@@ -187,9 +200,9 @@
       <h1 class="display-5 text-primary">Váš Košík</h1>
     </div>
     
-    <!-- Přidaný element pro zobrazení počtu položek -->
+    <!-- Zobrazení počtu položek -->
     <div class="cart-summary">
-      Počet položek: <span id="cart-count">0</span>
+      Počet položek: <span class="cart-count">0</span>
     </div>
 
     <!-- Zobrazení položek košíku -->
@@ -197,7 +210,7 @@
       <div class="col-lg-8 col-md-10">
         <div id="cart-items" class="mb-3"></div>
 
-        <!-- Flex kontejner: slevový kód vlevo, cena a doprava vpravo -->
+        <!-- Kontejner: slevový kód vlevo, cena a doprava vpravo -->
         <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start">
           <!-- Levá část: slevový kód -->
           <div class="discount-code-container mb-3 mb-lg-0">
@@ -290,7 +303,7 @@
   <i class="bi bi-arrow-up"></i>
 </a>
 
-<!-- JavaScript Libraries (stejně jako v index/spztky) -->
+<!-- JavaScript Libraries (typicky z index.html) -->
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="lib/wow/wow.min.js"></script>
@@ -316,7 +329,6 @@
   // === Funkce pro zobrazení položek košíku a výpočet cen ===
   function renderCart() {
     const cartItemsEl = document.getElementById("cart-items");
-    const cartCountEl = document.getElementById("cart-count");
 
     // Elementy pro zobrazení cen a slev
     const goodsPriceEl = document.getElementById("goods-price");
@@ -363,8 +375,10 @@
     // Celková cena
     const totalPriceAll = finalGoodsPrice + finalShippingPrice;
 
-    // Aktualizace počtu položek v košíku
-    cartCountEl.textContent = totalCount;
+    // === DŮLEŽITÁ ÚPRAVA: Aktualizujeme všechny prvky s class="cart-count" ===
+    document.querySelectorAll(".cart-count").forEach(el => {
+      el.textContent = totalCount;
+    });
 
     // Zobrazení cen a slev
     goodsPriceEl.textContent = `Cena za zboží: ${totalPriceItems} Kč`;
@@ -387,10 +401,10 @@
     localStorage.setItem("cart", JSON.stringify(cart));
   }
 
-  // Odebrání položky z košíku
+  // Odebrání celé položky z košíku (bez ohledu na quantity)
   function removeItem(idx) {
-    cart.splice(idx, 1);
-    renderCart();
+    cart.splice(idx, 1);  // smažeme tuto položku z pole cart
+    renderCart();         // znovu přepočítáme a vykreslíme
   }
 
   // Po načtení stránky vykreslit košík

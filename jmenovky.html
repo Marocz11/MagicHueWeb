@@ -36,7 +36,7 @@
   <!-- Customized Bootstrap Stylesheet -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- Template Stylesheet -->
+  <!-- Hlavní (globální) styly šablony -->
   <link href="css/style.css" rel="stylesheet">
 
   <!-- Dodatečné styly pro stránku Jmenovky (slider, atd.) -->
@@ -103,7 +103,7 @@
       }
     }
 
-    /* === Lightbox styly === */
+    /* === LIGHTBOX === */
     .lightbox-modal {
       display: none;
       position: fixed;
@@ -157,8 +157,11 @@
     .lightbox-close:hover {
       color: #bbb;
     }
-    
-    /* --- Původní styly pro jmenovky --- */
+
+    /*
+      PŘEDDEFINOVANÉ FONTY PRO JMÉNA
+      (zde nepotlačujeme nic, co by zasahovalo do patičky)
+    */
     @font-face {
       font-family: 'Cassandra';
       src: url('fonts/CassandraPersonalUsuFixed.otf') format('opentype');
@@ -188,6 +191,9 @@
       src: url('fonts/Sarina-Regular.ttf') format('truetype');
     }
 
+    /*
+      STYL JMENOVEK
+    */
     .name-field {
       font-family: 'Cassandra', cursive;
       font-size: 2rem; 
@@ -209,17 +215,18 @@
       opacity: 1;
     }
 
-    /* Kontejner pro jednotlivé řádky (číslo + input + tlačítko) */
+    /* Kontejner pro inputy jmen (číslo + input + tlačítko) */
     .name-input-container {
       display: flex;
       align-items: center;
-      justify-content: flex-start; /* Lze i "space-between" apod. */
-      gap: 8px;                   /* Větší mezera mezi inputem a tlačítkem */
+      justify-content: flex-start; 
+      gap: 8px;
       width: 40%;
       max-width: 500px;
       margin: auto;
     }
 
+    /* Tlačítka "Přidat jméno" */
     #add-name,
     #add-all-to-cart {
       width: 40%;
@@ -227,6 +234,7 @@
       display: block;
     }
 
+    /* Výběr fontu */
     .font-sample-selector-container {
       display: flex;
       flex-wrap: wrap;
@@ -264,14 +272,8 @@
     .font-sample-selector-container input[type="radio"]:checked + span {
       border-color: #0d6efd;
     }
-    .product-description {
-      text-align: left;
-      margin-bottom: 1rem;
-    }
-    .product-description p,
-    .product-description ul {
-      margin: 0.5rem 0;
-    }
+
+    /* Výběr (propojení) – arrow, heart apod. */
     .connector-description {
       text-align: center;
       margin-bottom: 0.5rem;
@@ -310,6 +312,8 @@
     .connector-selector-container input[type="radio"]:checked + span {
       border-color: #0d6efd;
     }
+
+    /* Výběr barvy */
     .color-selector-container {
       display: flex;
       align-items: center;
@@ -345,6 +349,7 @@
       border-color: #0d6efd;
     }
 
+    /* Responsivita pro malé displeje */
     @media (max-width: 768px) {
       .name-input-container,
       #add-name,
@@ -356,21 +361,18 @@
       }
     }
     
-    /* Tlačítko s křížkem: průhledný křížek s bílým stínem, menší padding */
+    /* Tlačítko s křížkem */
     button.remove-name, .remove-name {
       background-color: #dc3545 !important; /* červené pozadí */
       border: none !important;
       appearance: none;
       -webkit-appearance: none;
-
-      /* Křížek samotný: color:transparent a text-shadow => bílý otisk */
       color: transparent !important; 
       text-shadow: 0 0 0 #fff !important;
-
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 4px 8px; /* zmenšené tlačítko */
+      padding: 4px 8px;
       font-size: 0.9rem;
       border-radius: 4px;
       cursor: pointer;
@@ -390,6 +392,12 @@
       border-radius: 5px;
       display: inline-block;
     }
+
+    /*
+      NEUPRAVUJEME NIC, CO BY ZASAHOVALO DO PATIČKY
+      (bg-dark, text-light, atd.) => patička se bude chovat stejně
+      jako ve spztky.html
+    */
   </style>
 </head>
 
@@ -409,18 +417,22 @@
   </div>
   <!-- Spinner End -->
 
-  <!-- Navbar (placeholder, načítá se skrze navbar.js) -->
+  <!-- Navbar (placeholder, načítá se z js/navbar.js) -->
   <div id="navbar-placeholder"></div>
 
-  <!-- Obsah stránky: Jmenovky 3D -->
+  <!-- Hlavní obsah stránky: Jmenovky 3D -->
   <div class="container-xxl py-5">
     <div class="container">
+      <!-- Titulek sekce -->
       <div class="section-title text-center">
         <h1 class="display-5 text-primary">Jmenovky 3D</h1>
       </div>
+
+      <!-- Obsah jmenovek -->
       <div class="row g-4 justify-content-center">
         <div class="col-md-8">
           <div class="service-item border rounded overflow-hidden shadow text-center">
+            
             <!-- Slider -->
             <div class="slider" id="customSlider">
               <img
@@ -447,10 +459,10 @@
               <button class="arrow prev" id="prevBtn">&#10094;</button>
               <button class="arrow next" id="nextBtn">&#10095;</button>
             </div>
+
+            <!-- Popis produktu a formulář -->
             <div class="p-4">
               <h4 class="mb-3">Jmenovka 3D</h4>
-
-              <!-- Popis produktu -->
               <div class="product-description">
                 <p>
                   Ozdobte oslavu či svatební tabuli jedinečnými 3D jmenovkami.
@@ -473,7 +485,6 @@
                   </li>
                 </ul>
               </div>
-
               <p class="text-primary fw-bold">15 Kč / jméno</p>
 
               <!-- Výběr fontu -->
@@ -522,7 +533,7 @@
                 </label>
               </div>
 
-              <!-- Propojení -->
+              <!-- Propojení (symboly) -->
               <div class="connector-description">
                 <p class="fw-bold mb-1">Propojení</p>
                 <p class="mb-2">
@@ -621,11 +632,10 @@
                 </label>
               </div>
 
+              <!-- Tlačítka + inputy na jména -->
               <button class="btn btn-primary mb-3" id="add-name">
                 Přidat další jméno
               </button>
-
-              <!-- Kontejner pro inputy jmen -->
               <div id="name-inputs" class="d-flex flex-column align-items-center">
                 <div class="name-input-container mb-2">
                   <span class="me-2 fw-bold">1.</span>
@@ -652,45 +662,37 @@
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Lightbox modal pro jmenovky -->
-    <div id="lightboxModal" class="lightbox-modal">
-      <span class="lightbox-close" id="lightboxClose">&times;</span>
-      <button class="lightbox-prev" id="lightboxPrev">&#10094;</button>
-      <img class="lightbox-content" id="lightboxImage">
-      <button class="lightbox-next" id="lightboxNext">&#10095;</button>
-    </div>
+  <!-- Lightbox modal pro jmenovky -->
+  <div id="lightboxModal" class="lightbox-modal">
+    <span class="lightbox-close" id="lightboxClose">&times;</span>
+    <button class="lightbox-prev" id="lightboxPrev">&#10094;</button>
+    <img class="lightbox-content" id="lightboxImage">
+    <button class="lightbox-next" id="lightboxNext">&#10095;</button>
+  </div>
 
-    <!-- Footer Start -->
-    <div class="container-fluid bg-dark text-light py-3">
-      <div class="container d-flex justify-content-center align-items-center">
-        <div class="d-flex justify-content-center align-items-center">
-          <a href="#" class="text-light">
-            <i class="fab fa-instagram fa-2x"></i>
-          </a>
-        </div>
-        <div
-          class="mx-4"
-          style="border-left: 2px solid #fff; height: 30px;"
-        >
-        </div>
-        <div class="d-flex justify-content-center align-items-center">
-          <a href="terms.html" class="text-light">
-            Obchodní podmínky
-          </a>
-        </div>
+  <!-- Footer Start (stejný jako ve spztky.html) -->
+  <div class="container-fluid bg-dark text-light py-3">
+    <div class="container d-flex justify-content-center align-items-center">
+      <div class="d-flex justify-content-center align-items-center">
+        <a href="#" class="text-light"><i class="fab fa-instagram fa-2x"></i></a>
+      </div>
+      <div class="mx-4" style="border-left: 2px solid #fff; height: 30px;"></div>
+      <div class="d-flex justify-content-center align-items-center">
+        <a href="terms.html" class="text-light">Obchodní podmínky</a>
       </div>
     </div>
-    <!-- Footer End -->
-
-    <!-- Back to Top -->
-    <a
-      href="#"
-      class="btn btn-lg btn-primary btn-lg-square rounded-0 back-to-top"
-    >
-      <i class="bi bi-arrow-up"></i>
-    </a>
   </div>
+  <!-- Footer End -->
+
+  <!-- Back to Top -->
+  <a
+    href="#"
+    class="btn btn-lg btn-primary btn-lg-square rounded-0 back-to-top"
+  >
+    <i class="bi bi-arrow-up"></i>
+  </a>
 
   <!-- JavaScript Libraries -->
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -709,7 +711,7 @@
   <script src="js/main.js"></script>
   <script src="js/navbar.js"></script>
 
-  <!-- Skript slider + lightbox -->
+  <!-- Skript slider + lightbox pro jmenovky -->
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       const slider = document.getElementById("customSlider");
@@ -719,7 +721,7 @@
       let currentIndex = 0;
       
       if (window.innerWidth <= 768) {
-        // MOBILNÍ REŽIM
+        // MOBILNÍ REŽIM: horizontální scroll
         slider.style.display = "flex";
         slider.style.overflowX = "auto";
         slider.style.scrollBehavior = "smooth";
@@ -740,13 +742,13 @@
           slider.scrollLeft = 0;
         });
       } else {
-        // DESKTOP REŽIM
+        // DESKTOP REŽIM: přepínání active
         function showImage(index) {
           images.forEach(img => img.classList.remove("active"));
           images[index].classList.add("active");
         }
         showImage(currentIndex);
-        
+
         prevBtn.addEventListener("click", () => {
           currentIndex = (currentIndex - 1 + images.length) % images.length;
           showImage(currentIndex);
@@ -756,7 +758,7 @@
           showImage(currentIndex);
         });
 
-        // Swipe ovládání (dotyk)
+        // Swipe ovládání
         let touchstartX = 0, touchendX = 0;
         slider.addEventListener('touchstart', e => {
           touchstartX = e.changedTouches[0].screenX;
@@ -839,7 +841,7 @@
     document.addEventListener("DOMContentLoaded", function () {
       let nameCounter = 1;
 
-      // Základní nastavení fontů:
+      // Nastavení fontů (velikosti, padding)
       const rawFontSizes = {
         'Cassandra': 2,
         'Catchland': 2,
@@ -849,11 +851,10 @@
         'RemoraCamilla': 3.2,
         'Sarina': 3.2
       };
-
       const globalFactor = 0.5;
       const previewFactor = 0.5;
 
-      // Mapy pro texty:
+      // Mapy pro texty
       const fontNameMap = {
         'Cassandra': 'Cassandra',
         'Catchland': 'Catchland',
@@ -886,7 +887,7 @@
         'star': 'Hvězda'
       };
 
-      // Pro fonty spočítáme výsledné velikosti
+      // Přepočet velikostí fontů
       let fontSizes = {};
       for (const fontName in rawFontSizes) {
         fontSizes[fontName] = (rawFontSizes[fontName] * globalFactor) + 'rem';
@@ -896,7 +897,7 @@
         fontPreviewSizes[fontName] = (rawFontSizes[fontName] * previewFactor) + 'rem';
       }
 
-      // Padding kvůli různým fontům
+      // Padding pro různé fonty
       const fontTopPadding = { 'Catchland': 20 };
       const totalVerticalPadding = 30;
       const defaultTopPadding = 15;
@@ -913,6 +914,7 @@
         'seda': "#6c757d"
       };
 
+      // Funkce pro použití fontu + velikosti
       function applyFontAndSize(inputElem, font) {
         let size = fontSizes[font] || '2rem';
         inputElem.style.fontFamily = font;
@@ -924,31 +926,33 @@
         inputElem.style.setProperty('--placeholder-font-family', font);
         updateFieldColor(inputElem);
       }
-
       function applyFontPreview(spanElem, font) {
         let size = fontPreviewSizes[font] || '2rem';
         spanElem.style.fontFamily = font;
         spanElem.style.fontSize = size;
       }
 
+      // Nastavení barvy pro input
       function updateFieldColor(field) {
         let colorInput = document.querySelector('input[name="color"]:checked');
         if (colorInput) {
           let chosenColor = colorMap[colorInput.value];
           field.style.color = chosenColor;
-          // Pokud je barva textu bílá, volíme tmavé pozadí a naopak
+          // Je-li text bílý, dáme tmavé pozadí, jinak bílé
           field.style.backgroundColor = 
             (chosenColor.toLowerCase() === "#ffffff" ? "#6c757d" : "#ffffff");
           field.style.setProperty('--placeholder-color', chosenColor);
         }
       }
 
+      // Aktualizace barvy u všech name-field
       function updateNameFieldsColor() {
         document.querySelectorAll(".name-field").forEach(field => {
           updateFieldColor(field);
         });
       }
 
+      // Aktualizace fontu u všech name-field
       function updateNameFieldsFont() {
         let selectedFont = document.querySelector('input[name="font-sample"]:checked').value;
         document.querySelectorAll(".name-field").forEach(field => {
@@ -956,6 +960,7 @@
         });
       }
 
+      // Iniciální nastavení náhledů fontů
       function initFontPreviews() {
         document.querySelectorAll(
           '.font-sample-selector-container input[name="font-sample"]'
@@ -966,7 +971,7 @@
         });
       }
 
-      // Odebrání inputu
+      // Odebrání inputu (kliknutí na křížek)
       window.removeName = function(btn) {
         let parentDiv = btn.parentElement;
         parentDiv.remove();
@@ -988,12 +993,12 @@
         let selectedFont = document.querySelector('input[name="font-sample"]:checked').value;
         let inputElement = newDiv.querySelector('.name-field');
         applyFontAndSize(inputElement, selectedFont);
+        updateFieldColor(inputElement);
 
         newDiv.querySelector('.remove-name').addEventListener("click", function() {
           newDiv.remove();
           reindexNames();
         });
-        updateFieldColor(inputElement);
         reindexNames();
       });
 
@@ -1026,7 +1031,7 @@
           let nameValue = field.value.trim();
           if (nameValue !== "") {
             let words = nameValue.split(/\s+/);
-            // Pokud je to dvouslovné a zvolený symbol != none, vložíme symbol
+            // Pokud je to dvouslovné a symbol != none, vsadíme symbol mezi slova
             if (words.length === 2 && selectedConnectorKey !== 'none') {
               let connectorSymbol = "";
               switch (selectedConnectorKey) {
@@ -1039,7 +1044,6 @@
                 case "ring2": connectorSymbol = "②"; break;
                 case "ring3": connectorSymbol = "③"; break;
                 case "star": connectorSymbol = "⭐"; break;
-                default: connectorSymbol = "";
               }
               nameValue = `${words[0]} ${connectorSymbol} ${words[1]}`;
             }
@@ -1063,16 +1067,7 @@
         resetForm();
       });
 
-      function updateCartCount() {
-        let cart = JSON.parse(localStorage.getItem("cart")) || [];
-        let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-        let cartCounter = document.getElementById("cart-count");
-        if (cartCounter) {
-          cartCounter.textContent = totalItems;
-        }
-      }
-
-      // Reset formuláře po přidání do košíku
+      // Po přidání do košíku vyčistíme formulář
       function resetForm() {
         let nameInputs = document.getElementById("name-inputs");
         nameInputs.innerHTML = `
@@ -1088,15 +1083,17 @@
         updateFieldColor(firstInput);
       }
 
-      // Události při změně výběru fontu / barvy
-      document.querySelectorAll('input[name="font-sample"]').forEach(input => {
-        input.addEventListener("change", updateNameFieldsFont);
-      });
-      document.querySelectorAll('input[name="color"]').forEach(input => {
-        input.addEventListener("change", updateNameFieldsColor);
-      });
+      // Aktualizovat indikátor počtu položek v košíku (pokud je na stránce)
+      function updateCartCount() {
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        let cartCounter = document.getElementById("cart-count");
+        if (cartCounter) {
+          cartCounter.textContent = totalItems;
+        }
+      }
 
-      // Inicializace
+      // Spuštění
       initFontPreviews();
       let firstField = document.querySelector(".name-field");
       if (firstField) {
